@@ -131,3 +131,14 @@ class SearchUsers(APIView):
 class Spa(APIView):
     def get(self, request):
         return render(request, 'spa/spa.html')
+
+class Pong(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return render(request, 'signin.html')
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return render(request, 'signin.html')
+        return render(request, 'pong.html')
