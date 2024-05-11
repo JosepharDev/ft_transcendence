@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <style>
+        *
+        {
+            padding: 0;
+            margin: 0;
+        }
+        ul
+        {
+            background-color: bisque;
+            padding: 10px;
+            text-align: center;
+        }
+        ul li
+        {
+            display: inline-block;
+            padding-right: 30px;
+        }
+        ul li a
+        {
+            text-decoration: none;
+            color: darkorange;
+            font-size : 18px;
+        }
+        form
+        {
+            text-align:center;
+        }
+        input, h1
+        {
+            margin-bottom: 15px;
+            padding: 7px;
+        }
+        h1
+        {
+            text-align: center;
+        }
+        button
+        {
+            padding: 7px;
+            width: 80px;
+            margin-bottom: 10px;
+            background-color: wheat;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="home">Home</a></li>
+            <li><a href="profile">Profile</a></li>
+            <li><a href="chat">Chat</a></li>
+            <li><a href="game">Game</a></li>
+            <li><a href="tournament">Tournament</a></li>
+            <li><a href="signin">Signin</a></li>
+            <li><a href="signup">Signup</a></li>
+            <li><a href="logout">Logout</a></li>
+        </ul>
+    </nav>
+    <h1> signin </h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username" ><br />
+        <input type="password" name="password" placeholder="Password"><br/>
+        <button type="submit">Login</button>
+        <p> Not registered? <a href="/signup" class=""> Create a account </a></p>
+    </form>
+</body>
+</html>
