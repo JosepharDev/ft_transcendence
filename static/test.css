@@ -1,0 +1,43 @@
+*
+{
+    padding: 0;
+    margin: 0;
+}
+ul
+{
+    background-color: bisque;
+    padding: 10px;
+    text-align: center;
+}
+ul li
+{
+    display: inline-block;
+    padding-right: 30px;
+}
+ul li a
+{
+    text-decoration: none;
+    color: darkorange;
+    font-size : 18px;
+}
+form
+{
+    text-align:center;
+}
+input, h1
+{
+    margin-bottom: 15px;
+    padding: 7px;
+}
+h1
+{
+    text-align: center;
+}
+button
+{
+    padding: 7px;
+    width: 80px;
+    margin-bottom: 10px;
+    background-color: wheat;
+    border: none;
+}

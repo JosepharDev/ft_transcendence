@@ -35,7 +35,8 @@ class signin(APIView):
         password = request.POST['password']
         user = User.objects.filter(username=username).first()
         if user is None:
-            return HttpResponse('User Not found', status=404)
+            response = Response({"message": "not found"}, status=404)
+            return response
         if not user.check_password(password):
             return HttpResponse('invalid password')
         payload = generate_jwt(user)
@@ -126,3 +127,7 @@ class SearchUsers(APIView):
         return Response(serializer.data)
     
 # class update(APIView):
+
+class Spa(APIView):
+    def get(self, request):
+        return render(request, 'spa/spa.html')
