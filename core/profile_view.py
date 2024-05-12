@@ -16,6 +16,7 @@ class signin(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
+            return Response({"message": "not signin"}, status=200)
             return render(request, 'signin.html')
         try:
             user = decode_jwt(token)
@@ -38,7 +39,7 @@ class signin(APIView):
             response = Response({"message": "not found"}, status=404)
             return response
         if not user.check_password(password):
-            return HttpResponse('invalid password')
+            return Response({"message": "invalid password"}, status=403)
         payload = generate_jwt(user)
         response = Response({"message": "Success"}, status=200)
         response.set_cookie(key='jwt', value=payload, httponly=True)
@@ -115,6 +116,13 @@ class UserHistory(APIView):
 
 class SearchUsers(APIView):
     def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+                return Response({"message": "Expired Signature"})
         print(request.query_params)
         query = request.query_params.get('q', None)
         if not query:

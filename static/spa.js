@@ -14,6 +14,62 @@ const urlRoutes = {
             deleteEvent.push ({'elem' : document, 'evnt': 'keydown', 'fun': handleKeyDown });
         }
     },
+/*
+<form>
+  <div>
+    <input type="search" id="mySearch" name="q" />
+    <button>Search</button>
+  </div>
+</form>
+
+*/
+
+
+
+    '/search' : {
+        template : "/profile",
+        title : "",
+        description: "",
+        exec : () => {
+
+
+            async function example(e)
+            {
+                e.preventDefault();
+                console.log("signin");
+                // const formData = new FormData(form);
+                // const queryString = new URLSearchParams(formData).toString();
+                var form = document.getElementById('frm');
+                var formData = new FormData(form);
+                const request = new Request(
+                    'http://127.0.0.1:8000/profile/search/?' + new URLSearchParams(formData).toString(),
+                    {
+                        method: 'GET',
+                        mode: 'same-origin', // Do not send CSRF token to another domain.
+                    }
+                );
+                res = await fetch(request);
+                js = await res.json();
+                console.log(js);
+
+            }
+
+
+            
+            document.getElementById("content").innerHTML = '<h1> signin </h1>\
+            <form id="frm" action="" method="POST">\
+                <div>\
+                <input type="search" id="mySearch" name="q" />\
+                <button type="submit">Search</button>\
+                </div>\
+            </form>';
+            d = document.querySelector("#frm");
+
+            d.addEventListener("submit" , example)
+
+            deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example });
+        }
+    },
 
     '/signin' : {
         template : "/profile",
@@ -49,7 +105,23 @@ const urlRoutes = {
                 js = await res.json();
                 console.log(js);
                 if (js.message === "Success")
-                    pushUrl("/")
+                {
+
+                    const request = new Request(
+                        'http://127.0.0.1:8000/profile/signin/',
+                        {
+                            method: 'GET',
+    
+                            mode: 'same-origin', // Do not send CSRF token to another domain.
+                        }
+                    );
+                    res = await fetch(request);
+                    js = await res.json();
+                    console.log(js);
+                    document.getElementById("content").innerHTML = `<img src="/media/blank-profile-picture.png">\
+                        </img>` ;
+                    // pushUrl("/");
+                }
 
             }
             document.getElementById("content").innerHTML = '<h1> signin </h1>\
@@ -60,6 +132,18 @@ const urlRoutes = {
                 <p> Not registered? <a href="/signup" class=""> Create a account </a></p>\
             </form>';
             d = document.querySelector("#frm");
+
+            const request = new Request(
+                'http://127.0.0.1:8000/profile/signin/',
+                {
+                    method: 'GET',
+
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                }
+            );
+            res = await fetch(request);
+            js = await res.json();
+            console.log(js);
             d.addEventListener("submit" , example)
 
             deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example });
@@ -116,6 +200,8 @@ const urlLocationHandler = async () => {
     // console.log("bla");
     const route = urlRoutes[location] || urlRoutes[404];
     if (location === "/signin")
+        route.exec();
+    else if (location === "/search")
         route.exec();
     else
     {

@@ -15,7 +15,7 @@ import jwt
 from django.core.serializers import serialize
 from django.db.models import Q
 import jwt, datetime
-from .models import User
+from .models import User, Match, HistoryMatch
 from django.conf import settings
 
 canvasWidth__ = 1000
@@ -84,7 +84,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         await self.accept()
         userData = {
-                        'userName' : self.scope['user'].username
+                        'userName' : self.scope['user'].username,
+                        'id' : self.scope['user'].id,
                     }
         queue.append(userData)
 
@@ -107,7 +108,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             paddle_2 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
             ball = Ball(vec2(20,20), vec2(8,8), 10)
 
-            rooms[self.room_room] = roomData(paddle_1, paddle_2, ball)
+            rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
             # i need to push them in same room
             await self.channel_layer.group_send(
                     self.user_group_name,
@@ -143,6 +144,13 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             self.room_room, self.channel_name
         )
         if (self.iam_playing) and (self.room_room in rooms):
+            print ("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            u1 =await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user1_id)
+            u2 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user2_id)
+            match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=50,plr2_count=1)
+            await database_sync_to_async (match_.save)()
+            # HistoryMatch.create(match=match_)
+            # 
             del rooms[self.room_room]
         if (len(queue) == 1):
             if (queue[0]['userName'] == self.scope['user'].username):
@@ -214,7 +222,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 if (self.room_room not in rooms):
                     break
                 
-                if rooms[self.room_room].paddle_1.score >= 50 or rooms[self.room_room].paddle_2.score >= 50:
+                if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_2.score >= 5:
                     break
                 print (rooms[self.room_room].start)
                 print ("--")
@@ -350,14 +358,14 @@ class Ball():
         self.pos['y'] += self.velocity['y']
 
 class roomData:
-    def __init__(self, paddle_1, paddle_2, ball):
+    def __init__(self, paddle_1, paddle_2, ball, id1, id2):
         self.paddle_1 = paddle_1
         self.paddle_2 = paddle_2
         self.ball = ball
         self.size = 0
         self.start = True
-        self.user1_id = 0
-        self.user2_id = 0
+        self.user1_id = id1
+        self.user2_id = id2
     def json(self):
         message = {
                         "action": "data",
