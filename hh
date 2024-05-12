@@ -98,3 +98,14 @@ xdg==5
 xkit==0.0.0
 zipp==1.0.0
 zope.interface==6.3
+
+
+
+friend1
+friend2
+friend3
+friend4
+
+
+
+friend/:id

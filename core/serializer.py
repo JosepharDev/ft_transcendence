@@ -5,7 +5,7 @@ from .models import HistoryMatch
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'avatar', 'loses', 'wins', 'email']
+        fields = ['id', 'username', 'password', 'avatar', 'loses', 'wins', 'email', 'status']
         extra_kwargs = {
             'password': {'write_only': True},
             'id': {'read_only': True},

@@ -148,6 +148,8 @@ class UpdateUser(APIView):
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            # print("88888888888888888888888******************************")
+            # print(request.data)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -166,3 +168,43 @@ class Pong(APIView):
             return render(request, 'signin.html')
         return render(request, 'pong.html')
 
+
+class AuthUser(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "notfff"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({"message": "Expired Signature"})
+        return Response({"message": "authenticated"})
+
+
+
+# class SearchUsers(APIView):
+#     def get(self, request):
+#         print(request.query_params)
+#         query = request.query_params.get('q', None)
+#         if not query:
+#             return HttpResponseBadRequest("Bad Request")
+#         elif query:
+#             users = User.objects.get(username__icontains=query)
+#         else:
+#             users = User.objects.all()
+#         serializer = UserSerializer(users, many=True)
+#         return Response(serializer.data)
+
+class UserData(APIView):
+    def get(self, request, id):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+                return Response({"message": "Expired Signature"})
+        users = User.objects.get(pk=id)
+        serializer = UserSerializer(users)
+        print("ghhhhhhhhhhhhhhhhhhhh")
+        return Response(serializer.data)
