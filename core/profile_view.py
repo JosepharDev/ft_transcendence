@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .serializer import UserSerializer, HistoryMatchSerializer
+from rest_framework import status
 
 from django.contrib.auth.decorators import login_required
 from .models import User, Match, HistoryMatch, Friend
@@ -134,7 +135,21 @@ class SearchUsers(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
-# class update(APIView):
+class UpdateUser(APIView):
+    def patch(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+                return Response({"message": "Expired Signature"})
+        user = User.objects.get(id=user.id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Spa(APIView):
     def get(self, request):
@@ -150,3 +165,4 @@ class Pong(APIView):
         except jwt.ExpiredSignatureError:
             return render(request, 'signin.html')
         return render(request, 'pong.html')
+
