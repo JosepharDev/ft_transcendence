@@ -20,10 +20,6 @@ const urlRoutes = {
         title : "",
         description: "",
         exec : async ()=>{
-            document.addEventListener('keydown', handleKeyDown);
-            deleteEvent.push ({'elem' : document, 'evnt': 'keydown', 'fun': handleKeyDown });
-
-
             const isAuthenticated = await checkAuthenticationStatus();
             if (isAuthenticated) {
                 // document.getElementById("content").innerHTML = "<p>Welcome back!</p>";
