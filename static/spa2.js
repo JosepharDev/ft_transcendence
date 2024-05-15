@@ -130,6 +130,11 @@ async function checkAuthenticationStatus()
 urlRoutes = {
     404: {
         exec : async ()=>{
+            const isAuthenticated = await checkAuthenticationStatus();
+            if (!isAuthenticated) {
+                pushUrl("/signin");
+                return;
+            }        
             document.getElementById("content").innerHTML = '<h1> not found </h1>';
         }
     },
@@ -139,6 +144,10 @@ urlRoutes = {
     '/signin':{
         exec : signInView
     },
+    '/signup':{
+        exec : signUpView
+    }
+    ,
     '/search':{
         exec : searchView
     },
@@ -194,6 +203,25 @@ async function signInView()
                 );
                 socketDisconnect.push(chatSocket);
                 ididOnline = true
+                let gg = document.querySelector(".container");
+                console.log(gg);
+                document.querySelector(".container").innerHTML = '\
+                <div id="main">\
+            <nav>\
+                <a href="/">Home</a>\
+                <a href="/search">search</a>\
+                <a href="/tournament">Tournament</a>\
+                <a href="/settings">settings</a>\
+                <a href="/friends">settings</a>\
+                <a href="/update">update</a>\
+                <a href="/1vs1local">1vs1local</a>\
+                <a href="/bot">bot</a>\
+                <a href="/1vs1remote">1vs1remote</a>\
+            </nav>\
+            <div id="content">\
+            </div>\
+        </div>';
+
                 pushUrl("/");
             }
             else if (js.message === "invalid password")
@@ -209,26 +237,131 @@ async function signInView()
         const isAuthenticated = await checkAuthenticationStatus();
 
         if (isAuthenticated) {
+            
             document.getElementById("content").innerHTML = "<p>Welcome back!</p>";
             return;
         } 
 
-        document.getElementById("content").innerHTML = '<h1> signin </h1>\
+        document.querySelector(".container").innerHTML = '<h1> signin </h1>\
         <form id="frm" action="" method="POST">\
             <input type="text" name="username" placeholder="Username" ><br />\
             <input type="password" name="password" placeholder="Password"><br/>\
             <button type="submit">Login</button>\
-            <p> Not registered? <a href="/signup" class=""> Create a account </a></p>\
+            <p> Not registered? <a id="goin" href="/signup" class=""> Create a account </a></p>\
         </form>';
         
         
-        
         let d = document.querySelector("#frm");
+        let a = document.querySelector("#goin");
+
+        function handleSignIn(e)
+        {
+            e.preventDefault();
+            pushUrl("/signup");
+        }
 
         d.addEventListener("submit" , example)
+        a.addEventListener("click" , handleSignIn)
 
         deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example });
+        deleteEvent.push ({'elem' : a, 'evnt': 'click', 'fun': handleSignIn });
+
+
 }
+
+/*****************************************Sign up************************************************************* */
+
+
+async function signUpView()
+{
+        async function example(e)
+        {
+            e.preventDefault();
+            var form = document.getElementById('frm');
+            var formData = new FormData(form);
+            const request = new Request(
+                'http://127.0.0.1:8000/profile/signin/',
+                {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': csrftoken},
+                    mode: 'same-origin',
+                    body: formData,
+                }
+            );
+            res = await fetch(request);
+            js = await res.json();
+            if (js.message === "Success")
+            {
+                document.querySelector(".container").innerHTML = '\
+                    <div id="main">\
+                <nav>\
+                    <a href="/">Home</a>\
+                    <a href="/search">search</a>\
+                    <a href="/tournament">Tournament</a>\
+                    <a href="/settings">settings</a>\
+                    <a href="/friends">settings</a>\
+                    <a href="/update">update</a>\
+                    <a href="/1vs1local">1vs1local</a>\
+                    <a href="/bot">bot</a>\
+                    <a href="/1vs1remote">1vs1remote</a>\
+                </nav>\
+                <div id="content">\
+                </div>\
+            </div>';
+                pushUrl("/");
+            }
+            else if (js.message === "invalid password")
+            {
+                alert("invalid password");
+            }
+            else if (js.message === "not found")
+            {
+                alert("user not found");
+            }
+        }
+
+        const isAuthenticated = await checkAuthenticationStatus();
+
+        if (isAuthenticated) {
+            pushUrl("/");
+            return;
+        } 
+
+        document.querySelector(".container").innerHTML = '<h1>SignUp</h1>\
+        <form id="frm" action="" method="post">\
+                        <input type="text" name="username" placeholder="Username" ><br>\
+                        <input type="email" name="email" placeholder="Email" ><br>\
+                        <input type="password" name="password" placeholder="Password"><br>\
+                        <input type="password" name="password2" placeholder="Confirm Password" > <br>\
+                        <button type="submit" >Sign Up</button>\
+                        <p> Do you have an account? <a id="goin" href="/signin"> Login </a></p>\
+        </form>';
+        
+        
+        let d = document.querySelector("#frm");
+        let a = document.querySelector("#goin");
+
+        function handleSignIn(e)
+        {
+            e.preventDefault();
+            pushUrl("/signin");
+        }
+
+        d.addEventListener("submit" , example)
+        a.addEventListener("click" , handleSignIn)
+
+        deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example });
+        deleteEvent.push ({'elem' : a, 'evnt': 'click', 'fun': handleSignIn });
+}
+
+
+
+
+
+
+
+
+
 
 /***************************************Home View********************************************************** */
 
@@ -385,6 +518,13 @@ function renderUserProfile(userProfile) {
 
 async function settingView () 
 {
+    const isAuthenticated = await checkAuthenticationStatus();
+    if (!isAuthenticated) {
+        pushUrl("/signin");
+        return;
+    }
+
+
     async function example(e)
     {
         e.preventDefault();
@@ -637,16 +777,20 @@ async function localPong(isVsBot, objConf)
     
     const KEY_UP_RIGHT = 38;
     const KEY_DOWN_RIGHT  = 40;
-    window.addEventListener("keydown", (e) => {
-      console.log(e.keyCode);
-      keyPressed[e.keyCode] = true;
-    })
-    window.addEventListener("keyup", (e) => {
-      // console.log(e.keyCode);
-      keyPressed[e.keyCode] = false;
-    })
+    function handleKeyDownLocal(e)
+    {
+        console.log(e.keyCode);
+        keyPressed[e.keyCode] = true;
+    }
+    function handleKeyUpLocal(e)
+    {
+        keyPressed[e.keyCode] = false;
+    }
+    window.addEventListener("keydown", handleKeyDownLocal);
+    window.addEventListener("keyup", handleKeyUpLocal);
 
-
+    deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': handleKeyDownLocal });
+    deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': handleKeyUpLocal });
     function vec2(x, y)
     {
       return {x: x, y : y};
@@ -934,10 +1078,18 @@ async function localPong(isVsBot, objConf)
                 {
                     obj.vs1 = obj.player3;
                     obj.vs2 = obj.player4;
+                    deleteEvent.forEach(element => {
+                        element.elem.removeEventListener(element.evnt, element.fun);
+                    });
+                    deleteEvent = [];
                     localPong(1, obj);
                 }
                 else
                 {
+                    deleteEvent.forEach(element => {
+                        element.elem.removeEventListener(element.evnt, element.fun);
+                    });
+                    deleteEvent = [];
                     obj.vs1 = obj.win1;
                     obj.vs2 = obj.win2;
                     localPong(1, obj);
@@ -960,6 +1112,12 @@ async function localPong(isVsBot, objConf)
 
 async function tournamentView()
 {
+    const isAuthenticated = await checkAuthenticationStatus();
+    if (!isAuthenticated) {
+        pushUrl("/signin");
+        return;
+    }
+
     document.getElementById("content").innerHTML = '\
     <h1>Enter Player Names</h1>\
     <form id="playerForm">\
