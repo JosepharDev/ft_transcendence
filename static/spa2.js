@@ -168,6 +168,9 @@ urlRoutes = {
     },
     '/tournament': {
         exec : tournamentView
+    },
+    '/friends': {
+        exec: friendsView
     }
 }
 
@@ -355,9 +358,56 @@ async function signUpView()
 }
 
 
+/*************************************Friends view ************************************************************ */
+
+async function friendsView()
+{
+    const isAuthenticated = await checkAuthenticationStatus();
+    if (!isAuthenticated) {
+        pushUrl("/signin");
+        return;
+    }
+
+    const request = new Request(
+        'http://127.0.0.1:8000/profile/friends/',
+        {
+            method: 'GET',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin', // Do not send CSRF token to another domain.
+        }
+    );
+    let res = await fetch(request);
+    let js = await res.json();
+
+    console.log(js);
+
+    document.getElementById("content").innerHTML = '<h1> Friends </h1>\
+            <div id="users-id"></div>';
 
 
+    const userListElement = document.getElementById('users-id');
+    userListElement.innerHTML = '';
+    if (!js.length)
+    {
+        return;
+    }
 
+    js.forEach(user => {
+        const userElement = document.createElement('div');
+        const userLink = document.createElement('a');
+        userLink.textContent = `Username: ${user.username}`;
+        userLink.href = `/userid/${user.id}`; // Use a unique identifier for each user
+        
+        userLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            pushUrl(`/userid/${user.id}`);
+        });
+        
+        userElement.appendChild(userLink);
+        userListElement.appendChild(userElement);
+    });
+    
+}
 
 
 
@@ -1169,3 +1219,4 @@ async function tournamentView()
 
         });
 }
+
