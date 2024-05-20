@@ -21,12 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-(-6$r49vr7whr_1!%)yc!63$$ge2f3io4h3gohip4vua^ui_fe'
-
+OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+
+# Application definition
+INTRA_SECRET = "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"
+UID = 'u-s4t2ud-edd902aa7a0724afcecb181aa52a85e851372bf4c82f58515d10c2bb0b1b1170'
+REDIRECT_INTRA = 'http://127.0.0.1:8000/profile/signin/auth_42_api_callback/'
 
 # Application definition
 
@@ -41,7 +46,6 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
