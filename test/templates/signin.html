@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    
+    <link href="{% static 'test.css' %}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+    <script>
+        href= "{% static 'test.css' %}"
+        console.log(href);
+    </script>
+    <nav>
+        <ul>
+            <li><a href="home">Home</a></li>
+            <li><a href="profile">Profile</a></li>
+            <li><a href="chat">Chat</a></li>
+            <li><a href="game">Game</a></li>
+            <li><a href="tournament">Tournament</a></li>
+            <li><a href="signin">Signin</a></li>
+            <li><a href="signup">Signup</a></li>
+            <li><a href="logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h1> signin </h1>
+    <form id="frm" action="" method="POST">
+        <input type="text" name="username" placeholder="Username" ><br />
+        <input type="password" name="password" placeholder="Password"><br/>
+        <button type="submit">Login</button>
+        <p> Not registered? <a href="/signup" class=""> Create a account </a></p>
+    </form>
+    <form action="auth_42_api/" method="POST">
+        {% csrf_token %}
+        <button type="submit">Authenticate with 42 API</button>
+    </form>
+
+    <!-- <script>
+
+        document.getElementById('frm').addEventListener("submit", async (e)=> {
+            console.log('hhhh');
+            e.preventDefault();
+
+            var form = document.getElementById('frm');
+            var formData = new FormData(form);
+            const request = new Request(
+                'http://127.0.0.1:8000/profile/signin/',
+                {
+                    method: 'POST',
+
+                    mode: 'same-origin', // Do not send CSRF token to another domain.
+                    body: formData,
+                }
+            );
+            res = await fetch(request);
+            js = await res.json();
+            console.log(js);
+        });
+
+    </script> -->
+</body>
+</html>
