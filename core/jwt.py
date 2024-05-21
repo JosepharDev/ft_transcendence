@@ -5,7 +5,9 @@ from django.conf import settings
 def generate_jwt(user):
     payload = {
         "user_id": user.id,
-        "username": user.username
+        "username": user.username,
+        "2fa": user.twofa,
+        "code": False
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
