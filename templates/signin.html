@@ -34,8 +34,12 @@
         <button type="submit">Login</button>
         <p> Not registered? <a href="/signup" class=""> Create a account </a></p>
     </form>
+    <form action="auth_42_api/" method="POST">
+        {% csrf_token %}
+        <button type="submit">Authenticate with 42 API</button>
+    </form>
 
-    <script>
+    <!-- <script>
 
         document.getElementById('frm').addEventListener("submit", async (e)=> {
             console.log('hhhh');
@@ -57,6 +61,6 @@
             console.log(js);
         });
 
-    </script>
+    </script> -->
 </body>
 </html>

@@ -17,8 +17,8 @@ class signin(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
-            return Response({"message": "not signin"}, status=200)
             return render(request, 'signin.html')
+            return Response({"message": "not signin"}, status=200)
         try:
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
@@ -87,9 +87,17 @@ class UserFriends(APIView):
         except jwt.ExpiredSignatureError:
                 return Response({"message": "Expired Signature"})
         usr = User.objects.get(pk=user.id)
-        friends = usr.friends.all()
-        serializ = UserSerializer(friends, many=True)
-        return Response({"Friends": serializ.data})
+        # friends = usr.friends.all()
+        friends = Friend.objects.filter(from_user=user)
+        jj = []
+        for friend in friends:
+            jj.append({'username' : friend.to_user.username,
+                'id':friend.to_user.id
+            })
+
+
+        # serializ = UserSerializer(friends, many=True)
+        return Response(jj)
     def post(self, request, id):
         token = request.COOKIES.get('jwt')
         if not token:
@@ -106,7 +114,12 @@ class UserFriends(APIView):
             friend = User.objects.get(pk=id)
         except User.DoesNotExist:
             return Response({"message": "Friend not found"}, status=404)
-        Friend.objects.create(from_user=user_obj, to_user=friend)
+        is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
+        if (is_friend):
+            jj = Friend.objects.get(from_user=user_obj, to_user=friend)
+            jj.delete()
+        else:
+            Friend.objects.create(from_user=user_obj, to_user=friend)
         return Response({"message": "Friend added successfully"}, status=201)
 
 class UserHistory(APIView):
@@ -206,5 +219,32 @@ class UserData(APIView):
                 return Response({"message": "Expired Signature"})
         users = User.objects.get(pk=id)
         serializer = UserSerializer(users)
-        print("ghhhhhhhhhhhhhhhhhhhh")
-        return Response(serializer.data)
+
+        UserFriend = User.objects.get(id=id)
+        is_friend = Friend.objects.filter(from_user=user, to_user=UserFriend).exists()
+        # print(f"{serializer.data}")
+        k = serializer.data
+        k['friend'] = is_friend
+        matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
+        mm = []
+        for match in matches:
+            lo = {
+                'player1Email' : match.player1.email,
+                'player2Email' : match.player2.email,
+                'player1Score' : match.plr1_count,
+                'player2Score' : match.plr2_count,
+                'plr1img': match.player1.avatar.url,
+                'plr2img': match.player2.avatar.url,
+            }
+            mm.append(lo)
+        k['matches'] = mm
+        # print(matches.player1.nickname)
+        return Response(k)
+
+class HistoMatch(APIView):
+    def get(self, request, id):
+        # user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
+        matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
+        print(matches)
+        # his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
+        return Response({'message': 'ok'})

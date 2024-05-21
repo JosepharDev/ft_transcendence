@@ -251,7 +251,11 @@ async function signInView()
             <input type="password" name="password" placeholder="Password"><br/>\
             <button type="submit">Login</button>\
             <p> Not registered? <a id="goin" href="/signup" class=""> Create a account </a></p>\
-        </form>';
+        </form>\
+        <form action="profile/signin/auth_42_api/" method="POST">\
+\
+        <button type="submit">Authenticate with 42 API</button>\
+    </form>';
         
         
         let d = document.querySelector("#frm");
@@ -389,6 +393,7 @@ async function friendsView()
     userListElement.innerHTML = '';
     if (!js.length)
     {
+        console.log("")
         return;
     }
 
@@ -515,7 +520,6 @@ async function userProfileView (id)
         pushUrl("/signin");
         return;
     }
-
     loadUserProfile(id);
 }
 
@@ -523,7 +527,8 @@ async function userProfileView (id)
 async function loadUserProfile(userId) {
     // Fetch user profile data based on the userId
     // Update the content of your SPA with the user profile information
-    try {
+    try
+    {
         console.log(userId);
         let jj = `http://127.0.0.1:8000/profile/userid/${userId}/`;
         const request = new Request(
@@ -541,13 +546,27 @@ async function loadUserProfile(userId) {
         const userProfile = await response.json();
 
         document.getElementById('content').innerHTML = '<div id="user-profile"></div>';
-
-
         renderUserProfile(userProfile);
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error('Error loading user profile:', error);
         document.getElementById('content').innerHTML = '<div>Error loading user profile</div>';
 
+    }
+}
+async function toggleFollow(userId) {
+    // const action = isFriend ? 'unfollow' : 'follow';
+    const response = await fetch(`http://127.0.0.1:8000/profile/friends/${userId}/`, {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        mode: 'same-origin', // Do not send CSRF token to another domain.,
+    });
+
+    if (response.ok) {
+        loadUserProfile(userId); // Refresh profile to update follow status
+    } else {
+        alert('Something went wrong!');
     }
 }
 
@@ -560,8 +579,53 @@ function renderUserProfile(userProfile) {
         <p>wins: ${userProfile.wins}</p>
         <p>loses: ${userProfile.loses}</p>
         <p>status: ${userProfile.status}</p>
-        <img src="${userProfile.avatar}" />
-    `;
+        <button  onclick="toggleFollow(${userProfile.id})">
+            ${userProfile.friend ? 'Unfollow' : 'Follow'}
+            </button>
+        <div>user history matches</div>
+        <div id = "users-id"></div>
+            `;
+            console.log(userProfile.matches);
+            console.log("userProfile.matches");
+            // <img src="${userProfile.avatar}" />
+
+
+            const userListElement = document.getElementById('users-id');
+            userListElement.innerHTML = '';
+            if (!userProfile.matches.length)
+            {
+                const userElement = document.createElement('div');
+                userElement.textContent = "history empty";
+                userListElement.appendChild(userElement);
+                return;
+            }
+            // Clear previous content
+        
+            // Render users
+            userProfile.matches.forEach(u => {
+                const userElement = document.createElement('div');
+                const userLink = document.createElement('p');
+                const user1Link = document.createElement('img');
+                const user2Link = document.createElement('img');
+                user1Link.setAttribute("src", u.plr1img);
+                user2Link.setAttribute("src", u.plr2img);
+                user1Link.setAttribute("width", '40px');
+                user1Link.setAttribute("height", '40px');
+                user2Link.setAttribute("width", '40px');
+                user2Link.setAttribute("height", '40px');
+                userLink.textContent = `${u.player1Email}
+                ${u.player1Score}  vs  ${u.player2Email}
+                ${u.player2Score}`;
+                
+                userElement.appendChild(userLink);
+                userElement.appendChild(user1Link);
+                userElement.appendChild(user2Link);
+                userListElement.appendChild(userElement);
+
+                });
+            
+
+
 }
 
 /*******************************Settings**************************************** */

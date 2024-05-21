@@ -12,7 +12,7 @@ import jwt
 from django.http import JsonResponse
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
-
+from django.http import HttpResponse, HttpResponseRedirect
 @api_view(['POST'])
 def auth_42_api(request):
     params = {
@@ -110,7 +110,7 @@ def auth_42_api_callback(request):
             jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
 
 
-    response = Response({"message": "Success"}, status=status.HTTP_200_OK)
-    response.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
-    return response
+    r = HttpResponseRedirect('/profile/spa/')
+    r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
+    return r
 

@@ -55,7 +55,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         try:
             self.scope['user'] =  await decode_jwt(token)
         except jwt.ExpiredSignatureError:
-                print({"message": "Expired Signature"})
+            print({"message": "Expired Signature"})
 
         # if cookie_jwt:
         #     try:
@@ -147,7 +147,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             print ("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
             u1 =await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user1_id)
             u2 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user2_id)
-            match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=50,plr2_count=1)
+            match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[self.room_room].paddle_1.score,
+                plr2_count=rooms[self.room_room].paddle_2.score)
             await database_sync_to_async (match_.save)()
             # HistoryMatch.create(match=match_)
             # 
