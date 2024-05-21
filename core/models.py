@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 class User(AbstractUser):
     email = models.CharField(max_length=100)
-    password = models.CharField(max_length=100, blank=True)
+    password = models.CharField(max_length=100)
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
     status = models.CharField(max_length=20)
