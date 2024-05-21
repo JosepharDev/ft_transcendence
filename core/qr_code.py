@@ -5,7 +5,6 @@ import pyotp
 import base64
 from io import BytesIO
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import User
 from django.conf import settings
@@ -48,6 +47,7 @@ class twofa(APIView):
             user  = decode_jwt(token)
         except jwt.ExpiredSignatureError:
             return Response({"message": "expired Signature"}, status=400)
+        
         users = User.objects.filter(username=user.username)
         if not users:
             return Response({"message": "User Not Found"}, status=404)
@@ -55,21 +55,8 @@ class twofa(APIView):
         if not code:
             return Response({"message": "code messing"}, status=401)
         k = base64.b32encode(settings.OTP_SECRET_KEY).decode('utf-8')
-        print("------------------------------------")
-        print(k)
-        print("------------------------------------")
-
         tp = pyotp.TOTP(k)
         if tp.now() == code:
             return Response({"message": "success"}, status=200)
         else:
             return Response({"message": "invalid code"}, status=401)
-
-class prosecc(twofa):
-    def post(self, request):
-        if request.POST['qrcode'] == 'active':
-            return self.get(request)
-        elif request.POST["qrcode"] == 'desactive':
-            return Response({'message': "desactive"}, status=200)
-        else:
-            return Response({"message": "not valid keyword"}, status=400)
