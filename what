@@ -1,0 +1,29 @@
+check if user entered code if he enabled 2fa
+duplicate username
+password change
+
+game:
+    if player quite while playing he will get 5-0 score
+
+
+player 1 join    // generate random name
+player 2 join   //  joins the same random name
+player 3 join   //  joins the same random name
+player 4 join   //   joins the same random name
+
+create a room with random name
+if room have 4 player it starts the game
+just add another paddle to both sides 1 and 2 in left 
+3 and 4 in right
+
+
+
+users 
+usnam  aa 
+pass   aa
+
+
+jojo
+jojo
+
+

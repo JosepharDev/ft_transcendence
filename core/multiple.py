@@ -24,10 +24,22 @@ canvasHeight__ = 600
 def vec2(x, y):
     return {'x': x, 'y': y}
 
+import random
+import string
+
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choices(characters, k=length))
+    return random_string
+
+# # Example usage
+# random_string = generate_random_string(10)
+# print(random_string)
 
 
 queue = []
 rooms = {}
+current_room = ""
 
 async def decode_jwt(token):
     try:
@@ -36,7 +48,7 @@ async def decode_jwt(token):
         return await database_sync_to_async (User.objects.get)(pk=user_id)
     except (jwt.DecodeError, User.DoesNotExist):
         return None
-class PongConsumerTest(AsyncWebsocketConsumer):
+class multipleConsumeTest(AsyncWebsocketConsumer):
 
 
     async def connect(self):
@@ -44,11 +56,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         global queue
         global canvasWidth__
         global canvasHeight__
+        global current_room
 
-
-        print("88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888")
-        print(self.scope['cookies'].get('jwt'))
-        print("88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888")
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
@@ -57,30 +66,18 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         except jwt.ExpiredSignatureError:
             print({"message": "Expired Signature"})
 
-        # if cookie_jwt:
-        #     try:
-        #         decoded_token = jwt.decode(cookie_jwt, 'your_secret_key', algorithms=['HS256'])
-        #         user_id = decoded_token['user_id']
-
-        #         # Do something with the user_id
-        #     except jwt.ExpiredSignatureError:
-        #         # Handle expired token
-        #         pass
-        #     except jwt.InvalidTokenError:
-        #         # Handle invalid token
-        #         pass
-        self.id_in_queue  = len(queue)
-        self.iam_player_1 = True
+        if (len(queue) == 0) :
+            current_room = generate_random_string(10)
+            print (f"create new room {current_room}")
         self.iam_playing  = False
-        self.room_room = self.scope['user'].username
+        if len(queue) < 4 :
+            self.room_room = current_room
 
         self.user_group_name = f"user_{self.scope['user'].username}"
         await self.channel_layer.group_add(
             self.user_group_name, self.channel_name
         )
-        print("=======================================================================================")
-        print(self.scope['user'].username)
-        print("=======================================================================================")
+
 
         await self.accept()
         userData = {
@@ -89,154 +86,101 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     }
         queue.append(userData)
 
-
         await self.channel_layer.group_send(
                     self.user_group_name,
                     {"type": "send.message", "message": {'action': 'id', 'message':f"{self.scope['user'].id}"}}
                 )
-        await self.channel_layer.group_add(
-                queue[0]['userName'], self.channel_name
-            )
 
-
-
-        if len(queue) == 2:
-            self.room_room = queue[0]['userName']
-            self.iam_player_1 = False
-
-            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
-            paddle_2 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
-            ball = Ball(vec2(20,20), vec2(8,8), 10)
-
-            rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
-            # i need to push them in same room
-            await self.channel_layer.group_send(
-                    self.user_group_name,
-                    {"type": "send.message", "message": {'action': 'iam', 'iam': 2}}
-                )
-
-            await self.channel_layer.group_send(
-                    queue[0]['userName'],
-                    {
-                        "type": "send.message",
-                        "message": {'action': 'play', 'message':"start"}
-                    }
-                )
-
-
-            queue.pop(0)
-            queue.pop(0)
-            await self.channel_layer.group_send(
-                    self.room_room, 
-                    {"type": "start.game", "message": {'action': 'play_game', 'message':"print once"}}
-                )
-        else:
-            await self.channel_layer.group_send(
+        await self.channel_layer.group_send(
                 self.user_group_name,
-                {"type": "send.message", "message": {'action': 'iam', 'iam': 1}}
+                {"type": "send.message", "message": {'action': 'iam', 'iam': len(queue)}}
             )
-        # print ("rooms:")
-        # print (rooms)
+
+        await self.channel_layer.group_add(
+                self.room_room, self.channel_name
+            )
+
+        if (len(queue) == 4):
+            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
+            paddle_2 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
+            paddle_3 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
+            paddle_4 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
+            ball = Ball(vec2(20,20), vec2(8,8), 10)
+            rooms[self.room_room] = roomData(paddle_1, paddle_2, paddle_3, paddle_4, ball)
+
+            queue.pop(0)
+            queue.pop(0)
+            queue.pop(0)
+            queue.pop(0)
+            # rooms[self.room_room] = {'start' : True}
+            await self.channel_layer.group_send(
+                self.room_room, 
+                {"type": "start.game", "message": {'action': 'play_game', 'message':"print once"}}
+            )
+
 
     async def disconnect(self, close_code):
         global queue
         await self.channel_layer.group_discard(
             self.room_room, self.channel_name
         )
-        if (self.iam_playing) and (self.room_room in rooms):
-            print ("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-            u1 =await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user1_id)
-            u2 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user2_id)
-            match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[self.room_room].paddle_1.score,
-                plr2_count=rooms[self.room_room].paddle_2.score)
-            await database_sync_to_async (match_.save)()
-            # HistoryMatch.create(match=match_)
-            # 
-            del rooms[self.room_room]
-        if (len(queue) == 1):
-            if (queue[0]['userName'] == self.scope['user'].username):
-                queue.pop(0)
         print (f"quite room {self.room_room}")
-
-
 
 
     async def receive(self, text_data):
         message = json.loads(text_data)
-        print ("receievevvevevve")
-        print (message)
-        if (message['action'] == 'press' and self.iam_playing):
-            messageSend = 0
-            print ("------------------------------------")
 
-            if (message['user'] == 1):
-                await rooms[self.room_room].paddle_1.update(message['code'])
-                # messageSend = rooms[self.room_room].paddle_1.json()
-            else:
-                if (message['user'] == 2):
-                    await rooms[self.room_room].paddle_2.update(message['code'])
+        # if (message['action'] == 'press' and self.iam_playing):
+        #     messageSend = 0
+        #     print ("------------------------------------")
 
+        if (message['user'] == 1):
+            await rooms[self.room_room].paddle_1.update(message['code'])
+        elif (message['user'] == 2):
+                await rooms[self.room_room].paddle_2.update(message['code'])
+        elif (message['user'] == 3):
+                await rooms[self.room_room].paddle_3.update(message['code'])
+        elif (message['user'] == 4):
+            await rooms[self.room_room].paddle_4.update(message['code'])
 
     async def send_message(self, event):
         message = event["message"]
-        # print("---------------")
-        # print(message['action'])
-        if message['action'] == "play":
-            self.iam_playing = True
+
+        # if message['action'] == "play":
+        #     self.iam_playing = True
         
-
-        # print("**************************************")
-        # print(message)
-        # print(self.iam_playing)
-        # print("**************************************")
-
         await self.send(text_data=json.dumps({"message": message}))
 
 
     async def send_message_2(self, event):
         message = event["message"]
-        print("---------------")
-        print(message['action'])
         if message['action'] == "play":
             self.iam_playing = True
-        
-
-        print("**************************************")
-        print(message)
-        print(self.iam_playing)
-        print("**************************************")
 
         await self.send(text_data=json.dumps({"message": message}))
 
     async def start_game(self, event):
-        # Start the game loop
         message = event['message']
-        if rooms[self.room_room].start == False:
+        if (rooms[self.room_room].start == False):
             return
         else:
             rooms[self.room_room].start = False
-        await asyncio.sleep(2)
         async def gameLoop():
 
             while True:
-
-                if (self.room_room not in rooms):
-                    break
-                
-                if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_2.score >= 5:
-                    break
-                print (rooms[self.room_room].start)
-                print ("--")
-                print("HH")
                 await rooms[self.room_room].ball.update()
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
+                await paddleCollisionWithEdges(rooms[self.room_room].paddle_3, canvasHeight__)
+                await paddleCollisionWithEdges(rooms[self.room_room].paddle_4, canvasHeight__)
 
                 await ballCollisionWithEdges(rooms[self.room_room].ball, canvasHeight__)
 
                 await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
                 await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
-                await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_2, canvasWidth__, canvasHeight__)
+                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_3)
+                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_4)
+                await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_4, canvasWidth__, canvasHeight__)
 
 
                 await self.channel_layer.group_send(
@@ -245,6 +189,20 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 await asyncio.sleep(0.016)
         # await gameLoop()
         asyncio.create_task(gameLoop())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 async def paddleCollisionWithEdges(paddle, canvasHeight):
@@ -345,14 +303,14 @@ class Ball():
         self.pos['y'] += self.velocity['y']
 
 class roomData:
-    def __init__(self, paddle_1, paddle_2, ball, id1, id2):
+    def __init__(self, paddle_1, paddle_2, paddle_3, paddle_4, ball):
         self.paddle_1 = paddle_1
         self.paddle_2 = paddle_2
+        self.paddle_3 = paddle_3
+        self.paddle_4 = paddle_4
         self.ball = ball
         self.size = 0
         self.start = True
-        self.user1_id = id1
-        self.user2_id = id2
     def json(self):
         message = {
                         "action": "data",
@@ -374,6 +332,24 @@ class roomData:
                             'height' : self.paddle_2.height,
                             'score' : self.paddle_2.score
                         },
+                        "paddle_4" :
+                        {
+                            's': self.paddle_4.s,
+                            'pos' : self.paddle_4.pos,
+                            'velocity' : self.paddle_4.velocity,
+                            'width' : self.paddle_4.width,
+                            'height' : self.paddle_4.height,
+                            'score' : self.paddle_4.score
+                        },
+                        "paddle_3" :
+                        {
+                            's': self.paddle_3.s,
+                            'pos' : self.paddle_3.pos,
+                            'velocity' : self.paddle_3.velocity,
+                            'width' : self.paddle_3.width,
+                            'height' : self.paddle_3.height,
+                            'score' : self.paddle_3.score
+                        },
                         "ball":
                         {
                             'pos' : self.ball.pos , 
@@ -382,5 +358,3 @@ class roomData:
                         }
                 }
         return message
-
-

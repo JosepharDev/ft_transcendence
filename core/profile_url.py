@@ -1,6 +1,6 @@
 from django.urls import path
 from .profile_view import signin, signup, logout, UsersList, UpdateUser, SearchUsers, UserFriends,\
- UserHistory, Spa, Pong, AuthUser ,UserData 
+ UserHistory, Spa, Pong, AuthUser ,UserData , Toto
 from .qr_code import twofa
 from .s42_auth_view import auth_42_api, auth_42_api_callback
 urlpatterns = [
@@ -22,4 +22,5 @@ urlpatterns = [
     path('userid/<int:id>/', UserData.as_view(), name="tt"),
 
 
+    path("multiple/", Toto.as_view(), name="search"),
 ]

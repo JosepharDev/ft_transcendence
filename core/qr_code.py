@@ -57,6 +57,9 @@ class twofa(APIView):
         k = base64.b32encode(settings.OTP_SECRET_KEY).decode('utf-8')
         tp = pyotp.TOTP(k)
         if tp.now() == code:
-            return Response({"message": "success"}, status=200)
+            print("******************************************8")
+            print(code)
+            print("******************************************8")
+            return Response({"message": "Success"}, status=200)
         else:
             return Response({"message": "invalid code"}, status=401)

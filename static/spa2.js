@@ -227,6 +227,79 @@ async function signInView()
 
                 pushUrl("/");
             }
+            else if (js.message === "2fa")
+            {
+
+                async function example2(e){
+                    /********************************* */
+                    e.preventDefault();
+                    var form = document.getElementById('frm');
+                    var formData = new FormData(form);
+                    const request = new Request(
+                        'http://127.0.0.1:8000/profile/signin/twofa/',
+                        {
+                            method: 'POST',
+                            headers: {'X-CSRFToken': csrftoken},
+                            mode: 'same-origin',
+                            body: formData,
+                        }
+                    );
+                    res = await fetch(request);
+                    js = await res.json();
+                    if (js.message === "Success")
+                    {
+                        const chatSocket = new WebSocket(
+                            'ws://'
+                            + window.location.host
+                            + '/ws/onlineUser/'
+                            + '3'
+                            + '/'
+                        );
+                        socketDisconnect.push(chatSocket);
+                        ididOnline = true
+                        let gg = document.querySelector(".container");
+                        console.log(gg);
+                        document.querySelector(".container").innerHTML = '\
+                        <div id="main">\
+                    <nav>\
+                        <a href="/">Home</a>\
+                        <a href="/search">search</a>\
+                        <a href="/tournament">Tournament</a>\
+                        <a href="/settings">settings</a>\
+                        <a href="/friends">settings</a>\
+                        <a href="/update">update</a>\
+                        <a href="/1vs1local">1vs1local</a>\
+                        <a href="/bot">bot</a>\
+                        <a href="/1vs1remote">1vs1remote</a>\
+                    </nav>\
+                    <div id="content">\
+                    </div>\
+                </div>';
+        
+                        pushUrl("/");
+                    }
+                    else
+                    {
+                        alert("false otp");
+                    }
+
+
+                    /**************************** */
+                }
+
+                document.querySelector(".container").innerHTML = '<h1> otp code </h1>\
+                <form id="frm" action="" method="POST">\
+                    <input type="text" name="code" placeholder="otpcode..." ><br />\
+                    <button type="submit">otp</button>\
+                </form>\
+            </form>';
+            // let k = document.querySelector("#frm");
+                let d = document.querySelector("#frm");
+
+                d.addEventListener("submit" , example2)
+                deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example2 });
+
+            }
             else if (js.message === "invalid password")
             {
                 alert("invalid password");
@@ -269,7 +342,7 @@ async function signInView()
 
         d.addEventListener("submit" , example)
         a.addEventListener("click" , handleSignIn)
-
+        
         deleteEvent.push ({'elem' : d, 'evnt': 'submit', 'fun': example });
         deleteEvent.push ({'elem' : a, 'evnt': 'click', 'fun': handleSignIn });
 
@@ -466,6 +539,7 @@ async function searchView()
         js.forEach(user => {
             const userElement = document.createElement('div');
             const userLink = document.createElement('a');
+            const user1Link = document.createElement('img');
             userLink.textContent = `Username: ${user.username}`;
             userLink.href = `/userid/${user.id}`; // Use a unique identifier for each user
             
@@ -474,6 +548,10 @@ async function searchView()
                 pushUrl(`/userid/${user.id}`);
             });
             
+            user1Link.setAttribute("src", user.avatar);
+            user1Link.setAttribute("width", '40px');
+            user1Link.setAttribute("height", '40px');
+            userElement.appendChild(user1Link);
             userElement.appendChild(userLink);
             userListElement.appendChild(userElement);
         });
@@ -555,12 +633,16 @@ async function loadUserProfile(userId) {
 
     }
 }
-async function toggleFollow(userId) {
+async function toggleFollow(userId, btn) {
     // const action = isFriend ? 'unfollow' : 'follow';
+    formData = new FormData();
+    formData.append('data', btn.textContent);
+    
     const response = await fetch(`http://127.0.0.1:8000/profile/friends/${userId}/`, {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
         mode: 'same-origin', // Do not send CSRF token to another domain.,
+        body: formData,
     });
 
     if (response.ok) {
@@ -579,9 +661,7 @@ function renderUserProfile(userProfile) {
         <p>wins: ${userProfile.wins}</p>
         <p>loses: ${userProfile.loses}</p>
         <p>status: ${userProfile.status}</p>
-        <button  onclick="toggleFollow(${userProfile.id})">
-            ${userProfile.friend ? 'Unfollow' : 'Follow'}
-            </button>
+        <button  onclick="toggleFollow(${userProfile.id}, this)">${userProfile.friend? 'Unfollow' : 'Follow' }</button>
         <div>user history matches</div>
         <div id = "users-id"></div>
             `;
@@ -637,13 +717,13 @@ async function settingView ()
         pushUrl("/signin");
         return;
     }
-
-
+    
+    
     async function example(e)
     {
         e.preventDefault();
         var form = document.getElementById('frm');
-
+        
         var formData = new FormData(form);
         console.log(formData)
         const request = new Request(
@@ -656,18 +736,25 @@ async function settingView ()
             }
         );
         res = await fetch(request);
-        js = await res.json();
-        console.log(js);
-
-    }
-    
-    document.getElementById("content").innerHTML = '<h1> Settings </h1>\
+        if (!res.ok)
+            {
+                alert ("not updated");
+                return ;
+            }
+            js = await res.json();
+            console.log(js);
+            
+        }
+        console.log("gggggggggg");
+        document.getElementById("content").innerHTML = '<h1> Settsssings </h1>\
     <form id="frm" action="" method="POST">\
         <div>\
         <input type="file" id="file" placeholder="upload a file"   \
         name="avatar">\
         <input type="email" placeholder="email"   \
         name="email">\
+        <input type="password" placeholder="password"   \
+        name="password">\
         <button type="submit">submit</button>\
         </div>\
     </form>';

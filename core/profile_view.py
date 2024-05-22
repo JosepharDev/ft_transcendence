@@ -17,8 +17,8 @@ class signin(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
-            return render(request, 'signin.html')
             return Response({"message": "not signin"}, status=200)
+            return render(request, 'signin.html')
         try:
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
@@ -42,7 +42,10 @@ class signin(APIView):
         if not user.check_password(password):
             return Response({"message": "invalid password"}, status=403)
         payload = generate_jwt(user)
-        response = Response({"message": "Success"}, status=200)
+        if (user.is_2fa):
+            response = Response({"message": "2fa"}, status=200)
+        else :
+            response = Response({"message": "Success"}, status=200)
         response.set_cookie(key='jwt', value=payload, httponly=True)
         return response
 
@@ -62,7 +65,11 @@ class signup(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
+        print ("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
         serializer.save()
+        print (serializer)
+        print ("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+
         return redirect('signin')
 
 class logout(APIView):
@@ -115,6 +122,9 @@ class UserFriends(APIView):
         except User.DoesNotExist:
             return Response({"message": "Friend not found"}, status=404)
         is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
+        # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+        print(request.POST['data'] == "Unfollow")
+        # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
         if (is_friend):
             jj = Friend.objects.get(from_user=user_obj, to_user=friend)
             jj.delete()
@@ -160,9 +170,11 @@ class UpdateUser(APIView):
         user = User.objects.get(id=user.id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            # print("88888888888888888888888******************************")
-            # print(request.data)
+            if ('password' in request.data and request.data['password'] == ""):
+                print("44488888888888888888888888******************************")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            print(request.data['email'])
+            # serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -181,6 +193,16 @@ class Pong(APIView):
             return render(request, 'signin.html')
         return render(request, 'pong.html')
 
+class Toto(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return render(request, 'signin.html')
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return render(request, 'signin.html')
+        return render(request, 'multiple.html')
 
 class AuthUser(APIView):
     def get(self, request):
@@ -229,8 +251,8 @@ class UserData(APIView):
         mm = []
         for match in matches:
             lo = {
-                'player1Email' : match.player1.email,
-                'player2Email' : match.player2.email,
+                'player1Email' : match.player1.username,
+                'player2Email' : match.player2.username,
                 'player1Score' : match.plr1_count,
                 'player2Score' : match.plr2_count,
                 'plr1img': match.player1.avatar.url,
@@ -248,3 +270,4 @@ class HistoMatch(APIView):
         print(matches)
         # his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
         return Response({'message': 'ok'})
+
