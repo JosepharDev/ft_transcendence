@@ -147,6 +147,29 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             print ("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
             u1 =await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user1_id)
             u2 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user2_id)
+            ###################################3
+
+            if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_2.score >= 5:
+                    if rooms[self.room_room].paddle_1.score >= 5:
+                        usernamee = await self.getUsername(rooms[self.room_room].user1_id)
+                    else:
+                        usernamee = await self.getUsername(rooms[self.room_room].user2_id)
+                    dta = {
+                        "action": "finish",
+                        "winner" : usernamee
+                    }
+                    await self.channel_layer.group_send(
+                            self.room_room, {"type": "send.message", "message": dta}
+                    )
+            else:
+                if rooms[self.room_room].user1_id == self.scope['user'].id :
+                    rooms[self.room_room].paddle_1.score = 0
+                    rooms[self.room_room].paddle_2.score = 5
+                else :
+                    rooms[self.room_room].paddle_1.score = 5
+                    rooms[self.room_room].paddle_2.score = 0
+
+            ######################################
             match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[self.room_room].paddle_1.score,
                 plr2_count=rooms[self.room_room].paddle_2.score)
             await database_sync_to_async (match_.save)()
@@ -208,6 +231,17 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({"message": message}))
 
+
+
+    @database_sync_to_async
+    def getUsername(self, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            return user.username
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            pass
+
     async def start_game(self, event):
         # Start the game loop
         message = event['message']
@@ -224,6 +258,18 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     break
                 
                 if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_2.score >= 5:
+                    if rooms[self.room_room].paddle_1.score >= 5:
+                        usernamee = await self.getUsername(rooms[self.room_room].user1_id)
+                    else:
+                        usernamee = await self.getUsername(rooms[self.room_room].user2_id)
+                    dta = {
+                        "action": "finish",
+                        "winner" : usernamee
+                    }
+                    await self.channel_layer.group_send(
+                            self.room_room, {"type": "send.message", "message": dta}
+                        )
+                    # await self.close()
                     break
                 print (rooms[self.room_room].start)
                 print ("--")

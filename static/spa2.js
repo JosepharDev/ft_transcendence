@@ -795,6 +795,11 @@ async function pongRemoteView()
 
     if (data.message.action == 'iam' )
       iamuser = data.message.iam;
+    else if (data.message.action === 'finish')
+    {
+        alert (`${data.message.winner} WON`);
+        pushUrl('/');
+    }
     else if (data.message.action === 'data')
     {
         remoteGameLoop();

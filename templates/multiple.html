@@ -109,9 +109,12 @@
             {
               iamuser = data.message.iam;
               console.log(iamuser);
+              
             }
-            if (data.message.action == 'logged')
+            else if (data.message.action == 'logged')
               console.log("logged");
+            else if (data.message.action == 'finish')
+              alert (`${data.message.winner} WON`);
             else if (data.message.action == 'ball')
               drawBall(data.message.ball.pos.x, data.message.ball.pos.y, data.message.ball.radius);
             else if (data.message.action == 'paddle')
@@ -179,7 +182,7 @@
 
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    
+
     canvas.width = 1000;// window.innerWidth;
     canvas.height = 600;//window.innerHeight;
 

@@ -110,7 +110,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             paddle_2 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
             paddle_3 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
             paddle_4 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
-            ball = Ball(vec2(20,20), vec2(8, 8), 10)
+            ball = Ball(vec2(20,20), vec2(10, 10), 10)
             rooms[self.room_room] = roomData(paddle_1, paddle_2, paddle_3, paddle_4, ball)
 
             queue.pop(0)
@@ -186,6 +186,22 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         async def gameLoop():
 
             while True:
+                if (self.room_room not in rooms):
+                    break
+                if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_4.score >= 5:
+                    if rooms[self.room_room].paddle_1.score >= 5:
+                        usernamee = "team 1"
+                    else:
+                        usernamee = "team 2"
+                    dta = {
+                        "action": "finish",
+                        "winner" : usernamee
+                    }
+                    await self.channel_layer.group_send(
+                            self.room_room, {"type": "send.message", "message": dta}
+                        )
+                    # await self.close()
+                    break
                 await rooms[self.room_room].ball.update()
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
