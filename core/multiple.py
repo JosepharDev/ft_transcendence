@@ -40,6 +40,7 @@ def generate_random_string(length):
 queue = []
 rooms = {}
 current_room = ""
+availableIds = [1,2,3,4]
 
 async def decode_jwt(token):
     try:
@@ -57,7 +58,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         global canvasWidth__
         global canvasHeight__
         global current_room
-
+        global availableIds
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
@@ -77,8 +78,11 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(
             self.user_group_name, self.channel_name
         )
-
-
+        for i in range(len(availableIds)):
+            if availableIds[i] != -1:
+                self.myroomId = availableIds[i]
+                availableIds[i] = -1
+                break
         await self.accept()
         userData = {
                         'userName' : self.scope['user'].username,
@@ -101,11 +105,12 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             )
 
         if (len(queue) == 4):
+            availableIds = [1,2,3,4]
             paddle_1 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
             paddle_2 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
             paddle_3 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
             paddle_4 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
-            ball = Ball(vec2(20,20), vec2(8,8), 10)
+            ball = Ball(vec2(20,20), vec2(8, 8), 10)
             rooms[self.room_room] = roomData(paddle_1, paddle_2, paddle_3, paddle_4, ball)
 
             queue.pop(0)
@@ -113,6 +118,13 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             queue.pop(0)
             queue.pop(0)
             # rooms[self.room_room] = {'start' : True}
+            await self.channel_layer.group_send(
+                    self.room_room,
+                    {
+                        "type": "send.message",
+                        "message": {'action': 'play', 'message':"start"}
+                    }
+                )
             await self.channel_layer.group_send(
                 self.room_room, 
                 {"type": "start.game", "message": {'action': 'play_game', 'message':"print once"}}
@@ -124,6 +136,12 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(
             self.room_room, self.channel_name
         )
+        if (not self.iam_playing):
+            availableIds[self.myroomId - 1] = self.myroomId
+            for d in queue:
+                if d["id"] == self.scope['user'].id:
+                    queue.remove(d)
+                    break
         print (f"quite room {self.room_room}")
 
 
@@ -146,18 +164,18 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
     async def send_message(self, event):
         message = event["message"]
 
-        # if message['action'] == "play":
-        #     self.iam_playing = True
+        if message['action'] == "play":
+            self.iam_playing = True
         
         await self.send(text_data=json.dumps({"message": message}))
 
 
-    async def send_message_2(self, event):
-        message = event["message"]
-        if message['action'] == "play":
-            self.iam_playing = True
+    # async def send_message_2(self, event):
+    #     message = event["message"]
+    #     if message['action'] == "play":
+    #         self.iam_playing = True
 
-        await self.send(text_data=json.dumps({"message": message}))
+    #     await self.send(text_data=json.dumps({"message": message}))
 
     async def start_game(self, event):
         message = event['message']
