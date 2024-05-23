@@ -38,7 +38,24 @@ async def decode_jwt(token):
         return None
 class PongConsumerTest(AsyncWebsocketConsumer):
 
+    @database_sync_to_async
+    def checkUserStatus(self, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            return user.status
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            pass
 
+    @database_sync_to_async
+    def update_userStatus(self, user_id, status):
+        try:
+            user = User.objects.get(pk=user_id)
+            user.status = status
+            user.save()
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            pass
     async def connect(self):
 
         global queue
@@ -69,6 +86,9 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         #     except jwt.InvalidTokenError:
         #         # Handle invalid token
         #         pass
+
+        # i should check the user if he is playing or waiting if so he cant play 2 matches at same time
+
         self.id_in_queue  = len(queue)
         self.iam_player_1 = True
         self.iam_playing  = False
@@ -106,7 +126,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
             paddle_1 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
             paddle_2 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
-            ball = Ball(vec2(20,20), vec2(8,8), 10)
+            ball = Ball(vec2(20,20), vec2(10,10), 10)
 
             rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
             # i need to push them in same room
@@ -122,7 +142,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                         "message": {'action': 'play', 'message':"start"}
                     }
                 )
-
 
             queue.pop(0)
             queue.pop(0)
@@ -206,7 +225,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         # print(message['action'])
         if message['action'] == "play":
             self.iam_playing = True
-        
+
 
         # print("**************************************")
         # print(message)
@@ -222,7 +241,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         print(message['action'])
         if message['action'] == "play":
             self.iam_playing = True
-        
+
 
         print("**************************************")
         print(message)
@@ -257,8 +276,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 if (self.room_room not in rooms):
                     break
                 
-                if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_2.score >= 5:
-                    if rooms[self.room_room].paddle_1.score >= 5:
+                if rooms[self.room_room].paddle_1.score >= 10 or rooms[self.room_room].paddle_2.score >= 10:
+                    if rooms[self.room_room].paddle_1.score >= 10:
                         usernamee = await self.getUsername(rooms[self.room_room].user1_id)
                     else:
                         usernamee = await self.getUsername(rooms[self.room_room].user2_id)
@@ -274,7 +293,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 print (rooms[self.room_room].start)
                 print ("--")
                 print("HH")
-                await rooms[self.room_room].ball.update()
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
 
@@ -283,6 +301,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
                 await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
                 await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_2, canvasWidth__, canvasHeight__)
+                await rooms[self.room_room].ball.update()
 
 
                 await self.channel_layer.group_send(
@@ -312,7 +331,7 @@ async def ballPaddleCollision(ball, paddle):
     dx = abs(ball.pos['x'] - paddle.getCenter()['x'])
     dy = abs(ball.pos['y'] - paddle.getCenter()['y'])
 
-    if dx < (ball.radius + paddle.getHalfWidth()) and dy < (paddle.getHalfHeight() + ball.radius):
+    if dx <= (ball.radius + paddle.getHalfWidth()) and dy <= (paddle.getHalfHeight() + ball.radius - 5):
         if paddle.s == 1:
             ball.pos['x'] = (paddle.pos['x'] + paddle.width) + ball.radius; # // if ball gets stuck
         else:

@@ -11,7 +11,7 @@ class User(AbstractUser):
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
     nickname = models.CharField(max_length=100)
-    is_2fa = models.BooleanField(default=True)
+    is_2fa = models.BooleanField(default=False)
     friends = models.ManyToManyField('User', blank=True)
     intra = models.BooleanField(default=False)
     REQUIRED_FIELDS = []

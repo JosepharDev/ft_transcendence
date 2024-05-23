@@ -120,7 +120,69 @@ async function checkAuthenticationStatus()
     );
     answer = await AJAX_(request);
     console.log(answer.message);
-    return answer.message == "authenticated";
+    // return true;
+    if (answer.message === "2fa")
+    {
+        
+
+        async function example2(e){
+            /********************************* */
+            e.preventDefault();
+            var form = document.getElementById('frm');
+            var formData = new FormData(form);
+            const request = new Request(
+                'http://127.0.0.1:8000/profile/signin/twofa/',
+                {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': csrftoken},
+                    mode: 'same-origin',
+                    body: formData,
+                }
+            );
+            res = await fetch(request);
+            js = await res.json();
+            if (js.message === "success")
+            {
+                // const chatSocket = new WebSocket(
+                //     'ws://'
+                //     + window.location.host
+                //     + '/ws/onlineUser/'
+                //     + '3'
+                //     + '/'
+                // );
+                // socketDisconnect.push(chatSocket);
+                // ididOnline = true
+                // let gg = document.querySelector(".container");
+
+                console.log("enbaled")
+                pushUrl("/");
+            }
+            else
+            {
+                alert("false otp");
+            }
+
+
+            /**************************** */
+        }
+
+        document.querySelector(".container").innerHTML = '<h1> otp code </h1>\
+        <form id="frm" action="" method="POST">\
+            <input type="text" name="code" placeholder="otpcode..." ><br />\
+            <button type="submit">otp</button>\
+        </form>\
+    </form>';
+    // let k = document.querySelector("#frm");
+        let d = document.querySelector("#frm");
+
+        d.addEventListener("submit" , example2)
+
+        console.log("YOYOUOUIOUIOUIO")
+        return answer.message;
+        
+    }
+    else
+        return answer.message;
 }
 
 
@@ -131,7 +193,7 @@ urlRoutes = {
     404: {
         exec : async ()=>{
             const isAuthenticated = await checkAuthenticationStatus();
-            if (!isAuthenticated) {
+            if (isAuthenticated !== "authenticated") {
                 pushUrl("/signin");
                 return;
             }        
@@ -171,10 +233,144 @@ urlRoutes = {
     },
     '/friends': {
         exec: friendsView
+    },
+    '/enable2fa':
+    {
+        exec: enable2faView
     }
 }
 
+async function enable2faView()
+{
 
+    // const isAuthenticated = await checkAuthenticationStatus();
+    // if (!isAuthenticated) {
+    //     pushUrl("/signin");
+    //     return;
+    // }
+
+    const request = new Request(
+        'http://127.0.0.1:8000/profile/enable2fa/',
+        {
+            method: 'GET',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin', // Do not send CSRF token to another domain.
+        }
+    );
+    let res = await fetch(request);
+    let js = await res.json();
+
+    document.querySelector(".container").innerHTML = `\
+    <div id="main">\
+<nav>\
+    <a href="/">Home</a>\
+    <a href="/search">search</a>\
+    <a href="/tournament">Tournament</a>\
+    <a href="/settings">settings</a>\
+    <a href="/friends">settings</a>\
+    <a href="/update">update</a>\
+    <a href="/1vs1local">1vs1local</a>\
+    <a href="/bot">bot</a>\
+    <a href="/1vs1remote">1vs1remote</a>\
+</nav>\
+<div id="content">\
+<button  onclick="toggle2fa(this)">${js.message === "yes"? "disable" : "enable"}</button>\
+</div>\
+<img id="qr-code-img" alt="QR Code will be displayed here">\
+<div class="otpcinatiner"></div>
+</div>`;
+
+    console.log(js);
+
+}
+
+
+async function toggle2fa(btn) {
+    // const action = isFriend ? 'unfollow' : 'follow';
+    formData = new FormData();
+    formData.append('qrcode', btn.textContent);
+    
+    const response = await fetch(`http://127.0.0.1:8000/profile/signin/prosecc/`, {
+        method: 'POST',
+        headers: {'X-CSRFToken': csrftoken},
+        mode: 'same-origin', // Do not send CSRF token to another domain.,
+        body: formData,
+    });
+
+    if (response.ok) {
+        console.log("OOOOOOOOO")// Refresh profile to update follow status
+        if (btn.textContent === "enable")
+        {
+            blob = await response.blob();
+            const imgElement = document.getElementById('qr-code-img');
+            imgElement.src = URL.createObjectURL(blob);
+
+
+            async function example2(e){
+                /********************************* */
+                e.preventDefault();
+                var form = document.getElementById('frm');
+                var formData = new FormData(form);
+                const request = new Request(
+                    'http://127.0.0.1:8000/profile/signin/twofa/',
+                    {
+                        method: 'POST',
+                        headers: {'X-CSRFToken': csrftoken},
+                        mode: 'same-origin',
+                        body: formData,
+                    }
+                );
+                res = await fetch(request);
+                js = await res.json();
+                if (js.message === "success")
+                {
+                    // const chatSocket = new WebSocket(
+                    //     'ws://'
+                    //     + window.location.host
+                    //     + '/ws/onlineUser/'
+                    //     + '3'
+                    //     + '/'
+                    // );
+                    // socketDisconnect.push(chatSocket);
+                    // ididOnline = true
+                    // let gg = document.querySelector(".container");
+    
+                    // pushUrl("/");
+                    console.log("enbaled")
+                }
+                else
+                {
+                    alert("false otp");
+                }
+
+
+                /**************************** */
+            }
+
+            document.querySelector(".otpcinatiner").innerHTML = '<h1> otp code </h1>\
+            <form id="frm" action="" method="POST">\
+                <input type="text" name="code" placeholder="otpcode..." ><br />\
+                <button type="submit">otp</button>\
+            </form>\
+        </form>';
+        // let k = document.querySelector("#frm");
+            let d = document.querySelector("#frm");
+
+            d.addEventListener("submit" , example2)
+
+
+
+        }
+    } else {
+        alert('Something went wrong!');
+    // }
+    console.log("toggle");
+}
+}
+
+
+
+//
 /************************************************* signInView ****************************************** */
 
 async function signInView()
@@ -312,12 +508,14 @@ async function signInView()
 
         const isAuthenticated = await checkAuthenticationStatus();
 
-        if (isAuthenticated) {
-            
+        if (isAuthenticated === "2fa") {
+            return ;
+        }
+        else if (isAuthenticated === "authenticated")
+        {
             document.getElementById("content").innerHTML = "<p>Welcome back!</p>";
             return;
-        } 
-
+        }
         document.querySelector(".container").innerHTML = '<h1> signin </h1>\
         <form id="frm" action="" method="POST">\
             <input type="text" name="username" placeholder="Username" ><br />\
@@ -804,7 +1002,7 @@ async function pongRemoteView()
     {
         remoteGameLoop();
         drawBall(data.message.ball.pos.x, data.message.ball.pos.y, data.message.ball.radius);
-
+        console.log("YOYOYYOOOOOOOOOOOOOOOOo")
         drawPaddle(
             data.message.paddle_1.pos.x,
             data.message.paddle_1.pos.y,
@@ -945,8 +1143,10 @@ function drawPaddle(x, y, width, height)
 {
   ctx.fillStyle  = "#BB8493";
   ctx.beginPath();
-  ctx.roundRect(x, y, width, height, [70]);
-  ctx.fill();
+
+  ctx.fillRect(x, y, width, height);
+//   alert("aaaaaaaaaaaaa")
+//   ctx.fill();
 }
 
 
@@ -1228,7 +1428,8 @@ async function localPong(isVsBot, objConf)
       increaseScore(ball, paddle1, paddle2)
     }
     
-    function gameDraw() {
+    function gameDraw()
+    {
       ball.draw();
       paddle1.draw();
       paddle2.draw();

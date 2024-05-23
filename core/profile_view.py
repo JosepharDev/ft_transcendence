@@ -7,7 +7,7 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from .models import User, Match, HistoryMatch, Friend
 from django.shortcuts import render, redirect
-from .jwt import generate_jwt, decode_jwt
+from .jwt import generate_jwt, decode_jwt, decode
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
 import jwt
 from django.core.serializers import serialize
@@ -23,6 +23,9 @@ class signin(APIView):
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
             return render(request, 'signin.html')
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"})
         serializer = UserSerializer(user)
         response = (User.objects.filter(id=user.id).values(
             "id",
@@ -41,11 +44,11 @@ class signin(APIView):
             return response
         if not user.check_password(password):
             return Response({"message": "invalid password"}, status=403)
-        payload = generate_jwt(user)
-        if (user.is_2fa):
-            response = Response({"message": "2fa"}, status=200)
-        else :
-            response = Response({"message": "Success"}, status=200)
+        if user.is_2fa == True:
+            payload = generate_jwt(user, False)
+        else:
+            payload = generate_jwt(user, True)
+        response = Response({"message": "Success"}, status=200)
         response.set_cookie(key='jwt', value=payload, httponly=True)
         return response
 
@@ -213,6 +216,16 @@ class AuthUser(APIView):
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
             return Response({"message": "Expired Signature"})
+        token_code = decode(token)
+        print('******************************')
+        print('******************************')
+        print('******************************')
+        print(user.username)
+        print('******************************')
+        print('******************************')
+        print('******************************')
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"})
         return Response({"message": "authenticated"})
 
 
@@ -271,3 +284,17 @@ class HistoMatch(APIView):
         # his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
         return Response({'message': 'ok'})
 
+class Enable2fa(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "notfff"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({"message": "Expired Signature"})
+        token_code = decode(token)
+        if user.is_2fa:
+            return Response({"message": "yes"})
+        else:
+            return Response({"message": "no"})

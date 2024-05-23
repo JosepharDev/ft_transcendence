@@ -32,7 +32,6 @@ class OnlineConsumer(AsyncWebsocketConsumer):
 
 
     async def connect(self):
-
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
