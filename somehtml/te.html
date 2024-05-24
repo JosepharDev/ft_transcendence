@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .background-right {
+            background-image: url('https://i.pinimg.com/originals/95/b5/cc/95b5cc57dcb201fe835d79762aabf4e9.gif'); /* Replace with your ping pong GIF URL */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .background-left {
+            background-color: #5bacc5; /* Choose your desired background color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .full-height {
+            height: 100vh;
+        }
+        .social-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .social-login button {
+            margin-top: 10px;
+        }
+        .create-account {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+    <div class="container-fluid full-height">
+        <div class="row h-100">
+            <div class="col-md-6 background-left">
+                <div class="w-75">
+                    <h2 class="mb-4 text-center">Sign In</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </form>
+                    <div class="create-account">
+                        <p>Don't have an account? <a href="signup.html">Create Account</a></p>
+                    </div>
+                    <div class="social-login">
+                        <p>or login with</p>
+                        <button class="btn btn-primary">
+                            <i class="fab fa-facebook-f"></i> Login with Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 background-right d-none d-md-block">
+                <!-- Background GIF will be applied here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

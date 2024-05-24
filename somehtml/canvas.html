@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .container{
+            margin: auto auto;
+            position: relative;
+            width: 550px;
+            height:300px;
+            background: rgb(244, 244, 168);
+
+        }
+        .place {
+            height: 50px;
+            background: red;
+            margin-bottom: 10px;
+        }
+        .hh1
+        {
+            position: absolute;
+            font-size: 1.3rem;
+            left: 15%;
+
+        }
+        .hh2
+        {
+            position: absolute;
+            right: 15%;
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="place"></div>
+    <div class="container">
+        <h2 class="hh1">player1 1</h2>
+        <h2 class="hh2">4 player2</h2>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        let canvas = document.getElementById("canvas");
+        canvas.width = 550;
+        canvas.height = 300;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = "#824D74"
+        ctx.roundRect(0, 0, canvas.width, canvas.height, [10]);
+        ctx.fill();
+        ctx.strokeStyle = "#153448";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        drawPaddle(0, 100, 7, 70);
+        drawPaddle(canvas.width - 7, 100, 7, 70);
+        function drawPaddle(x, y, width, height)
+        {          
+            ctx.fillStyle  = '#401F71';
+
+            ctx.beginPath();
+            ctx.roundRect(x, y, width, height, [10]);
+            ctx.fill();
+        }
+        drawSceneGame();
+
+
+        function drawSceneGame()
+        {
+        ctx.strokeStyle = "#153448";
+
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+        ctx.moveTo(canvas.width/2, 0);
+        ctx.lineTo(canvas.width/2, canvas.height );
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(canvas.width/2, canvas.height / 2, 50, 0, Math.PI * 2);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Logout</a>
+            <div class="mx-auto">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </div>
+            <div class="d-flex align-items-center">
+                <select class="form-control form-control-sm mr-2" id="language-selector">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                </select>
+                <img src="avatar.png" alt="Avatar" class="avatar">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightblue small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="tournament">Tournament</h6>
+                        <p class="card-text" data-localize="tournament-desc">Participate in tournaments.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightgreen small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="training">Training</h6>
+                        <p class="card-text" data-localize="training-desc">Improve your skills.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightcoral small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="remote1vs1">Remote 1vs1</h6>
+                        <p class="card-text" data-localize="remote1vs1-desc">Play 1vs1 remotely.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightpink small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="remote2vs2">Remote 2vs2</h6>
+                        <p class="card-text" data-localize="remote2vs2-desc">Play 2vs2 remotely.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightyellow small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="search">Search</h6>
+                        <p class="card-text" data-localize="search-desc">Search for players.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 bg-lightgrey small-card">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h6 class="card-title" data-localize="friends">Friends</h6>
+                        <p class="card-text" data-localize="friends-desc">Connect with friends.</p>
+                        <a href="#" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="localization.js"></script>
+</body>
+</html>

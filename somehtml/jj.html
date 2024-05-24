@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match History</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .match-history {
+            margin-top: 20px;
+        }
+        .match-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background-color: #69ebae; /* Light blue background color */
+            max-width: 800px; /* Set maximum width for background */
+            margin-left: auto; /* Center the background */
+            margin-right: auto; /* Center the background */
+            flex-wrap: wrap; /* Allow content to wrap */
+        }
+        .player-image {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .username {
+            font-size: 18px;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        .score {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        .vs {
+            font-size: 16px;
+            margin-right: 15px;
+        }
+        .match-date {
+            width: 100%; /* Make date span take full width */
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container match-history">
+        <h2 class="mb-4 text-center">Match History</h2>
+        <div class="match-item">
+            <img src="https://miro.medium.com/v2/resize:fit:736/1*YqfVlyCe06DfcPsR3kpYrw.jpeg" alt="Player 1 Image" class="player-image">
+            <span class="username">John Doe</span>
+            <span class="score">3</span>
+            <span class="vs">vs</span>
+            <span class="score">2</span>
+            <span class="username">Jane Smith</span>
+            <img src="https://miro.medium.com/v2/resize:fit:736/1*YqfVlyCe06DfcPsR3kpYrw.jpeg" alt="Player 2 Image" class="player-image">
+            <span class="match-date">May 22, 2024</span>
+        </div>
+        <div class="match-item">
+            <img src="https://miro.medium.com/v2/resize:fit:736/1*YqfVlyCe06DfcPsR3kpYrw.jpeg" alt="Player 1 Image" class="player-image">
+            <span class="username">Alice Brown</span>
+            <span class="score">1</span>
+            <span class="vs">vs</span>
+            <span class="score">4</span>
+            <span class="username">Bob White</span>
+            <img src="https://miro.medium.com/v2/resize:fit:736/1*YqfVlyCe06DfcPsR3kpYrw.jpeg" alt="Player 2 Image" class="player-image">
+            <span class="match-date">May 21, 2024</span>
+        </div>
+        <!-- Add more match items as needed -->
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
