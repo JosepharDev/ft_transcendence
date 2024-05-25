@@ -193,7 +193,7 @@ class UpdateUser(APIView):
             #     print("44488888888888888888888888******************************")
             #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             # print(request.data['email'])
-            # # serializer.save()
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

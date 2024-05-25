@@ -3,12 +3,23 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.contrib.auth import get_user_model
 
 class User(AbstractUser):
+
+    class gamestatus(models.TextChoices):
+        in_game = "in game"
+        waiting = "waiting"
+        no_game  = "no_game"
+
+    class status(models.TextChoices):
+        online = "online"
+        offline = "offline"
+
     re = models.IntegerField(default=0)
     email = models.CharField(max_length=100)
     # password = models.CharField(max_length=100, blank=True)
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
-    status = models.CharField(max_length=20)
+    profile_status = models.CharField(max_length=20, choices=status.choices, default=status.offline)
+    game_status = models.CharField(max_length=20, choices=gamestatus.choices, default=gamestatus.no_game)
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
     nickname = models.CharField(max_length=100, blank=True)
