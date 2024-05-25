@@ -17,7 +17,7 @@ class signin(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
-            return Response({"message": "not signin"}, status=200)
+            # return Response({"message": "not signin"}, status=200)
             return render(request, 'signin.html')
         try:
             user = decode_jwt(token)
@@ -30,13 +30,10 @@ class signin(APIView):
         return Response(serializer.data)
     def post(self, request):
         username = request.POST['username']
-        password = request.POST['password']
         user = User.objects.filter(username=username).first()
         if user is None:
             response = Response({"message": "not found"}, status=404)
             return response
-        if not user.check_password(password):
-            return Response({"message": "invalid password"}, status=403)
         if user.is_2fa == True:
             payload = generate_jwt(user, False)
         else:
@@ -47,12 +44,34 @@ class signin(APIView):
 
 class logout(APIView):
     def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "not signin"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
         response = Response({"message": "success"})
         response.delete_cookie('jwt')
         return response
 
 class UsersList(APIView):
     def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
@@ -61,11 +80,15 @@ class UserFriends(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
-            return Response({"message": "unauthorized"})
+            return Response({"message": "unauthorized"}, status=403)
         try:
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
-                return Response({"message": "Expired Signature"})
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
         usr = User.objects.get(pk=user.id)
         # friends = usr.friends.all()
         friends = Friend.objects.filter(from_user=user)
@@ -81,11 +104,15 @@ class UserFriends(APIView):
     def post(self, request, id):
         token = request.COOKIES.get('jwt')
         if not token:
-            return Response({"message": "unauthorized"}, status=401)
+            return Response({"message": "unauthorized"}, status=403)
         try:
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
-            return Response({"message": "Expired Signature"}, status=401)
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
         try:
             user_obj = User.objects.get(pk=user.id)
         except User.DoesNotExist:
@@ -107,6 +134,17 @@ class UserFriends(APIView):
 
 class UserHistory(APIView):
     def get(self, request, id):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+    
         user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
         his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
         return Response(his_serializer.data)
@@ -123,10 +161,11 @@ class SearchUsers(APIView):
         token_code = decode(token)
         if user.is_2fa == True and token_code['code'] == False:
             return Response({"message": "2fa code required"}, status=403)
+
         print(request.query_params)
         query = request.query_params.get('q', None)
         if not query:
-            return HttpResponseBadRequest("Bad Request")
+            return HttpResponseBadRequest("bad Request")
         elif query:
             users = User.objects.filter(username__icontains=query)
         else:
@@ -146,6 +185,7 @@ class UpdateUser(APIView):
         token_code = decode(token)
         if user.is_2fa == True and token_code['code'] == False:
             return Response({"message": "2fa code required"})
+
         user = User.objects.get(id=user.id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
@@ -223,11 +263,15 @@ class UserData(APIView):
     def get(self, request, id):
         token = request.COOKIES.get('jwt')
         if not token:
-            return Response({"message": "unauthorized"})
+            return Response({"message": "unauthorized"}, status=403)
         try:
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
-                return Response({"message": "Expired Signature"})
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+    
         users = User.objects.get(pk=id)
         serializer = UserSerializer(users)
 
@@ -254,6 +298,17 @@ class UserData(APIView):
 
 class HistoMatch(APIView):
     def get(self, request, id):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+
         # user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
         matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
         print(matches)

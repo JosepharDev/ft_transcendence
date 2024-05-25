@@ -90,6 +90,7 @@ class twofa_process(twofa):
                 user.save()
                 token_code['code'] = False
                 response = Response({"message": "desactive"}, status=200)
+                token_code = generate_jwt(user, False)
                 response.set_cookie(key='jwt', value=token_code, httponly=True)
                 return response
         else:
