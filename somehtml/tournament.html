@@ -11,31 +11,50 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f8ff;
+            background: rgba(40,40,40,255);
             font-family: Arial, sans-serif;
         }
         .form-container, .matches-container {
-            background: white;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: 1px solid rgba(73,73,73,255);
+
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 300px;
         }
         .form-header, .matches-header {
-            background-color: #007bff;
+            /* background-color: #007bff; */
+            background-color: rgba(0, 0, 0, 0);
+            border: 1px solid rgba(73,73,73,255);
             color: white;
             padding: 10px;
             border-radius: 10px 10px 0 0;
             text-align: center;
         }
         .btn-primary {
-            background-color: #007bff;
-            border: none;
+            /* background-color: #007bff; */
+            /* stroke:  #FC6736; */
+            /* border: none; */
+            background-color: rgba(0, 0, 0, 0);
+            border: 2px solid rgba(212,155,32,255);
+        }
+        .btn-primary:hover {
+            background-color: rgba(0, 0, 0, 0);
+            border: 2px solid rgba(212,155,32,255);
+            background-color: rgba(212,155,32,255);
+        }
+        #mybtn:active,#mybtn:focus, #mybtn:focus:active {
+            background-color: rgba(212,155,32,255);
+            border: 2px solid rgba(212,155,32,255);
+            color: white;
+            box-shadow: none;
         }
         .match {
             margin: 10px 0;
             padding: 10px;
-            background-color: #e9ecef;
+            background-color:rgba(40,40,40,255);
             border-radius: 5px;
             text-align: center;
         }
@@ -67,7 +86,7 @@
                 <label for="player4">Player 4</label>
                 <input type="text" class="form-control" id="player4" placeholder="Enter username">
             </div>
-            <button type="button" class="btn btn-primary btn-block" onclick="startTournament()">Submit</button>
+            <button id="mybtn" type="button" class="btn btn-primary btn-block" onclick="startTournament()">Submit</button>
         </form>
     </div>
 
@@ -76,7 +95,7 @@
             <h2>Upcoming Matches</h2>
         </div>
         <div id="matchmaking"></div>
-        <button class="btn btn-primary btn-back" onclick="showForm()">Back to Registration</button>
+        <button id="mybtn" class="btn btn-primary btn-back" onclick="showForm()">Back to Registration</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

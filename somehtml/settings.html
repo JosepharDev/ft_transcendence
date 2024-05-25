@@ -8,7 +8,7 @@
     <style>
         body 
         {
-            background: rgb(209, 53, 53);
+            background: rgba(40,40,40,255);
         }
         .settings-container {
             margin-top: 50px;
@@ -17,9 +17,11 @@
             margin-left: auto;
             margin-right: auto;
             padding: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid rgba(73,73,73,255);
             border-radius: 10px;
-            background-color: #caacac;
+            /* background-color: #caacac; */
+            color: rgb(129,136,140);
+            background: rgba(0, 0, 0, 0.3);
         }
         .settings-title {
             text-align: center;
@@ -47,6 +49,29 @@
             width: 200px; /* Adjust width if needed */
             height: 200px; /* Adjust width if needed */
         }
+        input
+        {
+            background-color: rgba(60,56,53,255);
+        }
+
+        .btn-primary {
+            /* background-color: #007bff; */
+            /* stroke:  #FC6736; */
+            /* border: none; */
+            background-color: rgba(0, 0, 0, 0);
+            border: 3px solid rgba(212,155,32,255)
+        }
+        .btn-primary:hover {
+            background-color: rgba(0, 0, 0, 0);
+            border: 3px solid rgba(212,155,32,255);
+            background-color: rgba(212,155,32,255);
+        }
+        #mybtn:active,#mybtn:focus, #mybtn:focus:active {
+            background-color: rgba(212,155,32,255);
+            border: 3px solid rgba(212,155,32,255);
+            color: white;
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +95,7 @@
                 <label for="password">New Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Enter new password">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+            <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Update Profile</button>
         </form>
         <div class="two-factor-auth">
             <button id="toggle-2fa-btn" class="btn btn-secondary btn-block">Enable 2FA</button>
@@ -96,23 +121,22 @@
 
         document.getElementById('profile-form').addEventListener('submit', function(event) {
             event.preventDefault();
+            // document.querySelector('.btn').classList.remove('active');
             const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
+            // const email = document.getElementById('email').value;
+            // const password = document.getElementById('password').value;
+            // const confirmPassword = document.getElementById('confirm-password').value;
             const profileImage = document.getElementById('profile-image').files[0];
 
             // Basic validation
-            if (password !== confirmPassword) {
-                alert('Passwords do not match!');
-                return;
-            }
+            // if (password !== confirmPassword) {
+            //     alert('Passwords do not match!');
+            //     return;
+            // }
 
             // Prepare form data
             const formData = new FormData();
             formData.append('username', username);
-            formData.append('email', email);
-            formData.append('password', password);
             if (profileImage) {
                 formData.append('profileImage', profileImage);
             }

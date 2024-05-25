@@ -949,10 +949,8 @@ async function settingView ()
         <div>\
         <input type="file" id="file" placeholder="upload a file"   \
         name="avatar">\
-        <input type="email" placeholder="email"   \
-        name="email">\
-        <input type="password" placeholder="password"   \
-        name="password">\
+        <input type="username" placeholder="username"   \
+        name="username">\
         <button type="submit">submit</button>\
         </div>\
     </form>';
