@@ -69,7 +69,7 @@ class twofa(APIView):
         else:
             return Response({"message": "invalid code"}, status=401)
 
-class prosecc(twofa):
+class twofa_process(twofa):
     def post(self, request):
         token = request.COOKIES.get('jwt')
         if not token:

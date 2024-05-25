@@ -1,11 +1,9 @@
 from django.urls import path
-from .profile_view import signin, signup, logout, UsersList, UpdateUser, SearchUsers, UserFriends,\
+from .profile_view import signin , logout, UsersList, UpdateUser, SearchUsers, UserFriends,\
  UserHistory, Spa, Pong, AuthUser ,UserData , Toto, Enable2fa
-from .qr_code import twofa , prosecc
+from .qr_code import twofa , twofa_process
 from .s42_auth_view import auth_42_api, auth_42_api_callback
 urlpatterns = [
-    path('signup/', signup.as_view(), name="signup"),
-    path('signin/', signin.as_view(), name='signin'),
     path('logout/', logout.as_view(), name='logout'),
     path('users/', UsersList.as_view(), name='logout'),
     path('friends/', UserFriends.as_view(), name='logout'),
@@ -20,9 +18,9 @@ urlpatterns = [
     path('update/', UpdateUser.as_view(), name="update"),
     path('auth/', AuthUser.as_view(), name="auth"),
     path('userid/<int:id>/', UserData.as_view(), name="tt"),
-
     path("multiple/", Toto.as_view(), name="search"),
     path("enable2fa/", Enable2fa.as_view(), name="searssch"),
+    path("signin/twofa_process/", twofa_process.as_view(), name="twofa_process"),
 
-    path("signin/prosecc/", prosecc.as_view(), name="process"),
+    path('signin/', signin.as_view(), name='signin'),
 ]

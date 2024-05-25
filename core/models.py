@@ -3,17 +3,18 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.contrib.auth import get_user_model
 
 class User(AbstractUser):
+    re = models.IntegerField(default=0)
     email = models.CharField(max_length=100)
-    password = models.CharField(max_length=100, blank=True)
+    # password = models.CharField(max_length=100, blank=True)
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
     status = models.CharField(max_length=20)
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
-    nickname = models.CharField(max_length=100)
+    nickname = models.CharField(max_length=100, blank=True)
     is_2fa = models.BooleanField(default=False)
     friends = models.ManyToManyField('User', blank=True)
-    intra = models.BooleanField(default=False)
+    # intra = models.BooleanField(default=False)
     REQUIRED_FIELDS = []
 
 

@@ -27,13 +27,6 @@ class signin(APIView):
         if user.is_2fa == True and token_code['code'] == False:
             return Response({"message": "2fa"})
         serializer = UserSerializer(user)
-        response = (User.objects.filter(id=user.id).values(
-            "id",
-            "username",
-            "email",
-            "loses",
-            "wins"
-        ).first())
         return Response(serializer.data)
     def post(self, request):
         username = request.POST['username']
@@ -51,29 +44,6 @@ class signin(APIView):
         response = Response({"message": "Success"}, status=200)
         response.set_cookie(key='jwt', value=payload, httponly=True)
         return response
-
-
-class signup(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return render(request, 'signup.html')
-        try:
-            paylod = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return render(request, 'signup.html')
-        user = User.objects.filter(id=paylod['id']).first()
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    def post(self, request):
-        serializer = UserSerializer(data=request.POST)
-        serializer.is_valid(raise_exception=True)
-        print ("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-        serializer.save()
-        print (serializer)
-        print ("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-
-        return redirect('signin')
 
 class logout(APIView):
     def get(self, request):
@@ -150,6 +120,9 @@ class SearchUsers(APIView):
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
                 return Response({"message": "Expired Signature"})
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa code required"}, status=403)
         print(request.query_params)
         query = request.query_params.get('q', None)
         if not query:
@@ -170,14 +143,17 @@ class UpdateUser(APIView):
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
                 return Response({"message": "Expired Signature"})
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa code required"})
         user = User.objects.get(id=user.id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
-            if ('password' in request.data and request.data['password'] == ""):
-                print("44488888888888888888888888******************************")
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            print(request.data['email'])
-            # serializer.save()
+            # if ('password' in request.data and request.data['password'] == ""):
+            #     print("44488888888888888888888888******************************")
+            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # print(request.data['email'])
+            # # serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

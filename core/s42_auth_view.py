@@ -13,6 +13,10 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
 from django.http import HttpResponse, HttpResponseRedirect
+import requests
+from rest_framework import status
+
+
 @api_view(['POST'])
 def auth_42_api(request):
     params = {
@@ -22,14 +26,6 @@ def auth_42_api(request):
     }
     url = f"https://api.intra.42.fr/oauth/authorize?{urllib.parse.urlencode(params)}"
     return redirect(url)
-
-import requests
-from datetime import datetime, timedelta
-from django.conf import settings
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-import jwt
 
 @api_view(['GET'])
 def auth_42_api_callback(request):
@@ -62,7 +58,7 @@ def auth_42_api_callback(request):
     user_info = user_info_response.json()
 
     user_data = {
-        'id': user_info['id'],
+        're': user_info['id'],
         'username': user_info['login'],
         'email': user_info.get('email', ''), 
         'status': 'active',  
@@ -73,29 +69,17 @@ def auth_42_api_callback(request):
         if avatar_response.status_code == 200:
             avatar_content = ContentFile(avatar_response.content, name="avatar.JPG")
             user_data['avatar'] = avatar_content
-
-    print("-======================================")
-    print(user_info)
-    print("-======================================")
-
     try:
-        u = User.objects.get(username=user_info['login'],)
+        u = User.objects.get(re=user_info['id'])
     except:
         u = None
     if u:
-        if u.intra == True:
-            jwt_payload = {
-                'user_id': u.id,
-                'username': u.username,
-                'exp': datetime.now() + timedelta(hours=24),
-            }
-            jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
-        else:
-            user_serializer = UserSerializer(data=user_data)
-            if user_serializer.is_valid(raise_exception=True):
-                user = user_serializer.save() 
-            else:
-                return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        jwt_payload = {
+            'user_id': u.id,
+            'username': u.username,
+            'exp': datetime.now() + timedelta(hours=24),
+        }
+        jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
     else:
         user_serializer = UserSerializer(data=user_data)
         if user_serializer.is_valid(raise_exception=True):
