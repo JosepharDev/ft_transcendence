@@ -1,0 +1,362 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'css/bootstrap.min.css' %}"  rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script defer src="{% static 'spajs/app.js' %}" type="module"></script>
+
+<style>
+    /**********************************************************************/
+
+    body {
+    background-color: #f8f9fa;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: rgb(210, 216, 221);
+}
+
+.small-card {
+    height: 200px;
+}
+
+.bg-lightblue {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-lightgreen {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-lightcoral {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-lightpink {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-lightyellow {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-lightgrey {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.navbar .container-fluid {
+    flex-wrap: nowrap;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /***********************************************************************/
+    body 
+    {
+        background: rgb(209, 53, 53);
+    }
+    .search-container {
+        margin-top: 50px;
+        max-width: 400px; /* Adjusted width */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        /* background-color: #f9f9f9; */
+        color: rgb(129,136,140);
+        background: rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+    .search-results {
+        margin-top: 20px;
+        max-height: 220px; /* Adjusted maximum height */
+        overflow-y: auto; /* Added overflow for vertical scrolling */
+        padding-right: 5px; /* Added right padding to prevent overlap with scrollbar */
+    }
+    .user-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-color: #fff;
+    }
+    .user-item img {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+    }
+    .user-item span {
+        font-size: 16px;
+        font-weight: 500;
+    }
+    .not-found {
+        font-size: 18px;
+        color: red;
+        margin-top: 20px;
+    }
+    .btn-search
+    {
+        margin-top: 5px;
+    }
+
+
+
+    /*********************************************************************/
+    .profile-section {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .username-display {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .follow-button {
+            margin-bottom: 10px;
+        }
+        .online-status {
+            margin-bottom: 10px;
+        }
+        .stats {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px;
+            color: white;
+        }
+        .wins {
+            background-color: #28a745; /* Green background for wins */
+        }
+        .losses {
+            background-color: #dc3545; /* Red background for losses */
+        }
+        .matches {
+            background-color: #ffc107; /* Yellow background for matches */
+        }
+        .match-history {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .match-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background-color: #69ebae; /* Light blue background color */
+            max-width: 800px; /* Set maximum width for background */
+            margin-left: auto; /* Center the background */
+            margin-right: auto; /* Center the background */
+        }
+        .player-image {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        .username {
+            font-size: 18px;
+            font-weight: 500;
+            margin-right: 15px;
+        }
+        .score {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+        .vs {
+            font-size: 16px;
+            margin-right: 15px;
+        }
+
+        .empty-history {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #6c757d;
+        }
+/*************************************************************************/
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 56px); /* Adjust based on navbar height */
+        }
+        canvas {
+            background: #000;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #fff;
+        }
+        #game-info {
+            text-align: center;
+            width: 100%;
+            color: #333;
+            margin-bottom: 10px;
+            /* background-color: #ffffff; */
+            padding: 10px;
+            /* border-radius: 8px; */
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        }
+        #game-info h2 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            color: #ff6600;
+            text-transform: uppercase;
+            /* letter-spacing: 1px; */
+        }
+        #game-info p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+
+/********************************************************/
+
+body 
+        {
+            background: rgba(40,40,40,255);
+        }
+        .settings-container {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            max-width: 400px; /* Reduced width */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border: 1px solid rgba(73,73,73,255);
+            border-radius: 10px;
+            /* background-color: #caacac; */
+            color: rgb(129,136,140);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .settings-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: 500;
+        }
+        .profile-image-preview {
+            display: block;
+            margin: 10px auto;
+            width: 80px; /* Smaller width */
+            height: 80px; /* Smaller height */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
+        .two-factor-auth {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .two-factor-auth img {
+            display: block;
+            margin: 10px auto;
+            width: 200px; /* Adjust width if needed */
+            height: 200px; /* Adjust width if needed */
+        }
+        input
+        {
+            background-color: rgba(60,56,53,255);
+        }
+
+        .btn-primary {
+            /* background-color: #007bff; */
+            /* stroke:  #FC6736; */
+            /* border: none; */
+            background-color: rgba(0, 0, 0, 0);
+            border: 3px solid rgba(212,155,32,255)
+        }
+        .btn-primary:hover {
+            background-color: rgba(0, 0, 0, 0);
+            border: 3px solid rgba(212,155,32,255);
+            background-color: rgba(212,155,32,255);
+        }
+        #mybtn:active,#mybtn:focus, #mybtn:focus:active {
+            background-color: rgba(212,155,32,255);
+            border: 3px solid rgba(212,155,32,255);
+            color: white;
+            box-shadow: none;
+        }
+
+
+/*****************************************************/
+</style>
+
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Logout</a>
+            <div class="mx-auto">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </div>
+            <div class="d-flex align-items-center">
+                <select class="form-control form-control-sm mr-2" id="language-selector">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                </select>
+                <img src="avatar.png" alt="Avatar" class="avatar">
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="app"></div>
+</body>
+</html>
+

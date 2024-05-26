@@ -18,8 +18,8 @@ import jwt, datetime
 from .models import User, Match, HistoryMatch
 from django.conf import settings
 
-canvasWidth__ = 1000
-canvasHeight__ = 600
+canvasWidth__ = 800
+canvasHeight__ = 450
 
 def vec2(x, y):
     return {'x': x, 'y': y}
@@ -133,6 +133,12 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             await self.channel_layer.group_send(
                     self.user_group_name,
                     {"type": "send.message", "message": {'action': 'iam', 'iam': 2}}
+                )
+
+            await self.channel_layer.group_send(
+                    self.user_group_name,
+                    {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['userName'], 'user2':
+                                                        self.scope['user'].username}}
                 )
 
             await self.channel_layer.group_send(
@@ -326,17 +332,20 @@ async def ballCollisionWithEdges(ball, canvasHeight):
         print(f"ball collision-------------{ball.pos['x']}  {ball.pos['y']}    {ball.pos['y'] + ball.radius >= canvasHeight}------------------")
 
 
+
 async def ballPaddleCollision(ball, paddle):
 
     dx = abs(ball.pos['x'] - paddle.getCenter()['x'])
     dy = abs(ball.pos['y'] - paddle.getCenter()['y'])
 
-    if dx <= (ball.radius + paddle.getHalfWidth()) and dy <= (paddle.getHalfHeight() + ball.radius - 5):
+    if dx < (ball.radius + paddle.getHalfWidth()) and dy < (paddle.getHalfHeight() + ball.radius) \
+            and  ball.pos['y'] >= paddle.pos['y'] and ball.pos['y'] <= paddle.pos['y'] + paddle.height:
         if paddle.s == 1:
             ball.pos['x'] = (paddle.pos['x'] + paddle.width) + ball.radius; # // if ball gets stuck
         else:
             ball.pos['x'] = paddle.pos['x'] - paddle.width - ball.radius; #// if ball gets stuck
-
+        deltay = ball.pos['y'] - (paddle.pos['y'] + paddle.height/2)
+        ball.velocity['y'] = deltay * 0.20
         ball.velocity['x'] *= -1
 
 async def respawnBall(ball, canvasWidth, canvasHeight):

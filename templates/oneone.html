@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pong</title>
+
+
+<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .navbar {
+            margin-bottom: 10px;
+        }
+        .navbar-brand.left {
+            position: absolute;
+            left: 10px;
+        }
+        .navbar-nav.center {
+            margin: auto;
+        }
+        .avatar {
+            position: absolute;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+        }
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 56px); /* Adjust based on navbar height */
+        }
+        canvas {
+            background: #000;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #fff;
+        }
+        #game-info {
+            text-align: center;
+            width: 100%;
+            color: #333;
+            margin-bottom: 10px;
+            /* background-color: #ffffff; */
+            padding: 10px;
+            /* border-radius: 8px; */
+            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        }
+        #game-info h2 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            color: #ff6600;
+            text-transform: uppercase;
+            /* letter-spacing: 1px; */
+        }
+        #game-info p {
+            font-size: 1.2em;
+            color: #555;
+        }
+</style>
+</head>
+<body>
+
+    <div id="game-container">
+      <div id="game-info">
+          <h2 id="users"></h2>
+          <!-- <p>Score: <span id="score">0 - 0</span></p> -->
+      </div>
+      <canvas id="pongCanvas" width="800" height="450"></canvas>
+  </div>
+
+
+
+  <script>
+
+const canvas = document.getElementById('pongCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = 800;// window.innerWidth;
+        canvas.height = 450;//
+
+    // const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/pongTest/'
+        + '3'
+        + '/'
+    );
+
+    let k = 0;
+    let iamuser = 0;
+    chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            // console.log(data);
+      if (data.message.action == 'iam' )
+      {
+        iamuser = data.message.iam;
+        drawText2("waiting...", canvas.width / 2, canvas.height / 2, "#FFF"); 
+
+      }
+    else if (data.message.action === 'finish')
+    {
+        alert (`${data.message.winner} WON`);
+        pushUrl('/');
+    }
+    else if (data.message.action === 'data')
+    {
+        remoteGameLoop();
+        drawBall(data.message.ball.pos.x, data.message.ball.pos.y, data.message.ball.radius);
+        console.log("YOYOYYOOOOOOOOOOOOOOOOo")
+        drawPaddle(
+            data.message.paddle_1.pos.x,
+            data.message.paddle_1.pos.y,
+            data.message.paddle_1.width,
+            data.message.paddle_1.height
+        );
+        drawPaddle(
+            data.message.paddle_2.pos.x,
+            data.message.paddle_2.pos.y,
+            data.message.paddle_2.width,
+            data.message.paddle_2.height
+        );
+        drawSceneGame();
+        drawText(data.message.paddle_1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
+        drawText(data.message.paddle_2.score, 3 * canvas.width / 4, 50, "#FFF"); // Draw team2 score
+        // remoteIncreaseScore(data.message.paddle_1.s, data.message.paddle_1.score);
+        // remoteIncreaseScore(data.message.paddle_2.s, data.message.paddle_2.score);
+    }
+    else if (data.message.action === 'users')
+    {
+        document.getElementById("users").textContent = `${data.message.user1} vs ${data.message.user2}`;
+        remoteGameLoop();
+        drawText2("ready", canvas.width / 2, canvas.height / 2, "#FFF"); 
+        // document.getElementById("player11").textContent = data.message.user1;
+        // var loop = function (count)
+        // {
+        //     if (count > 0) {
+        //         document.getElementById("timer").textContent = count--;
+        //         timer = setTimeout(loop, 1000, count);
+        //     } else {
+        //         document.getElementById("timer").textContent = '';
+        //         clearTimeout(timer);
+        //     }
+        // }
+    
+        // // start the countdown
+        // loop(4);
+    }
+};
+
+    // canvas = document.getElementById('canvas');
+    // ctx = canvas.getContext('2d');
+
+    // canvas.width = 800;
+    // canvas.height = 450;
+
+    function onKeyDownEvent(e)
+    {
+        if (e.keyCode != 38 && e.keyCode != 40)  
+        return;
+
+        let msg = {
+            'action': 'press',
+            'user' : iamuser,
+            'code': e.keyCode,
+        }
+        chatSocket.send(JSON.stringify(msg));
+    }
+
+    window.addEventListener("keydown", onKeyDownEvent)
+    // deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': onKeyDownEvent });
+
+/**********1vs1remote utils********************** */
+
+
+function vec2(x, y)
+{
+  return {x: x, y : y};
+}
+
+function remoteIncreaseScore(player, score) {
+  if (player === 2)
+  {
+    document.getElementById("player2").innerHTML = score;
+  }
+  if (player === 1)
+  {
+    document.getElementById("player1").innerHTML = score;
+  }
+}
+
+function drawSceneGame()
+{
+  ctx.strokeStyle = "white";
+
+  // ctx.beginPath();
+  // ctx.lineWidth = 20;
+  // ctx.moveTo(0,0);
+  // ctx.lineTo(canvas.width, 0 );
+  // ctx.stroke();
+
+
+  // ctx.beginPath();
+  // ctx.lineWidth = 20;
+  // ctx.moveTo(0,canvas.height);
+  // ctx.lineTo(canvas.width, canvas.height );
+  // ctx.stroke();
+
+  // ctx.beginPath();
+  // ctx.lineWidth = 10;
+  // ctx.moveTo(canvas.width,0);
+  // ctx.lineTo(canvas.width, canvas.height );
+  // ctx.stroke();
+
+  // ctx.beginPath();
+  // ctx.lineWidth = 10;
+  // ctx.moveTo(0, 0);
+  // ctx.lineTo(0, canvas.height );
+  // ctx.stroke();
+
+  ctx.beginPath();
+  ctx.lineWidth = 3;
+  ctx.moveTo(canvas.width/2, 0);
+  ctx.lineTo(canvas.width/2, canvas.height );
+  ctx.stroke();
+
+  // ctx.beginPath();
+  // ctx.arc(canvas.width/2, canvas.height / 2, 50, 0, Math.PI * 2);
+  // ctx.lineWidth = 5;
+  // ctx.stroke();
+
+}
+
+
+function drawText(text, x, y, color) {
+            ctx.fillStyle = color;
+            ctx.font = "20px Arial";
+            ctx.fillText(text, x, y);
+        }
+function drawText2(text, x, y, color) {
+            ctx.fillStyle = color;
+            ctx.font = "30px Arial";
+            ctx.fillText(text, x-30, y);
+        }
+
+function remoteGameLoop()
+{
+  ctx.fillStyle = "rgba(0,0,0,1)"
+  ctx.fillRect(0,0,canvas.width, canvas.height);
+}
+
+function drawBall(x, y, radius)
+{
+  ctx.fillStyle = "white";
+  // ctx.strokeStyle =  "white";
+  ctx.beginPath ();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill();
+  // ctx.stroke();
+}
+
+function drawPaddle(x, y, width, height)
+{
+  ctx.fillStyle  = "white";
+  ctx.beginPath();
+
+  ctx.fillRect(x, y, width, height);
+//   alert("aaaaaaaaaaaaa")
+//   ctx.fill();
+}
+
+
+  </script>
+
+</body>

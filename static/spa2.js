@@ -1,7 +1,7 @@
 
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-
+let globaltimer = -1
 let deleteEvent = [];
 let socketDisconnect = [];
 
@@ -16,6 +16,10 @@ const urlLocationHandler = async () => {
     {
         clearInterval(id);
         id = -1;
+    }
+    if (globaltimer != -1)
+    {
+        globaltimer = -1;
     }
 
     const location = window.location.pathname;
@@ -78,7 +82,6 @@ const pushUrl = (href) => {
     history.pushState({}, '', href);
     window.dispatchEvent(new Event('popstate'));
   };
-
 
 const urlRoute = (event) => {
     event = event || window.event;  // is this mandatory
@@ -290,7 +293,7 @@ async function toggle2fa(btn) {
     formData = new FormData();
     formData.append('qrcode', btn.textContent);
     
-    const response = await fetch(`http://127.0.0.1:8000/profile/signin/prosecc/`, {
+    const response = await fetch(`http://127.0.0.1:8000/profile/signin/twofa_process/`, {
         method: 'POST',
         headers: {'X-CSRFToken': csrftoken},
         mode: 'same-origin', // Do not send CSRF token to another domain.,
@@ -712,11 +715,11 @@ async function searchView()
         var form = document.getElementById('frm');
         var formData = new FormData(form);
         const request = new Request(
-            'http://127.0.0.1:8000/profile/search/?' + new URLSearchParams(formData).toString(),
+            '/profile/search/?' + new URLSearchParams(formData).toString(),
             {
                 method: 'GET',
-                headers: {'X-CSRFToken': csrftoken},
-                mode: 'same-origin', // Do not send CSRF token to another domain.
+                // headers: {'X-CSRFToken': csrftoken},
+                // mode: 'same-origin', // Do not send CSRF token to another domain.
             }
         );
         let res = await fetch(request);
@@ -925,12 +928,12 @@ async function settingView ()
         var formData = new FormData(form);
         console.log(formData)
         const request = new Request(
-            'http://127.0.0.1:8000/profile/update/',
+            '/profile/update/',
             {
                 method: 'PATCH',
-                mode: 'same-origin', // Do not send CSRF token to another domain.
+                // mode: 'same-origin', // Do not send CSRF token to another domain.
                 body: formData,
-                headers: {'X-CSRFToken': csrftoken},
+                // headers: {'X-CSRFToken': csrftoken},
             }
         );
         res = await fetch(request);
@@ -1487,7 +1490,28 @@ async function localPong(isVsBot, objConf)
                         element.elem.removeEventListener(element.evnt, element.fun);
                     });
                     deleteEvent = [];
-                    localPong(1, obj);
+
+
+                    var loop = function (count)
+                    {
+                        if (count > 0) {
+                            document.getElementById("timer").textContent = count--;
+                            globaltimer = setTimeout(loop, 1000, count);
+                        } else {
+                            document.getElementById("timer").textContent = '';
+                            clearTimeout(globaltimer);
+                            globaltimer = -1;
+                        }
+                    }
+                    
+                    // start the countdown
+                    // loop(4);
+                    document.getElementById("content").innerHTML = '<button id ="jstbtn">nextmatch</button>';
+                    document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
+                        e.preventDefault();
+                        localPong(1, obj); 
+                    })
+
                 }
                 else
                 {
@@ -1497,7 +1521,11 @@ async function localPong(isVsBot, objConf)
                     deleteEvent = [];
                     obj.vs1 = obj.win1;
                     obj.vs2 = obj.win2;
-                    localPong(1, obj);
+                    document.getElementById("content").innerHTML = '<button id ="jstbtn">final</button>';
+                    document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
+                        e.preventDefault();
+                        localPong(1, obj); 
+                    })                        // localPong(1, obj);
                 }
             }
         }

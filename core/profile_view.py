@@ -195,10 +195,12 @@ class UpdateUser(APIView):
             # print(request.data['email'])
             serializer.save()
             return Response(serializer.data)
+        print("not")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Spa(APIView):
     def get(self, request):
+        return render(request, 'newSpa/newSpa.html')
         return render(request, 'spa/spa.html')
 
 class Pong(APIView):
@@ -221,7 +223,7 @@ class Toto(APIView):
             user = decode_jwt(token)
         except jwt.ExpiredSignatureError:
             return render(request, 'signin.html')
-        return render(request, 'multiple.html')
+        return render(request, 'oneone.html')
 
 class AuthUser(APIView):
     def get(self, request):
