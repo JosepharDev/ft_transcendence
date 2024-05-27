@@ -53,14 +53,15 @@ async function searchElementsEvent(e)
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
                 userItem.innerHTML = `
-                    <a id="userlink" href="/userid/${user.id}">
+                    <a id="userlink${user.id}" href="/userid/${user.id}">
                     <img src="${user.avatar}" alt="${user.username} Profile Image">
                     <span>${user.username}</span>
                     </a>
                 `;
                 resultsContainer.appendChild(userItem);
-                document.getElementById('userlink').addEventListener('click', (event) => {
+                document.getElementById(`userlink${user.id}`).addEventListener('click', (event) => {
                     event.preventDefault();
+                    console.log(`/userid/${user.id}`)
                     pushUrl(`/userid/${user.id}`);
                 });
             });

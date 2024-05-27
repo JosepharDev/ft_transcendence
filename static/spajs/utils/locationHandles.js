@@ -27,8 +27,9 @@ export async function urlLocationHandler()
 
     if (parsedUrl === "/userid/:id")
     {
-        profileFriend(request.id);
+        profileFriend2(request.id);
         return;
+        profileFriend(request.id);
     }
 
 

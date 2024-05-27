@@ -127,7 +127,7 @@ export async function remoteGame1()
     function drawSceneGame()
     {
       ctx.strokeStyle = "#FFF";
-    
+
       ctx.beginPath();
       ctx.lineWidth = 3;
       ctx.moveTo(canvas.width/2, 0);
