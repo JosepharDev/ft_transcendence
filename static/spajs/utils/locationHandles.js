@@ -5,40 +5,57 @@ import {localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
 import {remoteGame1} from "./../views/remote1.js"
-
+import {tournamentView} from "./../views/tournament.js"
+import { dataGlobal, removeEvents, closSockets } from "../views/globalData.js"
+import { signin } from "../views/signin.js";
+import { twofaView } from "../views/twofa.js";
+import { checkAuthentication } from "../views/checkAuth.js"
 
 export async function urlLocationHandler()
 {
+    console.log('popstate');
+
+    closSockets(dataGlobal);
+    removeEvents(dataGlobal);
 
     const location = window.location.pathname;
     if (!location.length)
         location = "/";
-
+    
     const params = location.split('/');
 
     const request = {
       resource: params[1] || null,
       id: params[2] || null,
     };
-
+    
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
     
     console.log("Lolo")
-
+    console.log("Lolssssssssso")
+    if (location === '/signin')
+    {
+        signin();
+        return ;
+    }
+    else if (location === '/twofa')
+    {
+        twofaView();
+        return ;
+    }
+    let path = window.location.pathname
+    console.log("locationHandler");
+    checkAuthentication();
     if (parsedUrl === "/userid/:id")
     {
         profileFriend2(request.id);
         return;
         profileFriend(request.id);
     }
-
-
-    console.log("locationHandler");
-    let path = window.location.pathname
-    if (path === '/remote')
+    else if (path === '/remote')
         {
-            remoteGame1();
-        }
+        remoteGame1();
+    }
     else if (path === "/search")
     {
         searchView()
@@ -49,10 +66,10 @@ export async function urlLocationHandler()
     }
     else if (path === "/s")
     {
+        tournamentView()
         // return;
         // settingView();
-        profileFriend2(3);
-
+        // profileFriend2(3);
     }
     else
     {

@@ -2,11 +2,33 @@ import { pushUrl } from "../utils/urlRoute.js";
 
 export async function signin()
 {
-    app = document.getElementById("app");
-    app.innerHTML = signInHtml();
+    let app = document.getElementById("app");
+    app.innerHTML = `
+    <div class="signin">
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Sign In</h2>
+        </div>
+        <form id="signinForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button id="mybtn" type="button" class="btn btn-primary btn-block" onclick="signIn()">Sign In</button>
+            <button type="button" class="btn btn-ftwo btn-block" onclick="signInWithFacebook()">Sign in with 42</button>
+        </form>
+    </div>
+</div>
+    `
 
-    let formSingin = document.querySelector("#frm");
-    formSingin.addEventListener("submit", submitSigninEvent)
+    // app.innerHTML = signInHtml();
+
+    // let formSingin = document.querySelector("#frm");
+    // formSingin.addEventListener("submit", submitSigninEvent)
 }
 
 
@@ -39,6 +61,7 @@ async function submitSigninEvent(e)
             body: formData,
         }
     );
+    //try catch later
     res = await fetch(request);
     js = await res.json();
     if (js.message === "Success")

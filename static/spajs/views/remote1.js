@@ -1,3 +1,7 @@
+import {dataGlobal} from "./globalData.js";
+import { pushUrl } from "../utils/urlRoute.js";
+
+
 export async function remoteGame1()
 {
     let app = document.getElementById("app");
@@ -23,7 +27,7 @@ export async function remoteGame1()
         + '/'
         );
 
-
+    dataGlobal.socketDisconnect.push(chatSocket);
 
     let iamuser = 0;
     chatSocket.onmessage = function(e) {

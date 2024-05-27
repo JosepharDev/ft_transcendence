@@ -1,10 +1,12 @@
+import { dataGlobal } from "./globalData.js";
+
 export async function localPong(isVsBot, objConf)
 {
     let app = document.getElementById("app");
     app.innerHTML = '\
     <div id="game-container">\
     <div id="game-info">\
-        <h2>player1 vs player2</h2>\
+        <h2 id="playervsplayer">player1 vs player2</h2>\
     </div>\
     <canvas id="pongCanvas" width="800" height="450"></canvas>\
     </div>';
@@ -14,8 +16,8 @@ export async function localPong(isVsBot, objConf)
     
     if (objConf.game === 'tournament'){
 
-        document.getElementById('player11').textContent = objConf.vs1;
-        document.getElementById('player22').textContent = objConf.vs2;
+        document.getElementById('playervsplayer').textContent = `${objConf.vs1} vs ${objConf.vs2}`;
+        // document.getElementById('player22').textContent = objConf.vs2;
         
     }
     canvas.width = 800;// window.innerWidth;
@@ -295,8 +297,8 @@ export async function localPong(isVsBot, objConf)
         if (paddle2.score >= 5 || paddle1.score >= 5)
         {
             let obj = objConf;
-            clearInterval(id);
-            id = -1;
+            clearInterval(dataGlobal.idInterval);
+            dataGlobal.idInterval = -1;
             if (obj.game === "bot" || obj.game === "justTwo")
             {
                 if (paddle2.score >= 5 )
@@ -333,12 +335,8 @@ export async function localPong(isVsBot, objConf)
                 {
                     obj.vs1 = obj.player3;
                     obj.vs2 = obj.player4;
-                    deleteEvent.forEach(element => {
-                        element.elem.removeEventListener(element.evnt, element.fun);
-                    });
-                    deleteEvent = [];
 
-                    document.getElementById("content").innerHTML = '<button id ="jstbtn">nextmatch</button>';
+                    document.getElementById("app").innerHTML = '<button id ="jstbtn">nextmatch</button>';
                     document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
                         e.preventDefault();
                         localPong(1, obj); 
@@ -347,13 +345,9 @@ export async function localPong(isVsBot, objConf)
                 }
                 else
                 {
-                    deleteEvent.forEach(element => {
-                        element.elem.removeEventListener(element.evnt, element.fun);
-                    });
-                    deleteEvent = [];
                     obj.vs1 = obj.win1;
                     obj.vs2 = obj.win2;
-                    document.getElementById("content").innerHTML = '<button id ="jstbtn">final</button>';
+                    document.getElementById("app").innerHTML = '<button id ="jstbtn">final</button>';
                     document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
                         e.preventDefault();
                         localPong(1, obj); 
@@ -364,6 +358,6 @@ export async function localPong(isVsBot, objConf)
     
 }
 
-    let id = setInterval(gameLoop, 20)
+    dataGlobal.idInterval = setInterval(gameLoop, 20)
 
 }
