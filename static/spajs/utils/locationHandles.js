@@ -66,9 +66,9 @@ export async function urlLocationHandler()
     }
     else if (path === "/s")
     {
-        tournamentView()
+        // tournamentView()
         // return;
-        // settingView();
+        settingView();
         // profileFriend2(3);
     }
     else

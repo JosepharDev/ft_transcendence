@@ -1,4 +1,5 @@
 import { pushUrl } from "../utils/urlRoute.js";
+import { dataGlobal } from "./globalData.js";
 
 export async function signin()
 {
@@ -18,8 +19,8 @@ export async function signin()
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Enter password">
             </div>
-            <button id="mybtn" type="button" class="btn btn-primary btn-block" onclick="signIn()">Sign In</button>
-            <button type="button" class="btn btn-ftwo btn-block" onclick="signInWithFacebook()">Sign in with 42</button>
+            <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <button type="button" class="btn btn-ftwo btn-block" >Sign in with 42</button>
         </form>
     </div>
 </div>
@@ -27,8 +28,8 @@ export async function signin()
 
     // app.innerHTML = signInHtml();
 
-    // let formSingin = document.querySelector("#frm");
-    // formSingin.addEventListener("submit", submitSigninEvent)
+    let formSingin = document.querySelector("#signinForm");
+    formSingin.addEventListener("submit", submitSigninEvent)
 }
 
 
@@ -52,8 +53,9 @@ async function submitSigninEvent(e)
 {
     e.preventDefault();
 
-    let form = document.getElementById('frm');
+    let form = document.getElementById('signinForm');
     let formData = new FormData(form);
+   
     const request = new Request(
         '/profile/signin/',
         {
@@ -61,9 +63,11 @@ async function submitSigninEvent(e)
             body: formData,
         }
     );
-    //try catch later
-    res = await fetch(request);
-    js = await res.json();
+
+
+    let res = await fetch(request);
+    console.log("WWWWWW")
+    let js = await res.json();
     if (js.message === "Success")
     {
         pushUrl('/');

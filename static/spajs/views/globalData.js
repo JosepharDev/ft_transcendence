@@ -7,6 +7,7 @@ export let dataGlobal = {
     socketDisconnect : [],
     deleteEvent: [],
     idInterval : -1,
+    csrftoken : "",
 
 }
 

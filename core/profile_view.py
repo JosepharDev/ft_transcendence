@@ -29,6 +29,7 @@ class signin(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     def post(self, request):
+        print("FFFFFFFFFFFFFFFF")
         username = request.POST['username']
         user = User.objects.filter(username=username).first()
         if user is None:

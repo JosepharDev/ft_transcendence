@@ -139,9 +139,22 @@ async function submit2faButtonEvent(e)
     try
     {
         let res = await fetch(request);
+        if (!res.ok)
+        {
+            console.log("resd not ok");
+        }
+        
+        console.log("resd ok");
         let js = await res.json();
+        console.log(js);
         if (js.message === "success")
         {
+            const image = document.getElementById('2fa-image');
+            const input = document.getElementById('2fa-code');
+            const button = document.getElementById('toggle-2fa-btn');
+            const submitButton = document.getElementById('submit-2fa-btn');
+
+
             button.textContent = 'Disable 2FA';
             image.style.display = 'none';
             input.style.display = 'none';
@@ -154,6 +167,7 @@ async function submit2faButtonEvent(e)
     }
     catch (err)
     {
+        alert("otp ERROR");
 
     }
 }
