@@ -54,8 +54,18 @@ async function submitSigninEvent(e)
     e.preventDefault();
 
     let form = document.getElementById('signinForm');
-    let formData = new FormData(form);
+    // let formData = new FormData(form);
    
+    
+    const username = document.getElementById('username').value;
+    const profileImage = document.getElementById('password').value;
+    const formData = new FormData();
+    // if (username.length > 0)
+        formData.append('username', username);
+    // if (profileImage) {
+        formData.append('password', profileImage);
+    // }
+
     const request = new Request(
         '/profile/signin/',
         {
@@ -63,7 +73,6 @@ async function submitSigninEvent(e)
             body: formData,
         }
     );
-
 
     let res = await fetch(request);
     console.log("WWWWWW")
