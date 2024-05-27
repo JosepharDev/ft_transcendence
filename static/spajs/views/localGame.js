@@ -6,7 +6,7 @@ export async function localPong(isVsBot, objConf)
     <div id="game-info">\
         <h2>player1 vs player2</h2>\
     </div>\
-    <canvas id="pongCanvas" width="800" height="400"></canvas>\
+    <canvas id="pongCanvas" width="800" height="450"></canvas>\
     </div>';
 
     const canvas = document.getElementById('pongCanvas');
@@ -127,8 +127,29 @@ export async function localPong(isVsBot, objConf)
 
     function ballCollisionWithEdges(ball)
     {
-      if (ball.pos.y + ball.radius >= canvas.height || ball.pos.y - ball.radius <= 0 )
-        ball.velocity.y *= -1;
+
+      if (ball.pos.y - ball.radius <= 0 )
+      {
+        ball.velocity.y = Math.abs(ball.velocity.y);
+      }
+      else if (ball.pos.y + ball.radius >= canvas.height)
+      {
+        ball.velocity.y = -Math.abs(ball.velocity.y);
+      }
+
+      // if (ball.pos.y + ball.radius >= canvas.height || ball.pos.y - ball.radius <= 0 )
+      // {
+      //   ball.velocity.y *= -1;
+      //   console.log('*******************')
+      //   console.log(`ball vely ${ball.velocity.y}`);
+      //   console.log(`ball posx ${ball.pos.x}`);
+      //   console.log(`ball posy ${ball.pos.y}`);
+      //   console.log('*******************')
+      // }
+
+
+
+      // if()
 
     }
 
@@ -138,19 +159,24 @@ export async function localPong(isVsBot, objConf)
       let dx = Math.abs(ball.pos.x - paddle.getCenter().x);
       let dy = Math.abs(ball.pos.y - paddle.getCenter().y);
 
-      if (dx < (ball.radius + paddle.getHalfWidth()) && dy < (paddle.getHalfHeight() + ball.radius)
+      if (dx <= (ball.radius + paddle.getHalfWidth()) && dy <= (paddle.getHalfHeight() + ball.radius)
                 && ball.pos.y >= paddle.pos.y && ball.pos.y <= paddle.pos.y + paddle.height)
       {
         if (paddle.s === 1)
-          ball.pos.x = (paddle.pos.x + paddle.width) + ball.radius;  // if ball gets stuck
+          ball.pos.x = (paddle.pos.x + paddle.width) + 3;//ball.radius;  // if ball gets stuck
         else
-          ball.pos.x = paddle.pos.x - paddle.width - ball.radius; // if ball gets stuck
+          ball.pos.x = paddle.pos.x - paddle.width - 3;//ball.radius; // if ball gets stuck
           
         let deltay = ball.pos.y - (paddle.pos.y+paddle.height/2);
-        ball.velocity.y = deltay * 0.30;
+        ball.velocity.y = deltay * 0.30
+        ;
         // if (ball.velocity.y <= ball.radius)
+        // console.log(`in ${ball.velocity.y}`);
         ball.velocity.x *= -1;
       }
+      // console.log(`x ${ball.velocity.x}`)
+      // console.log(`out ${ball.velocity.y}`);
+
     }
 
     function player2ai (ball, paddle) {
@@ -182,7 +208,7 @@ export async function localPong(isVsBot, objConf)
         ball.pos.x = canvas.width - 150;
         ball.pos.y = (Math.random() * (canvas.height - 200)) + 100;
       }
-      if (ball.velocity.x < 0)
+      else
       {
         ball.pos.x = 150;
         ball.pos.y = (Math.random() * (canvas.height - 200)) + 100;
@@ -218,14 +244,14 @@ export async function localPong(isVsBot, objConf)
       ctx.stroke();
 
     }
-
-    const ball = new Ball (vec2(20,20), vec2(13, 13), 10);
-    const paddle1 = new Paddle(vec2(0,70), vec2(10,10), 13 , 90, 1, objConf.vs1);
-    const paddle2 = new Paddle(vec2(canvas.width - 13, 20), vec2(10,10), 13 , 90, 2, objConf.vs2);
-
     
-    flag = isVsBot;
-    function gameUpdate() {
+    const ball = new Ball (vec2(20,20), vec2(13, 13), 10);
+    const paddle1 = new Paddle(vec2(0,70), vec2(10,10), 13, 90, 1, objConf.vs1);
+    const paddle2 = new Paddle(vec2(canvas.width - 13, 20), vec2(10,10), 13, 90, 2, objConf.vs2);
+    
+    flag = 0;
+    function gameUpdate()
+    {
       ball.update();
       paddle1.update();
       paddleCollisionWithEdges(paddle1);
@@ -240,8 +266,8 @@ export async function localPong(isVsBot, objConf)
       ballPaddleCollision(ball, paddle1);
       ballPaddleCollision(ball, paddle2);
       increaseScore(ball, paddle1, paddle2)
-        drawText(paddle1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
-        drawText(paddle2.score, 3 * canvas.width / 4, 50, "#FFF"); 
+      drawText(paddle1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
+      drawText(paddle2.score, 3 * canvas.width / 4, 50, "#FFF"); 
     }
 
     function drawText(text, x, y, color) {
