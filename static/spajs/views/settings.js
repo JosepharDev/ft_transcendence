@@ -115,7 +115,11 @@ async function twofaButtonEvent(e)
 
     }
     else
-    console.log("notok");
+    {
+        let js = await response.json();
+        console.log(js.message)
+        console.log("notok");
+    }
 }
 
 async function submit2faButtonEvent(e)

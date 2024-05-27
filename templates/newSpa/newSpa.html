@@ -10,10 +10,135 @@
     <title>Document</title>
     <link href="{% static 'css/bootstrap.min.css' %}"  rel="stylesheet">
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
     <script defer src="{% static 'spajs/app.js' %}" type="module"></script>
 
 <style>
+/***********************profile view*******************************/
+.user-profile {
+    background-color: #2c2c2c;
+    border: none;
+    border-radius: 15px;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: rgba(212,155,32,0.6);
+    padding: 20px;
+}
+
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.username {
+    margin: 0;
+}
+
+.follow-btn {
+    margin-left: 10px;
+}
+
+.status-indicator {
+    margin-left: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #28a745;
+}
+
+.status-indicator.offline {
+    background-color: #dc3545;
+}
+
+.status-text {
+    font-weight: bold;
+    color: #f8f9fa;
+}
+
+.stats {
+    margin-top: 20px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat h5 {
+    margin-bottom: 5px;
+    color: #adb5bd;
+}
+
+.match-history {
+    margin-top: 20px;
+    max-height: 200px; /* Adjust height to limit the visible matches */
+    overflow-y: auto;
+}
+
+.match {
+    padding: 10px;
+    border-bottom: 1px solid #343a40;
+    background-color: #3a3a3a; /* Background color for each match */
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    color: #c9ced2;
+}
+
+.match:last-child {
+    border-bottom: none;
+}
+
+.player-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.player-name {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px; /* Adjust max-width as needed */
+}
+
+.vs {
+    margin: 0 10px;
+    font-weight: bold;
+    color: #adb5bd;
+    flex-shrink: 0;
+}
+
+.match-score {
+    font-weight: bold;
+    color: #f8f9fa;
+    font-size: 1.2em;
+    padding: 2px 5px;
+    border: 1px solid #adb5bd;
+    border-radius: 5px;
+}
+
+.match-date {
+    font-size: 0.9em;
+    color: #adb5bd;
+    flex-shrink: 0;
+}
+
+
+
+
+/*****************************************************/
+
+
+
+
     /**********************************************************************/
 
     body {
@@ -134,7 +259,7 @@
 
 
     /*********************************************************************/
-    .profile-section {
+    /* .profile-section {
             text-align: center;
             margin-top: 20px;
             margin-bottom: 20px;
@@ -171,13 +296,13 @@
             color: white;
         }
         .wins {
-            background-color: #28a745; /* Green background for wins */
+            background-color: #28a745; /* Green background for wins 
         }
         .losses {
-            background-color: #dc3545; /* Red background for losses */
+            background-color: #dc3545; /* Red background for losses 
         }
         .matches {
-            background-color: #ffc107; /* Yellow background for matches */
+            background-color: #ffc107; /* Yellow background for matches 
         }
         .match-history {
             margin-top: 20px;
@@ -190,10 +315,10 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 10px;
-            background-color: #69ebae; /* Light blue background color */
-            max-width: 800px; /* Set maximum width for background */
-            margin-left: auto; /* Center the background */
-            margin-right: auto; /* Center the background */
+            background-color: #69ebae; Light blue background color
+            max-width: 800px; Set maximum width for background
+            margin-left: auto; Center the background
+            margin-right: auto; Center the background
         }
         .player-image {
             border-radius: 50%;
@@ -221,7 +346,7 @@
             margin-top: 20px;
             font-size: 18px;
             color: #6c757d;
-        }
+        } */
 /*************************************************************************/
 
         #game-container {
@@ -331,6 +456,14 @@ body
 
 
 /*****************************************************/
+
+
+
+
+
+
+
+
 </style>
 
 

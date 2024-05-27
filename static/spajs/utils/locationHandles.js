@@ -3,6 +3,9 @@ import {homeView } from "./../views/home.js"
 import {profileFriend} from "./../views/profileFriend.js"
 import {localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
+import {profileFriend2} from "./../views/profile2.js"
+import {remoteGame1} from "./../views/remote1.js"
+
 
 export async function urlLocationHandler()
 {
@@ -19,7 +22,8 @@ export async function urlLocationHandler()
     };
 
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
-
+    
+    console.log("Lolo")
 
     if (parsedUrl === "/userid/:id")
     {
@@ -30,7 +34,11 @@ export async function urlLocationHandler()
 
     console.log("locationHandler");
     let path = window.location.pathname
-    if (path === "/search")
+    if (path === '/remote')
+        {
+            remoteGame1();
+        }
+    else if (path === "/search")
     {
         searchView()
     }
@@ -41,7 +49,8 @@ export async function urlLocationHandler()
     else if (path === "/s")
     {
         // return;
-        settingView();
+        // settingView();
+        profileFriend2(3);
 
     }
     else

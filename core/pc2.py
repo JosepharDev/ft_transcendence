@@ -124,8 +124,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             self.room_room = queue[0]['userName']
             self.iam_player_1 = False
 
-            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 20 ,100, 1)
-            paddle_2 = Paddle(vec2(canvasWidth__ - 20, 20), vec2(40, 40), 20 ,100, 2)
+            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 10 , 90, 1)
+            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(40, 40), 10 ,90, 2)
             ball = Ball(vec2(20,20), vec2(10,10), 10)
 
             rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
@@ -326,10 +326,12 @@ async def paddleCollisionWithEdges(paddle, canvasHeight):
 
 
 async def ballCollisionWithEdges(ball, canvasHeight):
-    if ball.pos['y'] + ball.radius >= canvasHeight or ball.pos['y'] - ball.radius <= 0 :
-        ball.velocity['y'] *= -1
+    if ball.pos['y'] + ball.radius >= canvasHeight :
+        ball.velocity['y'] = abs (ball.velocity['y']) * (-1)
+    elif ball.pos['y'] - ball.radius <= 0 :
+        ball.velocity['y'] = abs (ball.velocity['y'])
         # await ball.update()
-        print(f"ball collision-------------{ball.pos['x']}  {ball.pos['y']}    {ball.pos['y'] + ball.radius >= canvasHeight}------------------")
+    #print(f"ball collision-------------{ball.pos['x']}  {ball.pos['y']}    {ball.pos['y'] + ball.radius >= canvasHeight}------------------")
 
 
 
@@ -341,11 +343,11 @@ async def ballPaddleCollision(ball, paddle):
     if dx < (ball.radius + paddle.getHalfWidth()) and dy < (paddle.getHalfHeight() + ball.radius) \
             and  ball.pos['y'] >= paddle.pos['y'] and ball.pos['y'] <= paddle.pos['y'] + paddle.height:
         if paddle.s == 1:
-            ball.pos['x'] = (paddle.pos['x'] + paddle.width) + ball.radius; # // if ball gets stuck
+            ball.pos['x'] = (paddle.pos['x'] + paddle.width) + 5 # // if ball gets stuck
         else:
-            ball.pos['x'] = paddle.pos['x'] - paddle.width - ball.radius; #// if ball gets stuck
+            ball.pos['x'] = paddle.pos['x'] - paddle.width - 5 #// if ball gets stuck
         deltay = ball.pos['y'] - (paddle.pos['y'] + paddle.height/2)
-        ball.velocity['y'] = deltay * 0.20
+        ball.velocity['y'] = deltay * 0.25
         ball.velocity['x'] *= -1
 
 async def respawnBall(ball, canvasWidth, canvasHeight):

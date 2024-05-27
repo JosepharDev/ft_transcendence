@@ -83,6 +83,7 @@ const pushUrl = (href) => {
     window.dispatchEvent(new Event('popstate'));
   };
 
+
 const urlRoute = (event) => {
     event = event || window.event;  // is this mandatory
 

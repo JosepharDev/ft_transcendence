@@ -1,4 +1,4 @@
-async function remoteGame1()
+export async function remoteGame1()
 {
     let app = document.getElementById("app");
     app.innerHTML = '\
@@ -69,7 +69,9 @@ async function remoteGame1()
         else if (data.message.action === 'users')
         {
             document.getElementById("game-info").innerHTML =
-            '<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>';
+            `<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>`;
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
 
@@ -87,50 +89,49 @@ async function remoteGame1()
             'code': e.keyCode,
         }
         chatSocket.send(JSON.stringify(msg));
-        window.addEventListener("keydown", onKeyDownEvent)
     }
+    window.addEventListener("keydown", onKeyDownEvent)
 
-}
-
-
-function drawText(text, x, y, color) {
-    ctx.fillStyle = color;
-    ctx.font = "20px Arial";
-    ctx.fillText(text, x, y);
-}
-
-
-function drawBall(x, y, radius)
-{
-  ctx.fillStyle = "#FFF";
-  ctx.beginPath ();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function remoteGameLoop()
-{
-  ctx.fillStyle = "rgba(0,0,0,1)"
-  ctx.fillRect(0,0,canvas.width, canvas.height);
-}
-
-
-function drawPaddle(x, y, width, height)
-{
-  ctx.fillStyle  = "#FFF";
-  ctx.beginPath();
-
-  ctx.fillRect(x, y, width, height);
-}
-
-
-function drawSceneGame()
-{
-  ctx.strokeStyle = "#49243E";
-
-  ctx.beginPath();
-  ctx.lineWidth = 10;
-  ctx.moveTo(canvas.width/2, 0);
-  ctx.lineTo(canvas.width/2, canvas.height );
-  ctx.stroke();
+    
+    function drawText(text, x, y, color) {
+        ctx.fillStyle = color;
+        ctx.font = "20px Arial";
+        ctx.fillText(text, x, y);
+    }
+    
+    
+    function drawBall(x, y, radius)
+    {
+      ctx.fillStyle = "#FFF";
+      ctx.beginPath ();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    function remoteGameLoop()
+    {
+      ctx.fillStyle = "rgba(0,0,0,1)"
+      ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+    
+    
+    function drawPaddle(x, y, width, height)
+    {
+      ctx.fillStyle  = "#FFF";
+      ctx.beginPath();
+    
+      ctx.fillRect(x, y, width, height);
+    }
+    
+    
+    function drawSceneGame()
+    {
+      ctx.strokeStyle = "#FFF";
+    
+      ctx.beginPath();
+      ctx.lineWidth = 3;
+      ctx.moveTo(canvas.width/2, 0);
+      ctx.lineTo(canvas.width/2, canvas.height );
+      ctx.stroke();
+    }
 }
