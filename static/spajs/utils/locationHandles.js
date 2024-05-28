@@ -74,6 +74,11 @@ export async function urlLocationHandler()
         friendsView();
         // profileFriend2(3);
     }
+    else if (path === "/settings")
+        {
+            settingView();
+
+        }
     else
     {
         console.log("rrrrrrrrrr");

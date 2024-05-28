@@ -47,12 +47,12 @@ class OnlineConsumer(AsyncWebsocketConsumer):
         try:
             user = User.objects.get(pk=user_id)
             if status == "online":
-                user.status = status
+                user.profile_status = status
                 user.status_count += 1
             else:
                 user.status_count -= 1
                 if user.status_count == 0:
-                    user.status = status
+                    user.profile_status = status
             user.save()
             print("cccccccccccccccccccccccccccccccccccccccccccddddddddddddccccccc")
             print(user.status)

@@ -39,7 +39,10 @@ class signin(APIView):
             payload = generate_jwt(user, False)
         else:
             payload = generate_jwt(user, True)
-        response = Response({"message": "Success"}, status=200)
+        if user.is_2fa == True:
+            response = Response({"message": "2fa"}, status=200)
+        else:
+            response = Response({"message": "Success"}, status=200)
         response.set_cookie(key='jwt', value=payload, httponly=True)
         return response
 
@@ -355,6 +358,18 @@ class Enable2fa(APIView):
 
 
 
+class IsTwoEnabled(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "notfff"})
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({"message": "Expired Signature"})
+        token_code = decode(token)
+        d = {"message": user.is_2fa == True}
+        return Response(d)
 
 
 

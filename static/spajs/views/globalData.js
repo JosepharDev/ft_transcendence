@@ -8,6 +8,7 @@ export let dataGlobal = {
     deleteEvent: [],
     idInterval : -1,
     csrftoken : "",
+    sentOnline : false,
 
 }
 

@@ -1,17 +1,41 @@
+import { pushUrl } from "../utils/urlRoute.js";
 export async function settingView()
 {
-    let app = document.getElementById("app");
-    app.innerHTML = settingsHtml();
-    let profileFormSettings =  document.getElementById('profile-form');
-    profileFormSettings.addEventListener('submit', profileFormSettingsEvent);
-    let twofaButton = document.getElementById('toggle-2fa-btn');
-    twofaButton.addEventListener('click', twofaButtonEvent);
-    let submit2faButton = document.getElementById('submit-2fa-btn');
-    submit2faButton.addEventListener('click', submit2faButtonEvent);
+    try
+    {
+        let app = document.getElementById("app");
+        const request = new Request(
+            '/profile/istwofa/',
+            {
+                method: 'GET',
+            }
+        );
+        let res = await fetch(request);
+        let js = await res.json();
+    
+        let isEnable = "Enable 2FA";
+        if (js.message)
+        {
+            isEnable = "Disable 2FA";
+    
+        }
+    
+        app.innerHTML = settingsHtml(isEnable);
+        let profileFormSettings =  document.getElementById('profile-form');
+        profileFormSettings.addEventListener('submit', profileFormSettingsEvent);
+        let twofaButton = document.getElementById('toggle-2fa-btn');
+        twofaButton.addEventListener('click', twofaButtonEvent);
+        let submit2faButton = document.getElementById('submit-2fa-btn');
+        submit2faButton.addEventListener('click', submit2faButtonEvent);
+    }
+    catch (err)
+    {
+        pushUrl('/');
+    }
 }
 
 
-function settingsHtml()
+function settingsHtml(isEnable)
 {
     return (`
     <div class="container settings-container">
@@ -28,7 +52,7 @@ function settingsHtml()
             <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Update Profile</button>
         </form>
         <div class="two-factor-auth">
-            <button id="toggle-2fa-btn" class="btn btn-secondary btn-block">Enable 2FA</button>
+            <button id="toggle-2fa-btn" class="btn btn-secondary btn-block">${isEnable}</button>
             <img id="2fa-image" src="https://pbs.twimg.com/profile_images/1701878932176351232/AlNU3WTK_400x400.jpg" alt="2FA QR Code" style="display: none;">
             <input type="text" id="2fa-code" class="form-control mt-2" placeholder="Enter 2FA code" style="display: none;">
             <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;">Submit 2FA Code</button>

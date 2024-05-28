@@ -1,6 +1,9 @@
-
+import { dataGlobal } from "./globalData.js";
 export function sendOnline()
 {
+    if (dataGlobal.sentOnline)
+        return ;
+    console.log("SENDONLINE");
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
@@ -8,4 +11,6 @@ export function sendOnline()
         + '3'
         + '/'
     );
+    dataGlobal.sentOnline = true;
+
 }

@@ -1,5 +1,6 @@
 import { pushUrl } from "../utils/urlRoute.js";
 import { dataGlobal } from "./globalData.js";
+import { sendOnline } from "./online.js";
 
 export async function signin()
 {
@@ -81,6 +82,11 @@ async function submitSigninEvent(e)
     let js = await res.json();
     if (js.message === "Success")
     {
+        sendOnline();
         pushUrl('/');
+    }
+    else if (js.message === "2fa")
+    {
+        pushUrl('/twofa');
     }
 }

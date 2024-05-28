@@ -1,5 +1,6 @@
 import { pushUrl } from "../utils/urlRoute.js";
-
+import { dataGlobal } from "./globalData.js";
+import { sendOnline } from "./online.js";
 export async function checkAuthentication()
 {
     const request = new Request(
@@ -13,7 +14,14 @@ export async function checkAuthentication()
     console.log('message');
     console.log(answer.message);
     if (answer.message === "authenticated")
+    {
+        if (!dataGlobal.sentOnline)
+        {
+            sendOnline();
+            // dataGlobal.sentOnline = true;
+        }
         return ;
+    }
     if (answer.message === "2fa")
         pushUrl('/twofa');
     else
