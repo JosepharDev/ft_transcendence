@@ -6,7 +6,7 @@ import {urlRoute} from './utils/urlRoute.js'
 
 
 
-dataGlobal.csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+// dataGlobal.csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 tuto();
 console.log(url);

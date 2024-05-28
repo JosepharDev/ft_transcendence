@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Winner Announcement</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for popup */
+        .winner-alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            width: 400px;
+            padding: 20px;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            text-align: center;
+            font-size: 1.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .close-btn {
+            border: none;
+            background: none;
+            font-size: 1.2em;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Game Page</h2>
+    <button type="button" class="btn btn-primary" onclick="announceWinner('Player 1')">Announce Player 1 as Winner</button>
+    <button type="button" class="btn btn-success" onclick="announceWinner('Player 2')">Announce Player 2 as Winner</button>
+</div>
+
+<div id="winnerAlert" class="winner-alert">
+    <button class="close-btn" onclick="closeAlert()">×</button>
+    <span id="winnerMessage">Player X is the winner!</span>
+</div>
+
+<script>
+    function announceWinner(player) {
+        const alertBox = document.getElementById('winnerAlert');
+        document.getElementById('winnerMessage').textContent = player + ' is the winner!';
+        alertBox.style.display = 'block';
+    }
+
+    function closeAlert() {
+        document.getElementById('winnerAlert').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

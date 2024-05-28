@@ -20,8 +20,10 @@ export async function signin()
                 <input type="password" class="form-control" id="password" placeholder="Enter password">
             </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
-            <button type="button" class="btn btn-ftwo btn-block" >Sign in with 42</button>
-        </form>
+            </form>
+            <form action="profile/signin/auth_42_api/" id="fortysign" method="POST">\
+            <button type="submit" class="btn btn-ftwo btn-block" >Sign in with 42</button>
+            </form>
     </div>
 </div>
     `

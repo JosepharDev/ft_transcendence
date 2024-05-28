@@ -23,6 +23,49 @@ export async function profileFriend2(id)
         console.log(userData.avatar);
         document.querySelector("#statsPart").innerHTML = profileStatsPart(userData);
         historyMatchView(userData.matches);
+
+        if (!userData.its_me)
+        {
+            async function toggleFollow(userId, btn)
+            {
+                let formData = new FormData();
+                formData.append('data', btn.textContent);
+                try
+                {
+                    const response = await fetch(`/profile/friends/${userId}/`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    
+                    if (response.ok) {
+                        let js = await response.json()
+                        if (js.message === "Friend removed successfully")
+                        {
+                            btn.textContent = "Follow";
+                            console.log(`FF${js.message}`);
+
+                        }
+                        else if (js.message === "Friend added successfully")
+                        {
+                            btn.textContent = "Unfollow";
+                            console.log(js.message);
+                        }
+                        console.log(btn);
+                    } else {
+                        alert('Something went wrong!');
+                    }
+                }
+                catch (err)
+                {
+            
+                }
+            }
+
+            let flwbtn = document.querySelector(".follow-btn");
+            flwbtn.addEventListener('click', () =>{
+                toggleFollow(userData.id, flwbtn);
+            })
+        }
     }
     catch (err)
     {
@@ -62,15 +105,29 @@ function profileFriendHtml()
 
 function profileFirstPart(data)
 {
-
+    console.log(data.its_me);
+    console.log(data.friend);
+    let followShow = "";
+    let onlineStatus = data.is_online ? "Online" : "Offline";
+    let statusIndicator = data.is_online ? "" : "offline";
+    console.log(data.is_online);
+    if (!data.its_me)
+    {
+        let followPlace = ""
+        if (data.friend)
+            followPlace = "Unfollow";
+        else
+            followPlace = "Follow";
+        followShow = `<button class="btn btn-sm btn-outline-light follow-btn">${followPlace}</button>`;
+    }
     return (`
     <img src="${data.avatar}" class="profile-avatar" alt="User Avatar">
     <div class="ml-3">
         <h4 class="username mb-0">${data.username}</h4>
         <div class="d-flex align-items-center mt-2">
-            <button class="btn btn-sm btn-outline-light follow-btn">Follow</button>
-            <span class="status-indicator ml-3"></span>
-            <span class="status-text ml-2">Online</span>
+            ${followShow}
+            <span class="status-indicator ${statusIndicator} ml-3"></span>
+            <span class="status-text ml-2">${onlineStatus}</span>
         </div>
     </div>
     `)
@@ -130,3 +187,6 @@ function historyMatchHelper(data)
     </div>
     `)
 }
+
+
+

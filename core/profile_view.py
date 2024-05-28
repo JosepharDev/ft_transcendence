@@ -77,61 +77,73 @@ class UsersList(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-class UserFriends(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=403)
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"invalid signature"}, status=400)
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=403)
+
+############################yoyahya
+
+# class UserFriends(APIView):
+#     def get(self, request):
+#         token = request.COOKIES.get('jwt')
+#         if not token:
+#             return Response({"message": "unauthorized"}, status=403)
+#         try:
+#             user = decode_jwt(token)
+#         except jwt.ExpiredSignatureError:
+#             return Response({'message':"invalid signature"}, status=400)
+#         token_code = decode(token)
+#         if user.is_2fa == True and token_code['code'] == False:
+#             return Response({"message": "2fa"}, status=403)
         
-        usr = User.objects.get(pk=user.id)
-        # friends = usr.friends.all()
-        friends = Friend.objects.filter(from_user=user)
-        jj = []
-        for friend in friends:
-            jj.append({'username' : friend.to_user.username,
-                'id':friend.to_user.id
-            })
+#         usr = User.objects.get(pk=user.id)
+#         # friends = usr.friends.all()
+#         friends = Friend.objects.filter(from_user=user)
+#         jj = []
+#         for friend in friends:
+#             jj.append({'username' : friend.to_user.username,
+#                 'id':friend.to_user.id
+#             })
 
 
-        # serializ = UserSerializer(friends, many=True)
-        return Response(jj)
-    def post(self, request, id):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=403)
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"invalid signature"}, status=400)
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=403)
+#         # serializ = UserSerializer(friends, many=True)
+#         return Response(jj)
+#     def post(self, request, id):
+#         token = request.COOKIES.get('jwt')
+#         if not token:
+#             return Response({"message": "unauthorized"}, status=403)
+#         try:
+#             user = decode_jwt(token)
+#         except jwt.ExpiredSignatureError:
+#             return Response({'message':"invalid signature"}, status=400)
+#         token_code = decode(token)
+#         if user.is_2fa == True and token_code['code'] == False:
+#             return Response({"message": "2fa"}, status=403)
         
-        try:
-            user_obj = User.objects.get(pk=user.id)
-        except User.DoesNotExist:
-            return Response({"message": "User not found"}, status=404)
-        try:
-            friend = User.objects.get(pk=id)
-        except User.DoesNotExist:
-            return Response({"message": "Friend not found"}, status=404)
-        is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
-        # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-        print(request.POST['data'] == "Unfollow")
-        # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-        if (is_friend):
-            jj = Friend.objects.get(from_user=user_obj, to_user=friend)
-            jj.delete()
-        else:
-            Friend.objects.create(from_user=user_obj, to_user=friend)
-        return Response({"message": "Friend added successfully"}, status=201)
+#         try:
+#             user_obj = User.objects.get(pk=user.id)
+#         except User.DoesNotExist:
+#             return Response({"message": "User not found"}, status=404)
+#         try:
+#             friend = User.objects.get(pk=id)
+#         except User.DoesNotExist:
+#             return Response({"message": "Friend not found"}, status=404)
+#         is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
+#         # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+#         print(request.POST['data'] == "Unfollow")
+#         # print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+#         if (is_friend):
+#             jj = Friend.objects.get(from_user=user_obj, to_user=friend)
+#             jj.delete()
+#         else:
+#             Friend.objects.create(from_user=user_obj, to_user=friend)
+#         return Response({"message": "Friend added successfully"}, status=201)
+
+
+
+
+
+#################################
+
+
+
 
 class UserHistory(APIView):
     def get(self, request, id):
@@ -283,6 +295,11 @@ class UserData(APIView):
         # print(f"{serializer.data}")
         k = serializer.data
         k['friend'] = is_friend
+        k['its_me'] = (id == user.id)
+        k['is_online'] = UserFriend.profile_status == 'online'
+        print("*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(user.profile_status)
+        print("*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
         mm = []
         for match in matches:
@@ -332,3 +349,79 @@ class Enable2fa(APIView):
             return Response({"message": "yes"})
         else:
             return Response({"message": "no"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+class UserFriends(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
+        usr = User.objects.get(pk=user.id)
+        # friends = usr.friends.all()
+        friends = Friend.objects.filter(from_user=user)
+        jj = []
+        for friend in friends:
+            jj.append({'username' : friend.to_user.username,
+                'id':friend.to_user.id,
+                'avatar' : friend.to_user.avatar.url
+            })
+
+
+        # serializ = UserSerializer(friends, many=True)
+        return Response(jj)
+    def post(self, request, id):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=403)
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"invalid signature"}, status=400)
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=403)
+        
+        if (user.id == id):
+            return Response({"message": "you cant follow yourself"}, status=403)
+        
+        try:
+            user_obj = User.objects.get(pk=user.id)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=404)
+
+        try:
+            friend = User.objects.get(pk=id)
+        except User.DoesNotExist:
+            return Response({"message": "Friend not found"}, status=404)
+
+        is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
+        print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+        print(request.POST['data'] == "Unfollow")
+        print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+        if (is_friend and request.POST['data'] == "Unfollow"):
+            jj = Friend.objects.get(from_user=user_obj, to_user=friend)
+            jj.delete()
+            return Response({"message": "Friend removed successfully"}, status=201)
+        elif (not is_friend and request.POST['data'] == "Follow"):
+            Friend.objects.create(from_user=user_obj, to_user=friend)
+            return Response({"message": "Friend added successfully"}, status=201)
+        return Response({"message": "Nothing happened"}, status=200)

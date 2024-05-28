@@ -10,6 +10,8 @@ import { dataGlobal, removeEvents, closSockets } from "../views/globalData.js"
 import { signin } from "../views/signin.js";
 import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
+import {friendsView} from "../views/friends.js"
+
 
 export async function urlLocationHandler()
 {
@@ -68,7 +70,8 @@ export async function urlLocationHandler()
     {
         // tournamentView()
         // return;
-        settingView();
+        // settingView();
+        friendsView();
         // profileFriend2(3);
     }
     else
