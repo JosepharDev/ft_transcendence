@@ -42,6 +42,8 @@ export async function localPong(isVsBot, objConf)
     }
     window.addEventListener("keydown", handleKeyDownLocal);
     window.addEventListener("keyup", handleKeyUpLocal);
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': handleKeyDownLocal });
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': handleKeyUpLocal });
 
     function vec2(x, y)
     {
@@ -175,6 +177,15 @@ export async function localPong(isVsBot, objConf)
         // if (ball.velocity.y <= ball.radius)
         // console.log(`in ${ball.velocity.y}`);
         ball.velocity.x *= -1;
+
+
+
+        let j = 1
+        if ((ball.velocity.x < 0))
+            j = -1
+
+        ball.velocity.x = (Math.abs(ball.velocity.x) + 0.06) * j
+
       }
       // console.log(`x ${ball.velocity.x}`)
       // console.log(`out ${ball.velocity.y}`);
@@ -217,6 +228,12 @@ export async function localPong(isVsBot, objConf)
       }
       ball.velocity.x *= -1;
       ball.velocity.y *= -1;
+
+      let j = 1
+      if ((ball.velocity['x'] < 0))
+          j = -1
+      ball.velocity.x = 13 * j
+
     }
 
     function increaseScore(ball, paddle_1, paddle_2)
@@ -251,7 +268,7 @@ export async function localPong(isVsBot, objConf)
     const paddle1 = new Paddle(vec2(0,70), vec2(10,10), 13, 90, 1, objConf.vs1);
     const paddle2 = new Paddle(vec2(canvas.width - 13, 20), vec2(10,10), 13, 90, 2, objConf.vs2);
     
-    flag = 0;
+    flag = isVsBot;
     function gameUpdate()
     {
       ball.update();

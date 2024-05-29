@@ -124,8 +124,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             self.room_room = queue[0]['userName']
             self.iam_player_1 = False
 
-            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 10 , 90, 1)
-            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(40, 40), 10 ,90, 2)
+            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 10 , 90, 1,  queue[0]['id'])
+            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(40, 40), 10 ,90, 2,  self.scope['user'].id)
             ball = Ball(vec2(20,20), vec2(10,10), 10)
 
             rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
@@ -210,20 +210,19 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
 
     async def receive(self, text_data):
-        message = json.loads(text_data)
-        print ("receievevvevevve")
-        print (message)
-        if (message['action'] == 'press' and self.iam_playing):
-            messageSend = 0
-            print ("------------------------------------")
-
-            if (message['user'] == 1):
-                await rooms[self.room_room].paddle_1.update(message['code'])
-                # messageSend = rooms[self.room_room].paddle_1.json()
-            else:
-                if (message['user'] == 2):
+        try:
+            message = json.loads(text_data)
+            print ("receievevvevevve")
+            print (message)
+            if (message['action'] == 'press' and self.iam_playing):
+                messageSend = 0
+                print ("------------------------------------")
+                if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
+                    await rooms[self.room_room].paddle_1.update(message['code'])
+                else:
                     await rooms[self.room_room].paddle_2.update(message['code'])
-
+        except:
+            pass 
 
     async def send_message(self, event):
         message = event["message"]
@@ -296,9 +295,9 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                         )
                     # await self.close()
                     break
-                print (rooms[self.room_room].start)
-                print ("--")
-                print("HH")
+                # print (rooms[self.room_room].start)
+                # print ("--")
+                # print("HH")
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
                 await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
 
@@ -349,7 +348,16 @@ async def ballPaddleCollision(ball, paddle):
         deltay = ball.pos['y'] - (paddle.pos['y'] + paddle.height/2)
         ball.velocity['y'] = deltay * 0.25
         ball.velocity['x'] *= -1
+        j = 1
+        if ((ball.velocity['x'] < 0)):
+            j = -1
 
+        print('**********')
+        print(ball.velocity['x'])
+        print('------------------')
+        ball.velocity['x'] = (abs(ball.velocity['x']) + 0.06) * j
+        print(ball.velocity['x'])
+        print('**********')
 async def respawnBall(ball, canvasWidth, canvasHeight):
     if (ball.velocity['x'] > 0):
         ball.pos['x'] = canvasWidth - 150
@@ -361,6 +369,11 @@ async def respawnBall(ball, canvasWidth, canvasHeight):
 
     ball.velocity['x'] *= -1
     ball.velocity['y'] *= -1
+    j = 1
+    if ((ball.velocity['x'] < 0)):
+        j = -1
+
+    ball.velocity['x'] = 10 * j
 
 
 
@@ -374,14 +387,14 @@ async def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
 
 
 class Paddle:
-    def __init__(self, pos , velocity, width, height, leftOrRight):
+    def __init__(self, pos , velocity, width, height, leftOrRight, id):
         self.s = leftOrRight
         self.pos = pos
         self.velocity = velocity
         self.width = width
         self.height = height
         self.score = 0
-
+        self.id = id
     async def update (self ,key):
         if (key == 38):
             self.pos['y'] -= self.velocity['y']

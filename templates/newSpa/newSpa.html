@@ -11,9 +11,9 @@
     <link href="{% static 'css/bootstrap.min.css' %}"  rel="stylesheet">
     <link href="{% static 'css/stackboots.css' %}"  rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Bangers&family=Orbitron:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
     <script defer src="{% static 'spajs/app.js' %}" type="module"></script>
-
 <style>
 #navi
 {
@@ -198,7 +198,12 @@
 }
 
 .bg-lightblue {
-    background-color: rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    border-radius: 8px; 
+    /* background-size: cover; */
+    background: url("https://img.freepik.com/free-vector/ping-pong_78370-259.jpg")  no-repeat;
+    /* backgr   ound: url('path_to_your_image.jpg') no-repeat center center; */ 
+    background-size: cover;
 }
 
 .bg-lightgreen {
@@ -570,6 +575,8 @@ body
             height: 100vh;
             background: rgba(40,40,40,255);
             font-family: Arial, sans-serif;
+            background-image: url("https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg");
+    background-size: cover;
         }
         .form-container {
             background: rgba(0, 0, 0, 0.3);
@@ -673,6 +680,23 @@ h3 {
     display: none;
 }
 
+body
+{
+    background-image: url("https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg");
+    /* background-size: cover; */
+    font-family: 'Orbitron', sans-serif;
+}
+
+#home, #logout
+{
+    font-family: 'Orbitron', sans-serif;
+
+}
+/* #jbi
+{
+    background-image: url("https://img.freepik.com/free-vector/ping-pong_78370-259.jpg");
+    background-size: cover;
+} */
 
 /***************************************************************/
 </style>
