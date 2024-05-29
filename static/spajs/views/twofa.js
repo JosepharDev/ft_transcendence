@@ -51,6 +51,8 @@ async function submitOTPButtonEvent(e)
         console.log(js);
         if (js.message === "success")
         {
+            document.querySelector(".hideme").classList.remove("hideme");
+
             console.log("reaaaas ok");
             sendOnline();
             console.log("reaaagsdgsdgdsas ok");

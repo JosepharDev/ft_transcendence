@@ -400,7 +400,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 56px); /* Adjust based on navbar height */
+            /* height: calc(100vh - 56px); Adjust based on navbar height */
         }
         canvas {
             background: #000;
@@ -668,6 +668,10 @@ h3 {
 }
 
 
+.hideme
+{
+    display: none;
+}
 
 
 /***************************************************************/
@@ -679,7 +683,7 @@ h3 {
 <body>
     <!-- {% csrf_token %} -->
     <!-- <nav class="navbar navbar-light bg-light" style="display: none;"> -->
-    <nav id="navi" class="navbar navbar-light" >
+    <nav id="navi" class="navbar navbar-light hideme" >
         <div class="container-fluid">
             <a class="navbar-brand" id="logout" href="#">Logout</a>
             <div class="mx-auto">

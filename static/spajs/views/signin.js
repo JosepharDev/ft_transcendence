@@ -82,6 +82,10 @@ async function submitSigninEvent(e)
     let js = await res.json();
     if (js.message === "Success")
     {
+        //use something other than hideme to get the element
+        console.log("YOYO")
+        document.querySelector(".hideme").classList.remove("hideme");
+        
         sendOnline();
         pushUrl('/');
     }

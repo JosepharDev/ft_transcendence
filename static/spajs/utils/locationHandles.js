@@ -12,6 +12,7 @@ import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
 import {friendsView} from "../views/friends.js"
 import { pushUrl } from "./urlRoute.js"
+import { remoteGame4 } from "../views/fourvsfour.js"
 
 export async function urlLocationHandler()
 {
@@ -74,6 +75,11 @@ export async function urlLocationHandler()
     else if (path === "/localgame")
     {
         localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"}); 
+    }
+    else if (path === "/remote4")
+    {
+
+        remoteGame4();
     }
     else if (path === "/s")
     {

@@ -4,6 +4,7 @@ import {homeView} from './views/home.js'
 import {urlLocationHandler} from './utils/locationHandles.js'
 import {urlRoute} from './utils/urlRoute.js'
 import { pushUrl } from './utils/urlRoute.js'
+import { checkAuthentication } from './views/checkAuth.js'
 const translations = {
     en: {
         tournament: "Tournament",
@@ -77,6 +78,8 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
     let js = await res.json();
     if (js.message === "success")
     {
+        document.querySelector("nav").classList.add("hideme");
+        
         pushUrl('/signin');
     }
 })
@@ -86,9 +89,29 @@ document.getElementById("home").addEventListener('click', async (e)=>{
     pushUrl('/');
 })
 
-tuto();
+// tuto();
 console.log(url);
-homeView();
-window.onpopstate = urlLocationHandler;
-window.route = urlRoute;
-urlLocationHandler();
+// homeView();
+
+async function ini()
+{
+
+    window.onpopstate = urlLocationHandler;
+    window.route = urlRoute;
+
+    const authStatus = await checkAuthentication();
+    if (authStatus === "2fa") {
+        pushUrl('/twofa');
+        return;
+    }
+    else if (authStatus === 'signin')
+    {
+        pushUrl('/signin');
+        return ;
+    }
+    document.querySelector(".hideme").classList.remove("hideme");
+
+    urlLocationHandler();
+
+}
+ini()
