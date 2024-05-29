@@ -19,7 +19,7 @@ function searchHtml()
                 <div class="form-group">
                     <input name="q" type="text" class="form-control" id="search-input" placeholder="Search for users by username">
                 </div>
-                <button id="searchButton" type="submit" class="btn-search btn btn-primary btn-block">Search</button>
+                <button id="mybtn" type="submit" class="btn-search btn btn-primary btn-block">Search</button>
             </form>
             <div id="search-results" class="search-results"></div>
         </div>

@@ -18,18 +18,19 @@ export async function checkAuthentication()
         if (!dataGlobal.sentOnline)
         {
             sendOnline();
-            // dataGlobal.sentOnline = true;
         }
-        return ;
+        return 'authenticated';
     }
     if (answer.message === "2fa")
-        pushUrl('/twofa');
+        return '2fa'
+        //pushUrl('/twofa');
     else
-        pushUrl('/signin');
+        return 'signin'
+    //    pushUrl('/signin');
 }
 
 
-async function AJAX_(req)
+export async function AJAX_(req)
 {
     try
     {

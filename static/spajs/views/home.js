@@ -1,15 +1,15 @@
 import {pushUrl} from './../utils/urlRoute.js';
+import { AJAX_ } from './checkAuth.js';
 
-
-export function homeView()
+export async function  homeView()
 {
+
     let app = document.getElementById('app');
     app.innerHTML = homeHtml();
-    const matches = document.querySelectorAll("a");
+    const matches = document.querySelectorAll(".btn-sm");
     if (matches)
     {
         matches.forEach(match =>{
-
             match.addEventListener("click", (e) => {
                 e.preventDefault();
                 pushUrl(e.target.href);

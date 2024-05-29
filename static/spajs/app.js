@@ -3,7 +3,7 @@ import {dataGlobal, url} from './views/globalData.js'
 import {homeView} from './views/home.js'
 import {urlLocationHandler} from './utils/locationHandles.js'
 import {urlRoute} from './utils/urlRoute.js'
-
+import { pushUrl } from './utils/urlRoute.js'
 const translations = {
     en: {
         tournament: "Tournament",
@@ -65,7 +65,26 @@ document.getElementById("language-selector").value = "en";
 document.getElementById("language-selector").dispatchEvent(new Event("change"));
 // </div>
 
+document.getElementById("logout").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    const request = new Request(
+        '/profile/logout/',
+        {
+            method: 'GET',
+        }
+    );
+    let res = await fetch(request);
+    let js = await res.json();
+    if (js.message === "success")
+    {
+        pushUrl('/signin');
+    }
+})
 
+document.getElementById("home").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    pushUrl('/');
+})
 
 tuto();
 console.log(url);

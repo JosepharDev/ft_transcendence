@@ -10,6 +10,19 @@ export function urlRoute (event)
 
 export function pushUrl (href)
 {
-    history.pushState({}, '', href);
-    window.dispatchEvent(new Event('popstate'));
+    try
+    {
+        if (href === window.location.pathname)
+            return ;
+        console.log(`-> ${href}   ${window.location.pathname}`)
+
+
+        
+        history.pushState({}, '', href);
+        window.dispatchEvent(new Event('popstate'));
+    }
+    catch (err)
+    {
+        console.log("BAL");
+    }
 }

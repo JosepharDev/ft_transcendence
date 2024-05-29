@@ -11,7 +11,7 @@ import { signin } from "../views/signin.js";
 import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
 import {friendsView} from "../views/friends.js"
-
+import { pushUrl } from "./urlRoute.js"
 
 export async function urlLocationHandler()
 {
@@ -47,7 +47,16 @@ export async function urlLocationHandler()
     }
     let path = window.location.pathname
     console.log("locationHandler");
-    checkAuthentication();
+    const authStatus = await checkAuthentication();
+    if (authStatus === "2fa") {
+        pushUrl('/twofa');
+        return;
+    }
+    else if (authStatus === 'signin')
+        {
+            pushUrl('/signin');
+            return ;
+        }
     if (parsedUrl === "/userid/:id")
     {
         profileFriend2(request.id);
