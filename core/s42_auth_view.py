@@ -94,7 +94,7 @@ def auth_42_api_callback(request):
             jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
 
 
-    r = HttpResponseRedirect('/profile/spa/')
+    r = HttpResponseRedirect('/api/spa/')
     r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
     return r
 

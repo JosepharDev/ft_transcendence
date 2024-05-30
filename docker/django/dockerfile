@@ -1,0 +1,12 @@
+FROM debian:bullseye
+
+RUN apt-get update && \
+    apt-get install -y python3 pip iputils-ping vim curl python3-psycopg2
+
+WORKDIR /usr/src/
+
+COPY ./req.txt .
+
+RUN pip install -r req.txt
+CMD python3 manage.py makemigrations && \
+    python3 manage.py migrate && python3 manage.py loaddata ss.json

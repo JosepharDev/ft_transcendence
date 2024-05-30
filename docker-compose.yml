@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    build: /home/josephardev/Desktop/ft_transcendence/docker/postgres/
+    image: db_image
+    container_name: db_container
+    restart: 'always'
+    networks:
+      - net
+    environment:
+      - DB_NAME=db
+      - POSTGRES_USER=yoyahya
+      - POSTGRES_PASSWORD=yoyahya
+    volumes:
+      - db:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+  web:
+    build: /home/josephardev/Desktop/ft_transcendence/docker/django/
+    command: daphne -b 0.0.0.0 -p 8001 tests.asgi:application
+    restart: 'always'
+    image: django_image
+    container_name: djangocontainer
+    volumes:
+      - vol:/usr/src/
+    networks:
+      - net
+    environment:
+      - DJANGO_SETTINGS_MODULE=tests.settings
+    depends_on:
+      - db
+    # ports:
+    #   - 8001:8001
+  server:
+    build: /home/josephardev/Desktop/ft_transcendence/docker/nginx/
+    image: nginx_image
+    container_name: nginx_container
+    ports:
+      - 8002:8002
+    restart: 'always'
+    volumes:
+    - vol:/var/www/html/
+    depends_on:
+      - web
+    networks:
+      - net
+
+
+networks:
+    net:
+      driver: bridge
+
+volumes:
+  vol:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/josephardev/Desktop/ft_transcendence/
+      o: bind
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/josephardev/Desktop/ft_transcendence/database/
+      o: bind

@@ -25,13 +25,17 @@ OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['django_container','djangocontainer', 'localhost', '0.0.0.0', '127.0.0.1']
 
 
 # Application definition
-INTRA_SECRET = "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"
-UID = 'u-s4t2ud-edd902aa7a0724afcecb181aa52a85e851372bf4c82f58515d10c2bb0b1b1170'
-REDIRECT_INTRA = 'http://127.0.0.1:8000/profile/signin/auth_42_api_callback/'
+# INTRA_SECRET = "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"
+# UID = 'u-s4t2ud-edd902aa7a0724afcecb181aa52a85e851372bf4c82f58515d10c2bb0b1b1170'
+# REDIRECT_INTRA = 'http://127.0.0.1:8000/profile/signin/auth_42_api_callback/'
+
+UID = 'u-s4t2ud-981ce8e1179387c75faac906b4b5d7effa7b51c89fb0d17adba9e138957e784a'
+REDIRECT_INTRA = 'http://127.0.0.1:8002/api/signin/auth_42_api_callback/'
+INTRA_SECRET = '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'
 
 # Application definition
 
@@ -96,13 +100,23 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',
+        'USER': 'yoyahya',
+        'PASSWORD': 'yoyahya',
+        'HOST': 'db_container',
+        'POST': '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
