@@ -5,7 +5,7 @@ export async function settingView()
     {
         let app = document.getElementById("app");
         const request = new Request(
-            '/profile/istwofa/',
+            '/api/istwofa/',
             {
                 method: 'GET',
             }
@@ -75,7 +75,7 @@ async function profileFormSettingsEvent(e)
     }
 
     const request = new Request(
-        '/profile/update/',
+        '/api/update/',
         {
             method: 'PATCH',
             body: formData,
@@ -109,7 +109,7 @@ async function twofaButtonEvent(e)
     else
         formData.append('qrcode', "enable");
 
-    const response = await fetch(`/profile/signin/twofa_process/`, {
+    const response = await fetch(`/api/signin/twofa_process/`, {
         method: 'POST',
         body: formData,
     });
@@ -154,7 +154,7 @@ async function submit2faButtonEvent(e)
     formData.append('code', code);
 
     const request = new Request(
-        '/profile/signin/twofa/',
+        '/api/signin/twofa/',
         {
             method: 'POST',
             body: formData,

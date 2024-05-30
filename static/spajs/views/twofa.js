@@ -31,7 +31,7 @@ async function submitOTPButtonEvent(e)
     formData.append('code', code);
 
     const request = new Request(
-        '/profile/signin/twofa/',
+        '/api/signin/twofa/',
         {
             method: 'POST',
             body: formData,

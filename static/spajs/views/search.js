@@ -34,7 +34,7 @@ async function searchElementsEvent(e)
     var form = document.getElementById('search-form');
     var formData = new FormData(form);
     const request = new Request(
-        '/profile/search/?' + new URLSearchParams(formData).toString(),
+        '/api/search/?' + new URLSearchParams(formData).toString(),
         {
             method: 'GET',
         }

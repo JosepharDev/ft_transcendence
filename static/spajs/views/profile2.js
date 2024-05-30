@@ -7,7 +7,7 @@ export async function profileFriend2(id)
 
     try{
 
-        let jj = `/profile/userid/${id}/`;
+        let jj = `/api/userid/${id}/`;
         const request = new Request(
             jj,
             {
@@ -32,7 +32,7 @@ export async function profileFriend2(id)
                 formData.append('data', btn.textContent);
                 try
                 {
-                    const response = await fetch(`/profile/friends/${userId}/`, {
+                    const response = await fetch(`/api/friends/${userId}/`, {
                         method: 'POST',
                         body: formData,
                     });

@@ -69,7 +69,7 @@ document.getElementById("language-selector").dispatchEvent(new Event("change"));
 document.getElementById("logout").addEventListener('click', async (e)=>{
     e.preventDefault();
     const request = new Request(
-        '/profile/logout/',
+        '/api/logout/',
         {
             method: 'GET',
         }
@@ -104,7 +104,7 @@ async function ini()
         pushUrl('/twofa');
         return;
     }
-    else if (authStatus === 'signin')
+    else if (authStatus === 'signin' || authStatus === 'notfff')
     {
         pushUrl('/signin');
         return ;

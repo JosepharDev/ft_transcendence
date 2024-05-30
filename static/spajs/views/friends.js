@@ -4,7 +4,7 @@ import { pushUrl } from "../utils/urlRoute.js";
 export async function friendsView()
 {
     const request = new Request(
-        '/profile/friends/',
+        '/api/friends/',
         {
             method: 'GET',
         }

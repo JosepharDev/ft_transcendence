@@ -3,7 +3,7 @@ import { dataGlobal } from "./globalData.js";
 import { sendOnline } from "./online.js";
 
 export async function signin()
-{
+{   console.log("AYOOaaa");
     let app = document.getElementById("app");
     app.innerHTML = `
     <div class="signin">
@@ -22,7 +22,7 @@ export async function signin()
             </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
-            <form action="profile/signin/auth_42_api/" id="fortysign" method="POST">\
+            <form action="api/signin/auth_42_api/" id="fortysign" method="POST">\
             <button type="submit" class="btn btn-ftwo btn-block" >Sign in with 42</button>
             </form>
     </div>
@@ -70,7 +70,7 @@ async function submitSigninEvent(e)
     // }
 
     const request = new Request(
-        '/profile/signin/',
+        '/api/signin/',
         {
             method: 'POST',
             body: formData,

@@ -4,7 +4,7 @@ import { sendOnline } from "./online.js";
 export async function checkAuthentication()
 {
     const request = new Request(
-        '/profile/auth/',
+        '/api/auth/',
         {
             method: 'GET',
         }

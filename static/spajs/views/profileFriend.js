@@ -6,7 +6,7 @@ export async function profileFriend(id)
 
     try{
 
-        let jj = `/profile/userid/${id}/`;
+        let jj = `/api/userid/${id}/`;
         const request = new Request(
             jj,
             {
