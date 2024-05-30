@@ -36,8 +36,13 @@ export async function remoteGame1()
         // if (data.message.action == 'ALREADY' )
         // {
         //     // redirect to home;
-        // } 
-        if (data.message.action == 'iam' )
+        // }
+        if (data.message.action === 'NA')
+        {
+            drawText("ALREADY IN GAME/LOBBY", canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+            console.log('ayoo');
+        }
+        else if (data.message.action == 'iam' )
         {
             iamuser = data.message.iam;
             drawText("WAITING...", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 

@@ -50,6 +50,31 @@ async def decode_jwt(token):
     except (jwt.DecodeError, User.DoesNotExist):
         return None
 class multipleConsumeTest(AsyncWebsocketConsumer):
+    
+    
+    
+    @database_sync_to_async
+    def checkUserStatus(self, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            return user.game_status
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return "ERR"
+
+
+
+    @database_sync_to_async
+    def update_userStatus(self, user_id, status):
+        try:
+            user = User.objects.get(pk=user_id)
+            user.game_status = status
+            user.save()
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return "ERR"
+
+
 
 
     async def connect(self):
@@ -59,6 +84,9 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         global canvasHeight__
         global current_room
         global availableIds
+        
+        self.update_to_nogame = False
+
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
@@ -67,17 +95,35 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         except jwt.ExpiredSignatureError:
             print({"message": "Expired Signature"})
 
-        if (len(queue) == 0) :
-            current_room = generate_random_string(10)
-            print (f"create new room {current_room}")
-        self.iam_playing  = False
-        if len(queue) < 4 :
-            self.room_room = current_room
-
         self.user_group_name = f"user_{self.scope['user'].username}"
         await self.channel_layer.group_add(
             self.user_group_name, self.channel_name
         )
+        print(f"===================================================+++> {self.scope['user'].username}")
+        stats = await self.checkUserStatus(self.scope['user'].id)
+        if (stats != 'no_game'):
+            await self.accept()
+            await self.channel_layer.group_send(
+                        self.user_group_name,
+                        {"type": "send.message", "message": {'action': 'NA'}} )
+            # print("=======================================================================================")
+
+            # print(self.checkUserStatus(self.scope['user'].id))
+            self.update_to_nogame = True
+            # await self.close(1000)
+            return
+
+
+        if (len(queue) == 0) :
+            current_room = generate_random_string(10)
+            print (f"create new room {current_room}")
+            self.room_room = current_room
+
+        self.iam_playing  = False
+        if len(queue) < 4 :
+            self.room_room = current_room
+
+
         for i in range(len(availableIds)):
             if availableIds[i] != -1:
                 self.myroomId = availableIds[i]
@@ -106,10 +152,10 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
         if (len(queue) == 4):
             availableIds = [1,2,3,4]
-            paddle_1 = Paddle(vec2(0,0), vec2(40,40), 10 ,60, 1)
-            paddle_2 = Paddle(vec2(0,canvasHeight__ - 60), vec2(40,40), 10 ,60, 1)
-            paddle_3 = Paddle(vec2(canvasWidth__ - 10, 0), vec2(40, 40), 10 ,60, 2)
-            paddle_4 = Paddle(vec2(canvasWidth__ - 10, canvasHeight__ - 60), vec2(40, 40), 10 ,60, 2)
+            paddle_1 = Paddle(vec2(0,0), vec2(40,40), 10 ,60, 1, queue[0]['id'])
+            paddle_2 = Paddle(vec2(0,canvasHeight__ - 60), vec2(40,40), 10 ,60, 1, queue[1]['id'])
+            paddle_3 = Paddle(vec2(canvasWidth__ - 10, 0), vec2(40, 40), 10 ,60, 2, queue[2]['id'])
+            paddle_4 = Paddle(vec2(canvasWidth__ - 10, canvasHeight__ - 60), vec2(40, 40), 10 ,60, 2, queue[3]['id'])
             ball = Ball(vec2(20,20), vec2(10, 10), 10)
             rooms[self.room_room] = roomData(paddle_1, paddle_2, paddle_3, paddle_4, ball)
 
@@ -126,22 +172,33 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                     }
                 )
             await self.channel_layer.group_send(
-                self.room_room, 
+                self.room_room,
                 {"type": "start.game", "message": {'action': 'play_game', 'message':"print once"}}
             )
+        else:
+            await self.update_userStatus(self.scope['user'].id, 'waiting')
 
 
     async def disconnect(self, close_code):
         global queue
-        await self.channel_layer.group_discard(
-            self.room_room, self.channel_name
-        )
+
+        if not self.update_to_nogame:
+            await self.update_userStatus(self.scope['user'].id, 'no_game')
+
+            await self.channel_layer.group_discard(
+                self.room_room, self.channel_name
+            )
+
         if (not self.iam_playing):
             availableIds[self.myroomId - 1] = self.myroomId
             for d in queue:
                 if d["id"] == self.scope['user'].id:
                     queue.remove(d)
                     break
+        if (self.iam_playing):
+            rooms[self.room_room].size -= 1
+            if rooms[self.room_room].size == 0:
+                del rooms[self.room_room]
         print (f"quite room {self.room_room}")
 
 
@@ -152,20 +209,27 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         #     messageSend = 0
         #     print ("------------------------------------")
 
-        if (message['user'] == 1):
-            await rooms[self.room_room].paddle_1.update(message['code'])
-        elif (message['user'] == 2):
-                await rooms[self.room_room].paddle_2.update(message['code'])
-        elif (message['user'] == 3):
-                await rooms[self.room_room].paddle_3.update(message['code'])
-        elif (message['user'] == 4):
-            await rooms[self.room_room].paddle_4.update(message['code'])
+        try:
+            message = json.loads(text_data)
+            if (message['action'] == 'press' and self.iam_playing):
+                if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
+                    await rooms[self.room_room].paddle_1.update(message['code'])
+                elif (rooms[self.room_room].paddle_2.id == self.scope['user'].id):
+                    await rooms[self.room_room].paddle_2.update(message['code'])
+                elif (rooms[self.room_room].paddle_3.id == self.scope['user'].id):
+                    await rooms[self.room_room].paddle_3.update(message['code'])
+                elif (rooms[self.room_room].paddle_4.id == self.scope['user'].id):
+                    await rooms[self.room_room].paddle_4.update(message['code'])
+        except:
+            pass 
+
 
     async def send_message(self, event):
         message = event["message"]
 
         if message['action'] == "play":
             self.iam_playing = True
+            await self.update_userStatus(self.scope['user'].id, 'in_game')
         
         await self.send(text_data=json.dumps({"message": message}))
 
@@ -188,8 +252,8 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             while True:
                 if (self.room_room not in rooms):
                     break
-                if rooms[self.room_room].paddle_1.score >= 5 or rooms[self.room_room].paddle_4.score >= 5:
-                    if rooms[self.room_room].paddle_1.score >= 5:
+                if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_4.score >= 7:
+                    if rooms[self.room_room].paddle_1.score >= 7:
                         usernamee = "team 1"
                     else:
                         usernamee = "team 2"
@@ -296,13 +360,14 @@ async def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
 
 
 class Paddle:
-    def __init__(self, pos , velocity, width, height, leftOrRight):
+    def __init__(self, pos , velocity, width, height, leftOrRight, id):
         self.s = leftOrRight
         self.pos = pos
         self.velocity = velocity
         self.width = width
         self.height = height
         self.score = 0
+        self.id = id
 
     async def update (self ,key):
         if (key == 38):
@@ -349,7 +414,7 @@ class roomData:
         self.paddle_3 = paddle_3
         self.paddle_4 = paddle_4
         self.ball = ball
-        self.size = 0
+        self.size = 4
         self.start = True
     def json(self):
         message = {
