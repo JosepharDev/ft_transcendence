@@ -86,6 +86,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         global availableIds
         
         self.update_to_nogame = False
+        self.iam_playing  = False
 
         token = self.scope['cookies'].get('jwt')
         if not token:
@@ -119,7 +120,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             print (f"create new room {current_room}")
             self.room_room = current_room
 
-        self.iam_playing  = False
         if len(queue) < 4 :
             self.room_room = current_room
 
@@ -248,43 +248,45 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         else:
             rooms[self.room_room].start = False
         async def gameLoop():
+            try:
+                while True:
+                    if (self.room_room not in rooms):
+                        break
+                    if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_4.score >= 7:
+                        if rooms[self.room_room].paddle_1.score >= 7:
+                            usernamee = "team 1"
+                        else:
+                            usernamee = "team 2"
+                        dta = {
+                            "action": "finish",
+                            "winner" : usernamee
+                        }
+                        await self.channel_layer.group_send(
+                                self.room_room, {"type": "send.message", "message": dta}
+                            )
+                        # await self.close()
+                        break
+                    await rooms[self.room_room].ball.update()
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_3, canvasHeight__)
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_4, canvasHeight__)
 
-            while True:
-                if (self.room_room not in rooms):
-                    break
-                if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_4.score >= 7:
-                    if rooms[self.room_room].paddle_1.score >= 7:
-                        usernamee = "team 1"
-                    else:
-                        usernamee = "team 2"
-                    dta = {
-                        "action": "finish",
-                        "winner" : usernamee
-                    }
+                    await ballCollisionWithEdges(rooms[self.room_room].ball, canvasHeight__)
+
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_3)
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_4)
+                    await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_4, canvasWidth__, canvasHeight__)
+
+
                     await self.channel_layer.group_send(
-                            self.room_room, {"type": "send.message", "message": dta}
-                        )
-                    # await self.close()
-                    break
-                await rooms[self.room_room].ball.update()
-                await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
-                await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
-                await paddleCollisionWithEdges(rooms[self.room_room].paddle_3, canvasHeight__)
-                await paddleCollisionWithEdges(rooms[self.room_room].paddle_4, canvasHeight__)
-
-                await ballCollisionWithEdges(rooms[self.room_room].ball, canvasHeight__)
-
-                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
-                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
-                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_3)
-                await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_4)
-                await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_4, canvasWidth__, canvasHeight__)
-
-
-                await self.channel_layer.group_send(
-                    self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
-                )
-                await asyncio.sleep(0.016)
+                        self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
+                    )
+                    await asyncio.sleep(0.016)
+            except:
+                pass
         # await gameLoop()
         asyncio.create_task(gameLoop())
 
