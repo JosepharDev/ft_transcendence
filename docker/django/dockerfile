@@ -1,12 +1,10 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y python3 pip iputils-ping vim curl python3-psycopg2
+    apt-get install -y python3 pip iputils-ping vim curl python3-psycopg2 openssl
+COPY ./req.txt .
+RUN pip install -r req.txt
 
 WORKDIR /usr/src/
 
-COPY ./req.txt .
-
-RUN pip install -r req.txt
-CMD python3 manage.py makemigrations && \
-    python3 manage.py migrate && python3 manage.py loaddata ss.json
+CMD ['chmod +x /docker/django/script.sh && /docker/django/script.sh']

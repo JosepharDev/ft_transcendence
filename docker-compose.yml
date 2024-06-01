@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    build: /home/josephardev/Desktop/ft_transcendence/docker/postgres/
+    build: /home/josephardev/Desktop/last/docker/postgres/
     image: db_image
     container_name: db_container
     restart: 'always'
@@ -17,8 +17,9 @@ services:
     ports:
       - "5432:5432"
   web:
-    build: /home/josephardev/Desktop/ft_transcendence/docker/django/
-    command: daphne -b 0.0.0.0 -p 8001 tests.asgi:application
+    build: /home/josephardev/Desktop/last/docker/django/
+    command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
+    # command: daphne -b 0.0.0.0 -p 443 tests.asgi:application
     restart: 'always'
     image: django_image
     container_name: djangocontainer
@@ -33,11 +34,11 @@ services:
     # ports:
     #   - 8001:8001
   server:
-    build: /home/josephardev/Desktop/ft_transcendence/docker/nginx/
+    build: /home/josephardev/Desktop/last/docker/nginx/
     image: nginx_image
     container_name: nginx_container
     ports:
-      - 8002:8002
+      - 443:443
     restart: 'always'
     volumes:
     - vol:/var/www/html/
@@ -56,11 +57,11 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/josephardev/Desktop/ft_transcendence/
+      device: /home/josephardev/Desktop/last/
       o: bind
   db:
     driver: local
     driver_opts:
       type: none
-      device: /home/josephardev/Desktop/ft_transcendence/database/
+      device: /home/josephardev/Desktop/last/database/
       o: bind

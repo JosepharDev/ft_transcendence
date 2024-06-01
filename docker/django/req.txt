@@ -9,3 +9,4 @@ pyotp
 Pillow
 pyjwt
 psycopg2-binary
+pyopenssl
