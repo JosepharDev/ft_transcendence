@@ -4,7 +4,8 @@ RUN apt-get update && \
     apt-get install -y python3 pip iputils-ping vim curl python3-psycopg2 openssl
 COPY ./req.txt .
 RUN pip install -r req.txt
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /usr/src/private_daphne.pem -out /usr/src/public_daphne.pem  -subj "/CN=pingpong"
 
 WORKDIR /usr/src/
 
-CMD ['chmod +x /docker/django/script.sh && /docker/django/script.sh']
+CMD ['python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py loaddata ss.json']
