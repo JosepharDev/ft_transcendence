@@ -18,9 +18,10 @@ services:
       - "5432:5432"
   web:
     build: /home/josephardev/Desktop/ft_transcendence/docker/django/
-    command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
+    # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
+    # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
     # command: daphne -b 0.0.0.0 -p 443 tests.asgi:application
-    restart: 'always'
+    # restart: 'always'
     image: django_image
     container_name: djangocontainer
     volumes:

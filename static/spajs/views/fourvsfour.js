@@ -20,7 +20,7 @@ export async function remoteGame4()
 
 
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/multiple/'
         + '3'

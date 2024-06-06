@@ -86,7 +86,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         global availableIds
         
         self.update_to_nogame = False
-        self.iam_playing  = False
+        self.iam_playing = False
 
         token = self.scope['cookies'].get('jwt')
         if not token:
@@ -189,7 +189,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 self.room_room, self.channel_name
             )
 
-        if (not self.iam_playing):
+        if (self.iam_playing == False):
             availableIds[self.myroomId - 1] = self.myroomId
             for d in queue:
                 if d["id"] == self.scope['user'].id:
