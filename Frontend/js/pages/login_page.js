@@ -4,7 +4,7 @@ export default class LoginPage extends HTMLElement {
     constructor() {
         super()
     }
-    connectedCallback(){
+    connectedCallback() {
         const template = document.getElementById("login_template")
         const content = template.content.cloneNode(true)
         this.appendChild(content)

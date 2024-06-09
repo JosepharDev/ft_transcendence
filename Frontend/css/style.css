@@ -1,8 +1,9 @@
 @import "./global.css";
 @import "./components/navbar.css";
-@import "./pages/home-page.css";
-@import "./pages/login-page.css";
+@import "./pages/home.css";
+@import "./pages/profile.css";
+@import "./pages/login.css";
 @import "./pages/settings.css";
+
 @import "./components/edit-myacount.css";
 @import "./components/remove-two-factor.css";
-@import "./pages/profile.css";

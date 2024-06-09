@@ -1,4 +1,4 @@
-.profile_template {
+.profile {
     display: flex;
     flex: 1 80%;
     padding: 10px;
@@ -11,7 +11,7 @@
 
 /* /////////// information [1] */
 
-.profile_template .information {
+.profile .information {
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -19,7 +19,7 @@
 
 /* /////////// information head-profile [1 1] */
 
-.profile_template .information .head-profile {
+.profile .information .head-profile {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -27,7 +27,7 @@
     padding: 0 1.5rem;
 }
 
-.profile_template .information .head-profile .container {
+.profile .information .head-profile .container {
     display: flex;
     justify-content: space-between;
     background-color: gray;
@@ -39,22 +39,22 @@
     box-shadow: inset rgb(127, 138, 211) 2px -9px 19px 0px;
 }
 
-.profile_template .information .head-profile .container .user {
+.profile .information .head-profile .container .user {
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
 
-.profile_template .information .head-profile .container .user img {
-    width: 80px;
-    height: 80px;
+.profile .information .head-profile .container .user img {
+    width: 5rem;
+    height: 5rem;
     border-radius: 50%;
 
     box-shadow: 0px 0px 10px 8px rgb(200 201 208 / 41%);
 
 }
 
-.profile_template .information .head-profile .container .user h3 {
+.profile .information .head-profile .container .user h3 {
     padding-left: 1rem;
 
     font-family: Roboto;
@@ -62,7 +62,7 @@
     font-weight: 500;
 }
 
-.profile_template .information .head-profile .container button {
+.profile .information .head-profile .container button {
     padding: 0 3rem;
     margin: 0 3rem 0 0;
     font-size: 25px;
@@ -71,8 +71,8 @@
     border: 0;
 }
 
-/* .profile_template .information .head-profile .container button.animate::before,
-.profile_template .information .head-profile .container button.animate::after {
+/* .profile .information .head-profile .container button.animate::before,
+.profile .information .head-profile .container button.animate::after {
     content: "";
     position: absolute;
     height: 55px;
@@ -81,7 +81,7 @@
     background-repeat: no-repeat;
 }
 
-.profile_template .information .head-profile .container button.animate::before {
+.profile .information .head-profile .container button.animate::before {
     top: 20px;
     background-image: radial-gradient(circle, white 20%, transparent 20%),
     radial-gradient(circle, transparent 20%, white 20%, transparent 30%),
@@ -110,7 +110,7 @@
     }
 }
 
-.profile_template .information .head-profile .container button.animate::after {
+.profile .information .head-profile .container button.animate::after {
     top: 95px;
     transform: translateX(-137px);
     background-image: radial-gradient(circle, white 20%, transparent 20%),
@@ -154,26 +154,26 @@ button.addEventListener("click", (e) => {
 
 /* /////////// information results [1 2] */
 
-.profile_template .results {
+.profile .results {
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-grow: 1;
 }
 
-.profile_template .results div {
+.profile .results div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.profile_template .results div h4 {
+.profile .results div h4 {
     font-family: Roboto;
     font-size: 2rem;
     font-weight: 400;
 }
 
-.profile_template .results div .number {
+.profile .results div .number {
     font-size: 7.5rem;
     font-weight: 900;
     color: #4361EE;
@@ -183,123 +183,125 @@ button.addEventListener("click", (e) => {
 
 /* /////////// information latest-games [1 3] */
 
-.profile_template .latest-games {
+.profile .latest-games {
     padding: 2.5rem;
     flex-grow: 2;
 }
 
-.profile_template .latest-games .container {
+.profile .latest-games .container {
     background-color: #4361EE;
-    height: 800px;
+    height: 50rem;
     background: rgba(49, 53, 60, 1);
     box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
-.profile_template .latest-games .container .number-games {
+.profile .latest-games .container .number-games {
     display: flex;
     justify-content: space-between;
     padding: 2.5rem 2rem 1rem 1rem;
     font-size: 25px;
 }
 
-.profile_template .latest-games .container table {
+.profile .latest-games .container table {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
 
-.profile_template .latest-games .container table tbody tr td:nth-child(2) {
+.profile .latest-games .container table tbody tr td:nth-child(2) {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.profile_template .latest-games .container table th,
-.profile_template .latest-games .container table td {
+.profile .latest-games .container table th,
+.profile .latest-games .container table td {
     padding: 1.5rem 2rem;
 }
 
-.profile_template .latest-games .container table thead tr th:nth-child(2) {
-    width: 200px;
+.profile .latest-games .container table thead tr th:nth-child(2) {
+    width: 12.5rem;
 }
 
-.profile_template .latest-games .container table td img {
-    width: 45px;
-    height: 45px;
+.profile .latest-games .container table td img {
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
 }
 
-.profile_template .latest-games .container table tbody {
-    max-height: 570px;
+.profile .latest-games .container table tbody {
+    max-height: 35.6rem;
     overflow: auto;
     scrollbar-color: rgb(109, 138, 204) rgb(53, 54, 54);
 }
 
 /* ///////  friends */
 
-.profile_template .friends {
+.profile .friends {
     display: flex;
     flex-direction: column;
     width: 50%;
     padding: 10rem 2rem;
 }
 
-.profile_template .friends .container {
+.profile .friends .container {
     display: flex;
     flex-direction: column;
     height: 100%;
     background: rgba(49, 53, 60, 1);
     box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.25) inset;
-    max-height: 1130px;
+    max-height: 70.6rem;
 }
 
-.profile_template .friends .container .number-friends {
+.profile .friends .container .number-friends {
     display: flex;
     justify-content: space-between;
     font-size: 30px;
     padding: 3rem;
 }
 
-.profile_template .friends .container ul {
+.profile .friends .container ul {
     margin: 0 2rem 0 0;
     overflow: auto;
     scrollbar-color: rgb(145, 162, 203) rgb(53, 54, 54);
 }
 
-.profile_template .friends .container ul li:last-of-type {
+.profile .friends .container ul li:last-of-type {
     border-bottom: 0.1px solid rgb(36, 35, 35);
 }
 
-.profile_template .friends .container li {
+.profile .friends .container li {
     display: flex;
     align-items: center;
     padding: 0 1rem 0 0;
 }
 
-.profile_template .friends .container li .profile {
+.profile .friends .container li>div {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     border: 0;
     padding: 0.5rem;
     margin: 1em 1rem 0 2rem;
+
+    flex: 1 80%;
 }
  
 
-.profile_template .friends .container li .profile img {
-    width: 50px;
-    height: 50px;
+.profile .friends .container li>div img {
+    width: 4rem;
+    height: 4rem;
     border-radius: 50%;
     box-shadow: 0px 0px 9px 2px rgb(247 225 225 / 30%);
 }
 
-.profile_template .friends .container li .profile h4 {
+.profile .friends .container li>div h4 {
     font-size: 20px;
     font-family: Roboto;
 }
 
-.profile_template .friends .container li button {
+.profile .friends .container li button {
     padding: 0.5rem 0.9rem;
     font-size: 20px;
     border-radius: 10px;
@@ -308,67 +310,67 @@ button.addEventListener("click", (e) => {
     transition: transform 0.2s ease;
 }
 
-.profile_template .friends .container li button:hover {
+.profile .friends .container li button:hover {
     border: 0.3px solid white;
     transform: scale(1.20);
 }
 
 @media screen and (max-width: 1420px) {
 
-    .profile_template {
+    .profile {
         flex-direction: column;
     }
 
-    .profile_template .information .results {
+    .profile .information .results {
         padding: 2rem 0 0 0;
     }
 
-    .profile_template .latest-games .container table {
+    .profile .latest-games .container table {
         font-size: 25px;
     }
 
-    .profile_template .information {
+    .profile .information {
         width: 100%;
-        height: 865px;
+        height: 54rem;
         margin: 0 0 1rem 0;
     }
 
-    .profile_template .latest-games .container {
-        height: 500px;
+    .profile .latest-games .container {
+        height: 31rem;
     }
 
-    .profile_template .latest-games .container table {
-        max-height: 350px;
+    .profile .latest-games .container table {
+        max-height: 21.8rem;
     }
 
-    .profile_template .information .latest-games {
+    .profile .information .latest-games {
         padding: 0 2rem;
     }
 
-    .profile_template .latest-games .container .number-games {
+    .profile .latest-games .container .number-games {
         display: flex;
         justify-content: space-between;
         padding: 2rem 2rem 2rem 4rem;
         font-size: 20px;
     }
 
-    .profile_template .friends {
+    .profile .friends {
         width: 100%;
         padding: 0 2rem;
     }
 
-    .profile_template .friends .container {
-        height: 400px;
+    .profile .friends .container {
+        height: 25rem;
     }
 
-    .profile_template .friends .container .number-friends {
+    .profile .friends .container .number-friends {
         display: flex;
         justify-content: space-between;
         font-size: 20px;
         padding: 1rem 2rem 0.5rem 2.5rem;
     }
 
-    .profile_template .friends .container .profile {
+    .profile .friends .container li>div {
         flex-direction: row;
     }
 }

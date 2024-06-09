@@ -13,7 +13,7 @@
 
 /* /////////////////  Profile */
 
-.settings_template.profile {
+.settings_template .profile {
     left: 2.5%;
     width: 100%;
     border-width: 2px 2px 2px 2px;
@@ -23,29 +23,29 @@
     color: white;
 }
 
-.settings_template.profile h2 {
+.settings_template .profile h2 {
     padding: 1rem 0 0 2rem;
 }
 
-.settings_template.profile-header {
+.settings_template .profile-header {
     display: flex;
     padding-top: 40px;
     padding-left: 40px;
 }
 
-.settings_template.profile-image {
+.settings_template .profile-image {
     position: relative;
     padding-bottom: 1rem;
 }
 
-.settings_template.profile-header img {
+.settings_template .profile-header img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     box-shadow: 0px 0px 7px 4px rgb(255 255 255);
 }
 
-.settings_template.profile-image button {
+.settings_template .profile-image button {
     background: rgba(93, 118, 236, 1);
     font-size: 20px;
 	border: none;
@@ -58,7 +58,7 @@
     border-radius: 50%;
 }
 
-.settings_template.profile-image button i {
+.settings_template .profile-image button i {
     font-size: 24px;
     padding-left: 2px;
     padding-top: 2px;
@@ -66,25 +66,25 @@
     transition: font-size .2s;
 }
 
-.settings_template.profile-image button:hover {
+.settings_template .profile-image button:hover {
     width: 40px;
     height: 40px;
 }
 
-.settings_template.profile-image button i:hover {
+.settings_template .profile-image button i:hover {
     font-size: 40px;
 }
 
-.settings_template.profile-header .title {
+.settings_template .profile-header .title {
     padding-top: 35px;
     padding-left: 30px;
 }
 
-.settings_template.profile-header .title .Username {
+.settings_template .profile-header .title .Username {
     font-size: 50px;
 }
 
-.settings_template.profile-header .title button {
+.settings_template .profile-header .title button {
     padding-top: 10px;
     background: none;
 	color: inherit;
@@ -93,20 +93,20 @@
 	cursor: pointer;
 }
 
-.settings_template.profile-header .title button:hover {
+.settings_template .profile-header .title button:hover {
     text-decoration: underline;
     font-weight: bold;
 }
 
 @media screen and (max-width: 540px) {
-    .settings_template.profile-header .title .Username {
+    .settings_template .profile-header .title .Username {
         font-size: 20px;
     }
 }
 
 /* ///////////// main profile */
 
-.settings_template.main-profile {
+.settings_template .main-profile {
     display: flex;
     justify-content: space-between;
     flex-grow: 1;
@@ -116,7 +116,7 @@
 
 /* ////////////  information */
 
-.settings_template.information {
+.settings_template .information {
     display: flex;
     justify-content: center;
     flex: 60%;
@@ -126,7 +126,7 @@
     color: white;
 }
 
-.settings_template.information .container {
+.settings_template .information .container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -136,17 +136,17 @@
     height: 95%;
 }
 
-.settings_template.information .container>div {
+.settings_template .information .container>div {
     display: flex;
     justify-content: space-between;
     padding: 15px;
 }
 
-.settings_template.information .container h4 {
+.settings_template .information .container h4 {
     padding: 10px 0 0 0;
 }
 
-.settings_template.information .container button {
+.settings_template .information .container button {
     color: rgba(218, 218, 218, 1);
     padding: 3px 60px;
     background: rgb(82, 105, 224);
@@ -158,11 +158,11 @@
     transition: font-size .3s, box-shadow .3s;
 }
 
-.settings_template.information .container .two-factor button {
+.settings_template .information .container .two-factor button {
     padding: 7px 60px;
 }
 
-.settings_template.information .container button:hover {
+.settings_template .information .container button:hover {
     background: rgb(25, 58, 223);
     font-size: 20px;
     box-shadow: 0px 0px 0px 1px rgb(255 255 255);
@@ -171,7 +171,7 @@
 /* //////////// friends */
 
 
-.settings_template.friends {
+.settings_template .friends {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -184,11 +184,11 @@
     box-shadow: -6px 16px 20px 14px rgb(53, 54, 54);
 }
 
-.settings_template.friends h2 {
+.settings_template .friends h2 {
     padding: 1.2rem 0 1.8rem 2rem;
 }
 
-.settings_template.friends ul {
+.settings_template .friends ul {
     height: 90%;
     flex-direction: column;
     padding: 10px 0 10px 40px;
@@ -197,30 +197,30 @@
     scrollbar-width: 2px;
 }
 
-.settings_template.friends ul li {
+.settings_template .friends ul li {
     display: flex;
     justify-content: space-between;
     margin-right: 15px;
 }
 
-.settings_template.friends ul li div {
+.settings_template .friends ul li div {
     display: flex;
     padding: 20px 0 0 0;
 }
 
-.settings_template.friends img {
+.settings_template .friends img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     box-shadow: 0px 0px 0px 3px rgb(0 231 231);
 }
 
-.settings_template.friends ul li h4 {
+.settings_template .friends ul li h4 {
     padding: 28px 00px 28px 14px;
     font-size: larger;
 }
 
-.settings_template.friends ul li button {
+.settings_template .friends ul li button {
     align-self: center;
     color: rgba(218, 218, 218, 1);
     padding: 10px 50px;
@@ -234,16 +234,16 @@
     transition: font-size 0.3s;
 }
 
-.settings_template.friends ul li button:hover {
+.settings_template .friends ul li button:hover {
     background: rgb(25, 58, 223);
     font-size: 20px;
 }
 
 @media screen and (max-width: 1380px) {
-    .settings_template.main-profile {
+    .settings_template .main-profile {
         flex-direction: column;
     }
-    .settings_template.friends{
+    .settings_template .friends{
         max-height: 600px;
     }
 }

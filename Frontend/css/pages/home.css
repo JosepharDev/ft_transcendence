@@ -1,0 +1,71 @@
+
+home-page {
+    display: flex;
+    min-height: 100vh;
+    background: #292D32;
+}
+
+home-page .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    width: 65px;
+    height: 500px;
+    border-radius: 1px 45px 45px 1px;
+    border: 0.8px 0px 0px 0px;
+    opacity: 0px;
+    background: #31353C;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    box-shadow: -5px -5px 15px 0px rgba(54, 60, 69, 1);
+
+}
+
+home-page .container button {
+    background: #292D32;
+    position: relative;
+    border: 0;
+    width: 0;
+    right: -14px;
+    cursor: pointer;
+}
+
+home-page .container i {
+    background-color: #31353C;
+    box-shadow: 0px 0px 13px 2px #2F3655;
+    font-size: 30px;
+    border: 0.5px;
+}
+
+home-page .container i:hover {
+    color: #abafb7;
+    font-size: 45px;
+    transition-property: .5s;
+}
+
+home-page .my-account {
+    font-size: 55px;
+    position: fixed;
+    cursor: pointer;
+    top: 20px;
+    left: 13px;
+    border-radius: 50%;
+    background: transparent;
+    border: 0;
+    box-shadow: -5px -5px 15px 0px #373535;
+}
+
+home-page .my-account i {
+    position: relative;
+    top: 5px;
+    color: #656668;
+}
+
+home-page .my-account i:hover {
+    color: #abafb7;
+    font-size: 75px;
+    transition-property: .5s;
+}
+
