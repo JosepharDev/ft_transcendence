@@ -1,0 +1,374 @@
+.profile_template {
+    display: flex;
+    flex: 1 80%;
+    padding: 10px;
+    margin: 30px 20px 30px 90px;
+    border-style: solid;
+    border-color:  white;
+    height: 100%;
+    color: #DADADA;
+}
+
+/* /////////// information [1] */
+
+.profile_template .information {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+/* /////////// information head-profile [1 1] */
+
+.profile_template .information .head-profile {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+    padding: 0 1.5rem;
+}
+
+.profile_template .information .head-profile .container {
+    display: flex;
+    justify-content: space-between;
+    background-color: gray;
+    width: 100%;
+    padding: 2rem 1rem 2rem 3rem;
+    border-radius: 6rem;
+
+    background: rgba(67, 97, 238, 1);
+    box-shadow: inset rgb(127, 138, 211) 2px -9px 19px 0px;
+}
+
+.profile_template .information .head-profile .container .user {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.profile_template .information .head-profile .container .user img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+
+    box-shadow: 0px 0px 10px 8px rgb(200 201 208 / 41%);
+
+}
+
+.profile_template .information .head-profile .container .user h3 {
+    padding-left: 1rem;
+
+    font-family: Roboto;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.profile_template .information .head-profile .container button {
+    padding: 0 3rem;
+    margin: 0 3rem 0 0;
+    font-size: 25px;
+    border-radius: 20px;
+    background: rgb(96, 142, 221);
+    border: 0;
+}
+
+/* .profile_template .information .head-profile .container button.animate::before,
+.profile_template .information .head-profile .container button.animate::after {
+    content: "";
+    position: absolute;
+    height: 55px;
+    width: 200px;
+    transform: translateX(-65px);
+    background-repeat: no-repeat;
+}
+
+.profile_template .information .head-profile .container button.animate::before {
+    top: 20px;
+    background-image: radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, white 20%, transparent 30%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, white 15%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%); 
+    background-size: 10% 10%, 20% 20%, 15% 20%, 15% 15%, 20% 20%,
+    18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%,
+    25% 90%, 40% 90%, 55% 90%, 70% 90%;
+    animation: topBubbles 0.6s ease-in-out infinite;
+}
+
+@keyframes topBubbles {
+    50% {
+        background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+        50% 50%, 65% 20%, 90% 30;
+    }
+    100% {
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+        50% 40%, 65% 10%, 90% 20%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+}
+
+.profile_template .information .head-profile .container button.animate::after {
+    top: 95px;
+    transform: translateX(-137px);
+    background-image: radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, white 15%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%),
+    radial-gradient(circle, white 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+    background-position: 10% 0%, 30% 10%, 55% 0%, 70% 0%, 85% 0%, 70% 0%, 70% 0%;
+    animation: buttomBubbles 0.6s ease-in-out infinite;
+}
+
+@keyframes buttomBubbles {
+    50% {
+        background-position: 0% 80%, 20% 80%, 45% 60%, 100% 75%, 70% 75%, 95% 60%,
+        110% 10%;
+    }
+    100% {
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+        110% 10%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+} 
+
+<script>
+const button = document.querySelector(".button");
+
+button.addEventListener("click", (e) => {
+    e.preventDefault();
+    button.classList.add("animate");
+
+    setTimeout(() => {
+        button.classList.remove(animate);
+    }, 600); //
+});
+</script>
+
+*/
+
+/* /////////// information results [1 2] */
+
+.profile_template .results {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.profile_template .results div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile_template .results div h4 {
+    font-family: Roboto;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+.profile_template .results div .number {
+    font-size: 7.5rem;
+    font-weight: 900;
+    color: #4361EE;
+    font-family: IBM Plex Mono;
+    letter-spacing: -5px;
+}
+
+/* /////////// information latest-games [1 3] */
+
+.profile_template .latest-games {
+    padding: 2.5rem;
+    flex-grow: 2;
+}
+
+.profile_template .latest-games .container {
+    background-color: #4361EE;
+    height: 800px;
+    background: rgba(49, 53, 60, 1);
+    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.profile_template .latest-games .container .number-games {
+    display: flex;
+    justify-content: space-between;
+    padding: 2.5rem 2rem 1rem 1rem;
+    font-size: 25px;
+}
+
+.profile_template .latest-games .container table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile_template .latest-games .container table tbody tr td:nth-child(2) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile_template .latest-games .container table th,
+.profile_template .latest-games .container table td {
+    padding: 1.5rem 2rem;
+}
+
+.profile_template .latest-games .container table thead tr th:nth-child(2) {
+    width: 200px;
+}
+
+.profile_template .latest-games .container table td img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.profile_template .latest-games .container table tbody {
+    max-height: 570px;
+    overflow: auto;
+    scrollbar-color: rgb(109, 138, 204) rgb(53, 54, 54);
+}
+
+/* ///////  friends */
+
+.profile_template .friends {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 10rem 2rem;
+}
+
+.profile_template .friends .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: rgba(49, 53, 60, 1);
+    box-shadow: 10px 10px 10px 0px rgba(0, 0, 0, 0.25) inset;
+    max-height: 1130px;
+}
+
+.profile_template .friends .container .number-friends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 30px;
+    padding: 3rem;
+}
+
+.profile_template .friends .container ul {
+    margin: 0 2rem 0 0;
+    overflow: auto;
+    scrollbar-color: rgb(145, 162, 203) rgb(53, 54, 54);
+}
+
+.profile_template .friends .container ul li:last-of-type {
+    border-bottom: 0.1px solid rgb(36, 35, 35);
+}
+
+.profile_template .friends .container li {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0 0;
+}
+
+.profile_template .friends .container li .profile {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 0;
+    padding: 0.5rem;
+    margin: 1em 1rem 0 2rem;
+}
+ 
+
+.profile_template .friends .container li .profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 9px 2px rgb(247 225 225 / 30%);
+}
+
+.profile_template .friends .container li .profile h4 {
+    font-size: 20px;
+    font-family: Roboto;
+}
+
+.profile_template .friends .container li button {
+    padding: 0.5rem 0.9rem;
+    font-size: 20px;
+    border-radius: 10px;
+    background: rgb(96, 142, 221);
+    border: 0;
+    transition: transform 0.2s ease;
+}
+
+.profile_template .friends .container li button:hover {
+    border: 0.3px solid white;
+    transform: scale(1.20);
+}
+
+@media screen and (max-width: 1420px) {
+
+    .profile_template {
+        flex-direction: column;
+    }
+
+    .profile_template .information .results {
+        padding: 2rem 0 0 0;
+    }
+
+    .profile_template .latest-games .container table {
+        font-size: 25px;
+    }
+
+    .profile_template .information {
+        width: 100%;
+        height: 865px;
+        margin: 0 0 1rem 0;
+    }
+
+    .profile_template .latest-games .container {
+        height: 500px;
+    }
+
+    .profile_template .latest-games .container table {
+        max-height: 350px;
+    }
+
+    .profile_template .information .latest-games {
+        padding: 0 2rem;
+    }
+
+    .profile_template .latest-games .container .number-games {
+        display: flex;
+        justify-content: space-between;
+        padding: 2rem 2rem 2rem 4rem;
+        font-size: 20px;
+    }
+
+    .profile_template .friends {
+        width: 100%;
+        padding: 0 2rem;
+    }
+
+    .profile_template .friends .container {
+        height: 400px;
+    }
+
+    .profile_template .friends .container .number-friends {
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        padding: 1rem 2rem 0.5rem 2.5rem;
+    }
+
+    .profile_template .friends .container .profile {
+        flex-direction: row;
+    }
+}

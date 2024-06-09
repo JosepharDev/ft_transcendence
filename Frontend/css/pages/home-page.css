@@ -1,0 +1,27 @@
+.home_template {
+    display: flex;
+    flex: 1 80%;
+    padding: 10px;
+    margin: 30px 20px 30px 90px;
+    border-style: solid;
+    border-color:  white;
+    height: 100%;
+    color: #DADADA;
+    justify-content: center;
+    align-items: center;
+}
+
+.home_template .container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+    padding: 15% 20%;
+    background-color: red;
+    /* position: relative; */
+}
+
+.home_template .container .above {
+    display: flex;
+    border: 2px solid white;
+    padding: 10rem 5rem;
+}
