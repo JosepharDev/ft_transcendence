@@ -89,6 +89,21 @@ document.getElementById("home").addEventListener('click', async (e)=>{
     pushUrl('/');
 })
 
+document.getElementById("search").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    pushUrl('/search');
+})
+
+document.getElementById("friends").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    pushUrl('/s');
+})
+document.getElementById("set").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    pushUrl('/settings');
+})
+
+
 // tuto();
 console.log(url);
 // homeView();

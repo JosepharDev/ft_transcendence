@@ -12,6 +12,8 @@
     <link href="/static/css/stackboots.css"  rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Bangers&family=Orbitron:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
     <script defer src="/static/spajs/app.js" type="module"></script>
 <style>
@@ -21,17 +23,19 @@
     border : 1px solid rgba(212,155,32,1);
     border-radius: 15px;
     background-color: rgba(0, 0, 0, 255);
-    color: white;
+    /* color: white; */
     margin: 0 auto;
     margin-top: 10px;
 }
 
 #logout , #home
 {
-    color: white;
+    /* color: white; */
     font-family: sans-serif;
-    border : 1px solid rgba(212,155,32,1);
-    border-color: rgba(212,155,32,1);
+    /* border : 1px solid rgba(212,155,32,1); */
+    /* border-color: rgba(212,155,32,1); */
+    border: 1px solid #821e50;
+
     border-radius: 5px;
 }
 
@@ -44,15 +48,17 @@
 
 
 .user-profile {
-    background-color: #2c2c2c;
-    border: none;
+    /* background-color: rgba(246,1,136,0.8); */
+    background-color: rgba(0,0,34,1);
+
+    /* border: 1px solid #fff; */
     border-radius: 15px;
     max-width: 400px;
     overflow: hidden;
 }
 
 .card-header {
-    background-color: rgba(212,155,32,0.6);
+    background-color: rgba(0,0,34,0.9);
     padding: 20px;
 }
 
@@ -112,8 +118,10 @@
 }
 .match {
     padding: 10px;
-    border-bottom: 1px solid #343a40;
-    background-color: #3a3a3a; /* Background color for each match */
+    /* border-bottom: 1px solid #343a40; */
+    /* background-color: #3a3a3a; Background color for each match */
+
+
     border-radius: 5px;
     margin-bottom: 10px;
     display: flex;
@@ -121,9 +129,23 @@
     color: #c9ced2;
 }
 
-.match:last-child {
+.match {
+            margin: 10px 0;
+            margin-right: 3px;
+            padding: 10px;
+            /* background-color:rgba(40,40,40,255); */
+            background-color: rgba(0,0,34,1);
+            border-top: 1px solid rgba(255,9,124,0.6);
+            border-bottom: 1px solid rgba(255,9,124,0.6);
+            border-radius: 5px;
+            text-align: center;
+            padding-left: 3px;
+        }
+
+
+/* .match:last-child {
     border-bottom: none;
-}
+} */
 
 .player-avatar {
     width: 30px;
@@ -190,16 +212,16 @@
 }
 .col-lg-4{
 
-    border-radius: 20px;
+    border-radius: 2px;
 }
 .small-card {
     height: 200px;
-    border-radius: 30px;
+    border-radius: 5px;
 }
 
 .bg-lightblue {
     overflow: hidden;
-    border-radius: 8px; 
+    border-radius: 2px; 
     /* background-size: cover; */
     background: url("https://img.freepik.com/free-vector/ping-pong_78370-259.jpg")  no-repeat;
     /* backgr   ound: url('path_to_your_image.jpg') no-repeat center center; */ 
@@ -207,7 +229,11 @@
 }
 
 .bg-lightgreen {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 34, 0.9);
+    /* border: 2px solid #821e50 ; */
+    box-shadow: 0 0 5px 3px rgba(246,34,221,255);
+    border: 0.1px solid rgba(246,34,221,255) ;
+
 }
 
 .bg-lightcoral {
@@ -235,7 +261,10 @@
 
 
 
+.zibz{
+    margin: 100px auto;
 
+}
 
 
 
@@ -247,7 +276,7 @@
 
     .search-container {
         margin-top: 50px;
-        max-width: 400px; /* Adjusted width */
+        max-width: 500px; /* Adjusted width */
         margin-left: auto;
         margin-right: auto;
         padding: 20px;
@@ -255,7 +284,7 @@
         border-radius: 10px;
         /* background-color: #f9f9f9; */
         color: rgb(129,136,140);
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.8);
         text-align: center;
     }
     .search-results {
@@ -272,8 +301,8 @@
         border-radius: 5px;
         margin-bottom: 10px;
         /* background-color: #fff; */
-        background-color: #3a3a3a; /* Background color for each match */
-
+        /* background-color: #3a3a3a; Background color for each match */
+        background: rgba(0, 0, 34, 0.7);
         
     }
     .user-item a
@@ -408,10 +437,12 @@
             /* height: calc(100vh - 56px); Adjust based on navbar height */
         }
         canvas {
-            background: #000;
+            background: rgba(0,0,34,255);
             display: block;
             margin: 20px auto;
-            border: 2px solid #fff;
+            border: 0.2px solid #FFF;
+            box-shadow: 0 0 5px 3px rgba(246,34,221,255);
+            /* border-radius: 6px; */
         }
         #game-info {
             text-align: center;
@@ -453,7 +484,7 @@ body
             border-radius: 10px;
             /* background-color: #caacac; */
             color: rgb(129,136,140);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.9);
         }
         .settings-title {
             text-align: center;
@@ -492,16 +523,24 @@ body
             /* border: none; */
             margin-top: 8px;
             background-color: rgba(0, 0, 0, 0);
-            border: 3px solid rgba(212,155,32,255)
+            /* border: 3px solid rgba(212,155,32,255) */
+            /* border: 2px solid #821e50 ; */
+            border: 2px solid rgba(246,34,221,255) ;
+            
+
         }
         .btn-primary:hover {
             background-color: rgba(0, 0, 0, 0);
             border: 3px solid rgba(212,155,32,255);
-            background-color: rgba(212,155,32,255);
+            background-color: #FFF
         }
         #mybtn:active,#mybtn:focus, #mybtn:focus:active {
             background-color: rgba(212,155,32,255);
-            border: 3px solid rgba(212,155,32,255);
+            /* border: 3px solid rgba(212,155,32,255); */
+            
+            /* border: 2px solid #821e50 ; */
+            border: 2px solid rgba(246,34,221,255) ;
+
             color: white;
             box-shadow: none;
         }
@@ -546,21 +585,15 @@ body
         .btn-primary:hover {
             background-color: rgba(0, 0, 0, 0);
             border: 2px solid rgba(212,155,32,255);
-            background-color: rgba(212,155,32,255);
+            /* background-color: rgba(212,155,32,255); */
         }
         #mybtn:active,#mybtn:focus, #mybtn:focus:active {
-            background-color: rgba(212,155,32,255);
+            /* background-color: rgba(212,155,32,255); */
             border: 2px solid rgba(212,155,32,255);
             color: white;
             box-shadow: none;
         }
-        .match {
-            margin: 10px 0;
-            padding: 10px;
-            background-color:rgba(40,40,40,255);
-            border-radius: 5px;
-            text-align: center;
-        }
+
         .btn-back {
             margin-top: 20px;
             display: block;
@@ -596,11 +629,16 @@ body
         }
         .btn-primary {
             background-color: rgba(0, 0, 0, 0);
-            border: 2px solid rgba(212,155,32,255);
+            /* border: 2px solid rgba(212,155,32,255); */
+    /* border: 2px solid #821e50 ; */
+    border: 2px solid rgba(246,34,221,255) ;
+
+
         }
         .btn-primary:hover {
-            background-color: rgba(212,155,32,255);
-            border: 2px solid rgba(212,155,32,255);
+            /* background-color: rgba(212,155,32,255);  lastii */
+            background-color: rgba(246,34,221,0.5);
+            border: 2px solid rgba(246,34,221,255);
         }
         #mybtn:active, #mybtn:focus, #mybtn:focus:active
         {
@@ -643,14 +681,15 @@ h3 {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-radius: 10px;
-    background-color: #2c2c2c;
+    border-radius: 5px;
+    background-color: rgba(0,0 ,34,0.9);
+;
     transition: background-color 0.3s;
     color: #f8f9fa;
 }
 
 .friend:hover {
-    background-color: #3a3a3a;
+    background-color: rgba(0,0 ,34,1);
 }
 
 .friend-avatar {
@@ -682,6 +721,17 @@ h3 {
 body
 {
     /* background-size: cover; */
+    /* background: url(images/bg.jpg)  */
+    /* background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(2,54,91,1) 37%, rgba(2,82,120,1) 52%, rgba(0,212,255,1) 88%, rgba(0,181,223,1) 100%, rgba(0,212,255,1) 100%); */
+    /* height: 100vh; */
+    background: url('/static/css/p.png');
+    /* background-image: url('images/background.png'); */
+    background-size: cover; /* Ensures the background image covers the entire screen */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-position: center center; /* Centers the background image */
+    background-attachment: fixed; /* Keeps the background image fixed when scrolling */
+    height: 100%; /* Ensures the body takes up the full viewport height */
+    margin: 0; /* Removes default margin */
     font-family: 'Orbitron', sans-serif;
 }
 
@@ -697,6 +747,72 @@ body
 } */
 
 /***************************************************************/
+
+#navi {
+
+            max-width: 700px;
+            border: 0.2px solid rgba(246,34,221,255) ;
+            /* box-shadow: 0 0 4px 1px #b7599b; */
+            border-radius: 3px;
+            background-color: rgba(0, 0, 34, 0.7);
+            color: white;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding: 10px 20px;
+        }
+
+        #logout, .nav-link {
+            color: white;
+            color: #24f6e4;
+
+            /* color: rgba(212,155,32,1); */
+            font-family: 'Orbitron', sans-serif;
+            border: 1px solid #821e50;
+            border-radius: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+        }
+
+        #logout:hover, .nav-link:hover, #home:hover , #search:hover, #friends:hover {
+            background-color: #821e50;
+            box-shadow: 0 0 10px #821e50;
+
+            /* color: black; */
+        }
+
+        .navbar-brand {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            font-size: 1.1em;
+            margin: 0 10px;
+        }
+
+        .nav-link.active {
+            color: #24f6e4;
+        }
+
+        .avatarr {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 15px;
+        }
+
+        .form-control-sm {
+            background-color: rgba(60,56,53,255);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .form-control-sm option {
+            background-color: rgba(60,56,53,255);
+            color: white;
+        } 
 </style>
 
 
@@ -705,22 +821,24 @@ body
 <body>
     <!-- {% csrf_token %} -->
     <!-- <nav class="navbar navbar-light bg-light" style="display: none;"> -->
-    <nav id="navi" class="navbar navbar-light hideme" >
-        <div class="container-fluid">
-            <a class="navbar-brand" id="logout" href="#">Logout</a>
-            <div class="mx-auto">
-                <a class="nav-link active" aria-current="page" id="home" href="#">Home</a>
+        <nav id="navi" class="navbar navbar-light hideme">
+            <div class="container-fluid">
+                <a class="nav-link navbar-brand" id="logout" href="#"><i class="fas fa-sign-out-alt"></i></a>
+                <div class="mx-auto d-flex align-items-center">
+                    <a class="nav-link active" aria-current="page" id="home" href="#"><i class="fas fa-home"></i></a>
+                    <a class="nav-link active" aria-current="page" id="search" href="#"><i class="fas fa-search"></i></a>
+                    <a class="nav-link active" aria-current="page" id="friends" href="#"><i class="fas fa-user-friends"></i></a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <select class="form-control form-control-sm mr-2" id="language-selector">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                    </select>
+                    <a id="set" href="#"><img src="https://staticg.sportskeeda.com/editor/2022/06/508cd-16557590423635-1920.jpg?w=640" alt="Avatar" class="avatarr"></a>
+                </div>
             </div>
-            <div class="d-flex align-items-center">
-                <select class="form-control form-control-sm mr-2" id="language-selector">
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                </select>
-                <img src="avatar.png" alt="Avatar" class="avatar">
-            </div>
-        </div>
-    </nav>
+        </nav>
 
 
     <div id="app">
