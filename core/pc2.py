@@ -65,12 +65,15 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             # Handle the case where the user does not exist
             return "ERR"
 
-
     @database_sync_to_async
     def update_userStatus(self, user_id, status):
         try:
             user = User.objects.get(pk=user_id)
             user.game_status = status
+            if (status == 'no_game'):
+                user.game_type = 'N' #none
+            else:
+                user.game_type = 'P' #1vs1pong
             user.save()
         except User.DoesNotExist:
             # Handle the case where the user does not exist
@@ -127,13 +130,19 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
 
         stats = await self.checkUserStatus(self.scope['user'].id)
-        if (stats == 'in_game'):
-
-            self.iam_playing = True
-            roomAlreadyJoined = self.getCurrentRoom(self.scope['user'].id)
-            await self.channel_layer.group_add(
-                roomAlreadyJoined, self.channel_name
-            )
+        if (stats == 'in_game' ):
+            if self.scope['user'].game_type == 'P':
+                self.iam_playing = True
+                self.room_room = await self.getCurrentRoom(self.scope['user'].id)
+                print(f"=============>{self.room_room}")
+                await self.channel_layer.group_add(
+                    self.room_room, self.channel_name
+                )
+            else:
+                self.justDisconnect = True
+                await self.channel_layer.group_send(
+                            self.user_group_name,
+                            {"type": "send.message", "message": {'action': 'NA'}} )
 
             #later send users data
             # await self.channel_layer.group_send(
@@ -175,7 +184,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(
                 self.room_room, self.channel_name
             )
-
 
         if len(queue) == 2:
             #to update player status he is playing
@@ -252,6 +260,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             message = json.loads(text_data)
             print ("receievevvevevve")
             print (message)
+            print (self.iam_playing)
             if (message['action'] == 'P' and self.iam_playing):
                 if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
                     rooms[self.room_room].isKeyPdPressed_1 = True
