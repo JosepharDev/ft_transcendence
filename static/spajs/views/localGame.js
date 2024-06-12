@@ -3,13 +3,19 @@ import { dataGlobal } from "./globalData.js";
 export async function localPong(isVsBot, objConf)
 {
     let app = document.getElementById("app");
-    app.innerHTML = '\
-    <div id="game-container">\
-    <div id="game-info">\
-        <h2 id="playervsplayer">player1 vs player2</h2>\
-    </div>\
-    <canvas id="pongCanvas" width="800" height="450"></canvas>\
-    </div>';
+    app.innerHTML = `<div id="game-container">
+    <div class="player-info">
+        <div class="player">
+            <img src="media/blank-profile-picture.png" alt="Player 1">
+            <p id="player1-name">player1</p>
+        </div>
+        <div class="player">
+            <img src="media/blank-profile-picture.png" alt="Player 2">
+            <p id="player2-name">player2</p>
+        </div>
+    </div>
+    <canvas id="pongCanvas" width="800" height="450"></canvas>
+</div>`;
 
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');

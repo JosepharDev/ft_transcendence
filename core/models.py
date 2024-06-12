@@ -29,6 +29,11 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 
+    #zakaria
+    game_type = models.CharField(max_length=1, default="N")
+    current_room = models.CharField(max_length=30, blank=True)
+
+
 
 class Match(models.Model):
     match_id = models.IntegerField(primary_key=True)

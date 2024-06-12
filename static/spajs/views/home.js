@@ -44,6 +44,7 @@ function homeHtml()
             </div>
         </div>
 
+
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
         <div class="card h-100 bg-lightgreen small-card">
             <div class="card-body d-flex flex-column justify-content-center text-center">
@@ -66,7 +67,32 @@ function homeHtml()
                 <a href="/remote4" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
             </div>
         </div>
-    </div>
+        </div>
+
+
+
+
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card h-100 bg-lightgreen small-card">
+            <div class="card-body d-flex flex-column justify-content-center text-center">
+                <h6 class="card-title" data-localize="training">Tournament</h6>
+                <p class="card-text" data-localize="training-desc">Tournament.</p>
+                <a href="/tournament" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+            </div>
+        </div>
+        </div>
+
+
+
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card h-100 bg-lightgreen small-card">
+            <div class="card-body d-flex flex-column justify-content-center text-center">
+                <h6 class="card-title" data-localize="training">Vs Bot</h6>
+                <p class="card-text" data-localize="training-desc">Training.</p>
+                <a href="/tournament" class="btn btn-primary mt-auto btn-sm" data-localize="go">Go</a>
+            </div>
+        </div>
+        </div>
 
     </div>
 </div>

@@ -30,16 +30,14 @@ export async function remoteGame1()
     dataGlobal.socketDisconnect.push(chatSocket);
 
     let iamuser = 0;
+
+
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
 
-        // if (data.message.action == 'ALREADY' )
-        // {
-        //     // redirect to home;
-        // }
         if (data.message.action === 'NA')
         {
-            drawText("ALREADY IN GAME/LOBBY", canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+            drawText("ALREADY IN LOBBY", canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
             console.log('ayoo');
         }
         else if (data.message.action == 'iam' )
@@ -70,10 +68,9 @@ export async function remoteGame1()
                 data.message.paddle_2.height
             );
             drawSceneGame();
-            drawText(data.message.paddle_1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
+            drawText(data.message.paddle_1.score, canvas.width / 4, 50, "#FFF");
             drawText(data.message.paddle_2.score, 3 * canvas.width / 4, 50, "#FFF"); 
-            // remoteIncreaseScore(data.message.paddle_1.s, data.message.paddle_1.score);
-            // remoteIncreaseScore(data.message.paddle_2.s, data.message.paddle_2.score);
+
         }
         else if (data.message.action === 'users')
         {
@@ -93,13 +90,27 @@ export async function remoteGame1()
         return;
 
         let msg = {
-            'action': 'press',
+            'action': 'P',
             'user' : iamuser,
             'code': e.keyCode,
         }
         chatSocket.send(JSON.stringify(msg));
     }
+    function onKeyUpEvent(e)
+    {
+        if (e.keyCode != 38 && e.keyCode != 40)  
+        return;
+
+        let msg = {
+            'action': 'U',
+            'user' : iamuser,
+            'code': e.keyCode,
+        }
+        chatSocket.send(JSON.stringify(msg));
+    }
+
     window.addEventListener("keydown", onKeyDownEvent)
+    window.addEventListener("keyup", onKeyUpEvent)
 
     
     function drawText(text, x, y, color) {

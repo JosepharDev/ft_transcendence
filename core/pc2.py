@@ -34,6 +34,8 @@ def generate_random_string(length):
 queue = []
 rooms = {}
 curr_room = ""
+
+
 async def decode_jwt(token):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
@@ -41,6 +43,8 @@ async def decode_jwt(token):
         return await database_sync_to_async (User.objects.get)(pk=user_id)
     except (jwt.DecodeError, User.DoesNotExist):
         return None
+
+
 class PongConsumerTest(AsyncWebsocketConsumer):
 
     @database_sync_to_async
@@ -52,6 +56,14 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             # Handle the case where the user does not exist
             return "ERR"
 
+    @database_sync_to_async
+    def getCurrentRoom(self, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            return user.current_room
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return "ERR"
 
 
     @database_sync_to_async
@@ -59,6 +71,16 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         try:
             user = User.objects.get(pk=user_id)
             user.game_status = status
+            user.save()
+        except User.DoesNotExist:
+            # Handle the case where the user does not exist
+            return "ERR"
+
+    @database_sync_to_async
+    def update_room(self, user_id, rm):
+        try:
+            user = User.objects.get(pk=user_id)
+            user.current_room = rm
             user.save()
         except User.DoesNotExist:
             # Handle the case where the user does not exist
@@ -72,9 +94,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         global canvasHeight__
         global curr_room
 
-        print("88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888")
-        print(self.scope['cookies'].get('jwt'))
-        print("88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888")
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
@@ -85,27 +104,11 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             print({"message": "Expired Signature"})
             return
 
-        # if cookie_jwt:
-        #     try:
-        #         decoded_token = jwt.decode(cookie_jwt, 'your_secret_key', algorithms=['HS256'])
-        #         user_id = decoded_token['user_id']
+        await self.accept()
 
-        #         # Do something with the user_id
-        #     except jwt.ExpiredSignatureError:
-        #         # Handle expired token
-        #         pass
-        #     except jwt.InvalidTokenError:
-        #         # Handle invalid token
-        #         pass
-
-        # i should check the user if he is playing or waiting if so he cant play 2 matches at same time
-
-        self.id_in_queue  = len(queue)
-        self.iam_player_1 = True
         self.iam_playing  = False
         self.update_to_nogame = False
-
-        self.room_room = self.scope['user'].username
+        self.justDisconnect = False
 
         self.user_group_name = f"user_{self.scope['user'].username}"
 
@@ -116,32 +119,49 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             self.room_room = curr_room
 
 
+        #add user to his group
         await self.channel_layer.group_add(
             self.user_group_name, self.channel_name
         )
+        
+
+
         stats = await self.checkUserStatus(self.scope['user'].id)
-        if (stats != 'no_game'):
-            await self.accept()
+        if (stats == 'in_game'):
+
+            self.iam_playing = True
+            roomAlreadyJoined = self.getCurrentRoom(self.scope['user'].id)
+            await self.channel_layer.group_add(
+                roomAlreadyJoined, self.channel_name
+            )
+
+            #later send users data
+            # await self.channel_layer.group_send(
+            #         self.room_room,
+            #         {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['username'], 'user2':
+            #                                             self.scope['user'].username}}
+            #     )
+
+
+            return
+        elif (stats == 'waiting'):
+            self.justDisconnect = True
             await self.channel_layer.group_send(
                         self.user_group_name,
                         {"type": "send.message", "message": {'action': 'NA'}} )
-            # print("=======================================================================================")
-
-            # print(self.checkUserStatus(self.scope['user'].id))
-            self.update_to_nogame = True
-            # await self.close(1000)
             return
 
 
-        await self.accept()
+
 
         print("=======================================================================================")
         print(self.scope['user'].username)
         print("=======================================================================================")
 
         userData = {
-                        'userName' : self.scope['user'].username,
+                        'username' : self.scope['user'].username,
                         'id' : self.scope['user'].id,
+                        'avatar' : self.scope['user'].avatar.url,
                     }
         queue.append(userData)
 
@@ -150,15 +170,15 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     self.user_group_name,
                     {"type": "send.message", "message": {'action': 'id', 'message':f"{self.scope['user'].id}"}}
                 )
+
+        #user join room
         await self.channel_layer.group_add(
                 self.room_room, self.channel_name
             )
 
 
-
         if len(queue) == 2:
-
-            self.iam_player_1 = False
+            #to update player status he is playing
             await self.channel_layer.group_send(
                     self.room_room,
                     {
@@ -167,33 +187,35 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     }
                 )
 
-            paddle_1 = Paddle(vec2(0,70), vec2(40,40), 10 , 90, 1,  queue[0]['id'])
-            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(40, 40), 10 ,90, 2,  self.scope['user'].id)
+            paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1,  queue[0]['id'])
+            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  self.scope['user'].id)
             ball = Ball(vec2(20,20), vec2(10,10), 10)
 
-            rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0]['id'], self.scope['user'].id)
+            rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0], queue[1])
 
 
-            await self.channel_layer.group_send(
-                    self.user_group_name,
-                    {"type": "send.message", "message": {'action': 'iam', 'iam': 2}}
-                )
-
+            #send users data && starts counter in the client
             await self.channel_layer.group_send(
                     self.room_room,
-                    {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['userName'], 'user2':
+                    {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['username'], 'user2':
                                                         self.scope['user'].username}}
                 )
 
 
+            await self.update_room(queue[0]['id'], self.room_room)
+            await self.update_room(queue[1]['id'], self.room_room)
+
             queue.pop(0)
             queue.pop(0)
+
+            #start game
             await self.channel_layer.group_send(
                     self.room_room, 
                     {"type": "start.game", "message": {'action': 'play_game', 'message':"print once"}}
                 )
         else:
             await self.update_userStatus(self.scope['user'].id, 'waiting')
+
             await self.channel_layer.group_send(
                 self.user_group_name,
                 {"type": "send.message", "message": {'action': 'iam', 'iam': 1}}
@@ -204,65 +226,24 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         global queue
 
         try:
-            if not self.update_to_nogame:
-                await self.update_userStatus(self.scope['user'].id, 'no_game')
+            if self.justDisconnect:
+                return
 
-            if (self.iam_playing) and (self.room_room in rooms):
-                print ("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-                u1 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user1_id)
-                u2 = await database_sync_to_async (User.objects.get)(pk=rooms[self.room_room].user2_id)
-                ###################################3
-
-                if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_2.score >= 7:
-                        if rooms[self.room_room].paddle_1.score >= 7:
-                            usernamee = await self.getUsername(rooms[self.room_room].user1_id)
-                        else:
-                            usernamee = await self.getUsername(rooms[self.room_room].user2_id)
-                        dta = {
-                            "action": "finish",
-                            "winner" : usernamee
-                        }
-                        await self.channel_layer.group_send(
-                                self.room_room, {"type": "send.message", "message": dta}
-                        )
-                else:
-                    if rooms[self.room_room].user1_id == self.scope['user'].id :
-                        rooms[self.room_room].paddle_1.score = 0
-                        rooms[self.room_room].paddle_2.score = 7
-                        usernamee = await self.getUsername(rooms[self.room_room].user2_id)
-                        dta = {
-                            "action": "finish",
-                            "winner" : usernamee
-                        }
-                    else :
-                        rooms[self.room_room].paddle_1.score = 7
-                        rooms[self.room_room].paddle_2.score = 0
-                        usernamee = await self.getUsername(rooms[self.room_room].user1_id)
-                        dta = {
-                            "action": "finish",
-                            "winner" : usernamee
-                        }
-                    await self.channel_layer.group_send(
-                                self.room_room, {"type": "send.message", "message": dta}
-                        )
-
-                ######################################
-                match_ = await database_sync_to_async (Match)(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[self.room_room].paddle_1.score,
-                    plr2_count=rooms[self.room_room].paddle_2.score)
-                await database_sync_to_async (match_.save)()
-
-                del rooms[self.room_room]
-            
             if (len(queue) == 1):
                 if (queue[0]['userName'] == self.scope['user'].username):
                     queue.pop(0)
+
+            await self.channel_layer.group_discard(
+                self.user_group_name, self.channel_name
+            )
+
             await self.channel_layer.group_discard(
                 self.room_room, self.channel_name
             )
+
         except:
             pass
         print (f"quite room {self.room_room}")
-
 
 
 
@@ -271,13 +252,24 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             message = json.loads(text_data)
             print ("receievevvevevve")
             print (message)
-            if (message['action'] == 'press' and self.iam_playing):
-                messageSend = 0
-                print ("------------------------------------")
+            if (message['action'] == 'P' and self.iam_playing):
                 if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
-                    await rooms[self.room_room].paddle_1.update(message['code'])
+                    rooms[self.room_room].isKeyPdPressed_1 = True
+                    rooms[self.room_room].whichKeyPressed_1 = message['code']
+
                 else:
-                    await rooms[self.room_room].paddle_2.update(message['code'])
+                    rooms[self.room_room].isKeyPdPressed_2 = True
+                    rooms[self.room_room].whichKeyPressed_2 = message['code']
+    
+            elif (message['action'] == 'U' and self.iam_playing):
+                if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
+                    rooms[self.room_room].isKeyPdPressed_1 = False
+                    rooms[self.room_room].whichKeyPressed_1 = message['code']
+                else:
+                    rooms[self.room_room].isKeyPdPressed_2 = False
+                    rooms[self.room_room].whichKeyPressed_2 = message['code']
+
+            
         except:
             pass 
 
@@ -287,6 +279,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         if message['action'] == "play":
             self.iam_playing = True
             await self.update_userStatus(self.scope['user'].id, 'in_game')
+            
             # return #added this 05/30  11:15
 
         await self.send(text_data=json.dumps({"message": message}))
@@ -312,7 +305,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         else:
             rooms[self.room_room].start = False
         
-        
+
         await asyncio.sleep(2)
         async def gameLoop():
             try:
@@ -333,7 +326,17 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                         await self.channel_layer.group_send(
                                 self.room_room, {"type": "send.message", "message": dta}
                             )
+                        
+                        await self.finishMatch(self.room_room)
                         break
+
+
+
+                    if  rooms[self.room_room].isKeyPdPressed_1:
+                        await rooms[self.room_room].paddle_1.update(rooms[self.room_room].whichKeyPressed_1)
+                    if  rooms[self.room_room].isKeyPdPressed_2:
+                        await rooms[self.room_room].paddle_2.update(rooms[self.room_room].whichKeyPressed_2)
+
 
                     await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
                     await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
@@ -354,6 +357,26 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 pass
 
         asyncio.create_task(gameLoop())
+
+
+
+
+    @database_sync_to_async
+    def finishMatch(self, roomName):
+        u1 = User.objects.get(pk=rooms[roomName].user1_id)
+        u2 = User.objects.get(pk=rooms[roomName].user2_id)
+
+        u1.game_status = "no_game"
+        u2.game_status = "no_game"
+        u1.save()
+        u2.save()
+
+        match_ = Match(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[roomName].paddle_1.score,
+                            plr2_count=rooms[roomName].paddle_2.score)
+
+        match_.save()
+        del rooms[roomName]
+
 
 
 async def paddleCollisionWithEdges(paddle, canvasHeight):
@@ -434,9 +457,9 @@ class Paddle:
         if (key == 38):
             self.pos['y'] -= self.velocity['y']
         if (key == 40):
-            print(f"y ====:    {self.pos['y'] }")
+            # print(f"y ====:    {self.pos['y'] }")
             self.pos['y'] += self.velocity['y']
-            print(f"y ====:    {self.pos['y'] }")
+            # print(f"y ====:    {self.pos['y'] }")
 
     def json(self):
         message = {
@@ -469,31 +492,43 @@ class Ball():
         self.pos['y'] += self.velocity['y']
 
 class roomData:
-    def __init__(self, paddle_1, paddle_2, ball, id1, id2):
+    def __init__(self, paddle_1, paddle_2, ball, user1Data, user2Data):
+
         self.paddle_1 = paddle_1
         self.paddle_2 = paddle_2
         self.ball = ball
         self.size = 0
         self.start = True
-        self.user1_id = id1
-        self.user2_id = id2
+
+        self.user1_id = user1Data['id']
+        self.user2_id = user2Data['id']
+        
+        self.user1_username = user1Data['username']
+        self.user2_username = user2Data['username']
+  
+        self.user1_avatar = user1Data['avatar']
+        self.user2_avatar = user2Data['avatar']
+
+
+        self.isKeyPdPressed_1 = False
+        self.whichKeyPressed_1 = 0
+
+        self.isKeyPdPressed_2 = False
+        self.whichKeyPressed_2 = 0
+
     def json(self):
         message = {
                         "action": "data",
                         "paddle_1" :
                         {
-                            's': self.paddle_1.s,
                             'pos' : self.paddle_1.pos,
-                            'velocity' : self.paddle_1.velocity,
                             'width' : self.paddle_1.width,
                             'height' : self.paddle_1.height,
                             'score' : self.paddle_1.score
                         },
                         "paddle_2" :
                         {
-                            's': self.paddle_2.s,
                             'pos' : self.paddle_2.pos,
-                            'velocity' : self.paddle_2.velocity,
                             'width' : self.paddle_2.width,
                             'height' : self.paddle_2.height,
                             'score' : self.paddle_2.score
@@ -501,8 +536,8 @@ class roomData:
                         "ball":
                         {
                             'pos' : self.ball.pos , 
-                            'velocity' : self.ball.velocity ,
                             'radius' : self.ball.radius
+
                         }
                 }
         return message

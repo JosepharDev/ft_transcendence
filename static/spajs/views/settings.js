@@ -49,6 +49,10 @@ function settingsHtml(isEnable)
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" placeholder="Enter new username">
             </div>
+            <div class="form-group">
+            <label for="nickname">Tournament nickname</label>
+            <input type="text" class="form-control" id="nickname" placeholder="Enter new nickname">
+        </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Update Profile</button>
         </form>
         <div class="two-factor-auth">
