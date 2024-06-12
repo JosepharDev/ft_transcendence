@@ -113,10 +113,10 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         self.update_to_nogame = False
         self.justDisconnect = False
 
-        self.user_group_name = f"user_{self.scope['user'].username}"
+        self.user_group_name = generate_random_string(20)
 
         if len(queue) == 0:
-            curr_room = generate_random_string(5) + generate_random_string(8)
+            curr_room = generate_random_string(23)
         
         if len(queue) < 2:
             self.room_room = curr_room
@@ -237,8 +237,11 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             if self.justDisconnect:
                 return
 
+            if (self.iam_playing == False):
+                await self.update_userStatus(self.scope['user'].id, 'no_game')
+                
             if (len(queue) == 1):
-                if (queue[0]['userName'] == self.scope['user'].username):
+                if (queue[0]['id'] == self.scope['user'].id):
                     queue.pop(0)
 
             await self.channel_layer.group_discard(
