@@ -9,7 +9,43 @@ export async function remoteTournament()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="800" height="450"></canvas>
-    </div>`;
+    </div>
+    
+    
+        
+        <div class="bracket-wrapper hideme">
+        <div class="container">
+            <div class="bracket-container">
+                <!-- First Round -->
+                <div class="round">
+                    <div class="matchup us1">....</div>
+                    <div class="connector"></div>
+                    <div class="matchup us3">....</div>
+                </div>
+                <div class="round">
+                    <div class="matchup us2">....</div>
+                    <div class="connector"></div>
+                    <div class="matchup us4">....</div>
+                </div>
+                <!-- Semi-Finals -->
+                <div class="round">
+                    <div class="horizontal-connector"></div>
+                    <div class="matchup winner rone ">....</div>
+                    <div class="connector"></div>
+                    <div class="matchup winner rtwo ">....</div>
+                    <div class="horizontal-connector"></div>
+                </div>
+                <!-- Final -->
+                <div class="round">
+                    <div class="final-connector"></div>
+                    <div class="matchup winner final-winner">....</div>
+                    <div class="final-connector"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    `;
 
 
     // app.innerHTML = '\
@@ -20,6 +56,9 @@ export async function remoteTournament()
     // </div>';
 
     const canvas = document.getElementById('pongCanvas');
+    const canvasContainer = document.getElementById('game-container');
+    
+    const tournamentBracket = document.querySelector('.bracket-wrapper');
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
     canvas.height = 450;
@@ -81,6 +120,9 @@ export async function remoteTournament()
         }
         else if (data.message.action === 'users')
         {
+            // canvasContainer.classList.remove('hideme');
+            canvasContainer.style.display = 'flex';
+            tournamentBracket.classList.add('hideme');
             document.querySelector(".player-info").innerHTML =
             `<div class="player">
             <img src="${data.message.avatar1}" alt="Player 1">
@@ -97,6 +139,38 @@ export async function remoteTournament()
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
+        else if (data.message.action === 'allusers')
+        {
+            // canvasContainer.classList.add('hideme');
+            canvasContainer.style.display = 'none';
+            tournamentBracket.classList.remove('hideme');
+            document.querySelector('.us1').textContent = data.message.user1;
+            document.querySelector('.us2').textContent = data.message.user2;
+            document.querySelector('.us3').textContent = data.message.user3;
+            document.querySelector('.us4').textContent = data.message.user4;
+        }
+        else if (data.message.action === 'round1')
+        {
+            // canvasContainer.classList.add('hideme');
+            canvasContainer.style.display = 'none';
+            tournamentBracket.classList.remove('hideme');   
+            document.querySelector('.rone').textContent = data.message.winner;
+        }
+        else if (data.message.action === 'round2')
+        {
+            // canvasContainer.classList.add('hideme');
+            canvasContainer.style.display = 'none';
+            tournamentBracket.classList.remove('hideme');
+            document.querySelector('.rtwo').textContent = data.message.winner;
+        }
+        else if (data.message.action === 'final')
+        {
+            // canvasContainer.classList.add('hideme');
+            canvasContainer.style.display = 'none';
+            tournamentBracket.classList.remove('hideme');
+            document.querySelector('.final-winner').textContent = data.message.winner;
+        }
+
 
 
 

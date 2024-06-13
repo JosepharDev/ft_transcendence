@@ -333,6 +333,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         # await asyncio.sleep(2)
         async def gameLoop():
             # try:
+                await asyncio.sleep(4)
 
                 if rooms[self.room_room].round == 0:
                     rooms[self.room_room].paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match1_1)
@@ -389,7 +390,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
                 await asyncio.sleep(4)
                 
-
                 while True:
 
                     if (self.room_room not in rooms):
@@ -451,7 +451,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     return
                 rooms[self.room_room].round += 1
                 if rooms[self.room_room].round == 1 or rooms[self.room_room].round == 2:
-                    await asyncio.sleep(4)
+                    # await asyncio.sleep(4)
                     rooms[self.room_room].paddle_1.score = 0
                     rooms[self.room_room].paddle_2.score = 0
                     rooms[self.room_room].ball = Ball(vec2(20,20), vec2(10,10), 10)
