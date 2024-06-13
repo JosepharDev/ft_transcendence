@@ -5,39 +5,44 @@ export async function tournamentView()
     let app = document.getElementById("app");
     app.innerHTML = tournamentHtml();
 
-    tournamentForm = document.getElementById("tournamentForm");
-    tournamentForm.addEventListener('submit', tournamentSubmitEvent)
+    // tournamentForm = document.getElementById("tournamentForm");
+    // tournamentForm.addEventListener('submit', tournamentSubmitEvent)
 }
 
 
 function tournamentHtml()
 {
     return (`
-    <div class="tournament">
-    <div class="form-container" id="formContainer">
-    <div class="form-header">
-            <h2>Tournament Registration</h2>
+            <div class="bracket-wrapper">
+            <div class="container">
+                <div class="bracket-container">
+                    <!-- First Round -->
+                    <div class="round">
+                        <div class="matchup">Player 1</div>
+                        <div class="connector"></div>
+                        <div class="matchup">Player 2</div>
+                    </div>
+                    <div class="round">
+                        <div class="matchup">Player 3</div>
+                        <div class="connector"></div>
+                        <div class="matchup">Playddddd 4</div>
+                    </div>
+                    <!-- Semi-Finals -->
+                    <div class="round">
+                        <div class="horizontal-connector"></div>
+                        <div class="matchup winner">Winner1</div>
+                        <div class="connector"></div>
+                        <div class="matchup winner">Winner4</div>
+                        <div class="horizontal-connector"></div>
+                    </div>
+                    <!-- Final -->
+                    <div class="round">
+                        <div class="final-connector"></div>
+                        <div class="matchup winner final-winner">Final Winner</div>
+                        <div class="final-connector"></div>
+                    </div>
+                </div>
             </div>
-            <form id="tournamentForm">
-            <div class="form-group">
-            <label for="player1">Player 1</label>
-                <input type="text" class="form-control" id="player1" placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                <label for="player2">Player 2</label>
-                <input type="text" class="form-control" id="player2" placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                <label for="player3">Player 3</label>
-                <input type="text" class="form-control" id="player3" placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                <label for="player4">Player 4</label>
-                <input type="text" class="form-control" id="player4" placeholder="Enter username">
-                </div>
-                <button id="mybtn" type="submit" class="btn btn-primary btn-block">Submit</button>
-                </form>
-                </div>
         </div>
                 `)
             }

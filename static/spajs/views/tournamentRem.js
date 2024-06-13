@@ -2,7 +2,7 @@ import {dataGlobal} from "./globalData.js";
 import { pushUrl } from "../utils/urlRoute.js";
 
 
-export async function remoteGame1()
+export async function remoteTournament()
 {
     let app = document.getElementById("app");
     app.innerHTML = `<div id="game-container">
@@ -29,7 +29,7 @@ export async function remoteGame1()
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
-        + '/ws/pongTest/'
+        + '/ws/tournament/'
         + '3'
         + '/'
         );
@@ -98,13 +98,15 @@ export async function remoteGame1()
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
 
+
+
     }
 
 
     function onKeyDownEvent(e)
     {
         if (e.keyCode != 38 && e.keyCode != 40)  
-        return;
+            return;
 
         let msg = {
             'action': 'P',
@@ -116,7 +118,7 @@ export async function remoteGame1()
     function onKeyUpEvent(e)
     {
         if (e.keyCode != 38 && e.keyCode != 40)  
-        return;
+            return;
 
         let msg = {
             'action': 'U',

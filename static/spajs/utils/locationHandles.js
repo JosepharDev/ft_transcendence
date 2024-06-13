@@ -13,6 +13,7 @@ import { checkAuthentication } from "../views/checkAuth.js"
 import {friendsView} from "../views/friends.js"
 import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
+import { remoteTournament } from "../views/tournamentRem.js"
 
 export async function urlLocationHandler()
 {
@@ -92,6 +93,11 @@ export async function urlLocationHandler()
     else if (path === "/settings")
         {
             settingView();
+
+        }
+    else if (path === "/tournament")
+        {
+            remoteTournament();
 
         }
     else
