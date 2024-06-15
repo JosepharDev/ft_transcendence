@@ -1,4 +1,4 @@
-const translations = {
+export const translations = {
     en: {
         tournament: "Tournament",
         "tournament-desc": "Participate in tournaments.",
@@ -8,7 +8,7 @@ const translations = {
         "remote1vs1-desc": "Play 1vs1 remotely.",
         remote2vs2: "Remote 2vs2",
         "remote2vs2-desc": "Play 2vs2 remotely.",
-        search: "Search",
+        search: "Searciiih",
         "search-desc": "Search for players.",
         friends: "Friends",
         "friends-desc": "Connect with friends.",

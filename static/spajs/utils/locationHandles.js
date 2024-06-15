@@ -1,6 +1,5 @@
 import {searchView } from "./../views/search.js"
 import {homeView } from "./../views/home.js"
-import {profileFriend} from "./../views/profileFriend.js"
 import {localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
@@ -15,6 +14,7 @@ import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
 
+
 export async function urlLocationHandler()
 {
     console.log('popstate');
@@ -28,15 +28,18 @@ export async function urlLocationHandler()
     
     const params = location.split('/');
 
+
+    let path = window.location.pathname
+    if (params.length > 3)
+        path = '/';
+
     const request = {
       resource: params[1] || null,
       id: params[2] || null,
     };
-    
+
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
-    
-    console.log("Lolo")
-    console.log("Lolssssssssso")
+
     if (location === '/signin')
     {
         signin();
@@ -47,63 +50,32 @@ export async function urlLocationHandler()
         twofaView();
         return ;
     }
-    let path = window.location.pathname
+
+
     console.log("locationHandler");
-    const authStatus = await checkAuthentication();
-    if (authStatus === "2fa") {
-        pushUrl('/twofa');
-        return;
-    }
-    else if (authStatus === 'signin')
-        {
-            pushUrl('/signin');
-            return ;
-        }
+
+
     if (parsedUrl === "/userid/:id")
-    {
         profileFriend2(request.id);
-        return;
-        profileFriend(request.id);
-    }
     else if (path === '/remote')
-        {
         remoteGame1();
-    }
     else if (path === "/search")
-    {
         searchView()
-    }
     else if (path === "/localgame")
-    {
         localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"}); 
-    }
     else if (path === "/remote4")
-    {
-
         remoteGame4();
-    }
     else if (path === "/s")
-    {
-        // tournamentView()
-        // return;
-        // settingView();
         friendsView();
-        // profileFriend2(3);
-    }
     else if (path === "/settings")
-        {
-            settingView();
-
-        }
+        settingView();
     else if (path === "/tournament")
-        {
-            remoteTournament();
-
-        }
+        remoteTournament();
+    else if (path === "/bot")
+        localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"});
+    else if (path === "/game")
+        homeView(); // this will be the game
     else
-    {
-        console.log("rrrrrrrrrr");
-        homeView();
-    }
+        homeView(); // this will change just button to start
 }
 

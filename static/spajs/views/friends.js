@@ -3,45 +3,71 @@ import { pushUrl } from "../utils/urlRoute.js";
 
 export async function friendsView()
 {
-    const request = new Request(
-        '/api/friends/',
-        {
-            method: 'GET',
-        }
-    );
-    let res = await fetch(request);
-    let js = await res.json();
-
-
-    let app = document.getElementById("app");
-    app.innerHTML = friendsHtml();
-
-    const userListElement = document.querySelector('.friends-list');
-    userListElement.innerHTML = '';
-
-    if (!js.length)
+    try
     {
-        return;
+        const request = new Request(
+            '/api/friends/',
+            {
+                method: 'GET',
+            }
+        );
+        let res = await fetch(request);
+        if (!res.ok)
+        {
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                    pushUrl('/signin');
+                return 
+            }
+            throw new Error('Error: /api/friends/');
+        }
+        let js = await res.json();
+        let app = document.getElementById("app");
+        app.innerHTML = friendsHtml();
+    
+        const userListElement = document.querySelector('.friends-list');
+        userListElement.innerHTML = '';
+    
+        if (!js.length)
+        {
+            return;
+        }
+    
+        js.forEach(user => {
+            const userElement = document.createElement('div');
+            userElement.classList.add('col-12', 'col-sm-6', 'col-md-4', 'col-lg-3', 'mb-4');
+            userElement.innerHTML = friendData(user);
+            userListElement.appendChild(userElement);
+    
+            let frlink = document.getElementById(`userlink${user.id}`);
+            frlink.addEventListener('click', (e)=>{
+                e.preventDefault();
+                pushUrl(`/userid/${user.id}`);
+            })
+        });
     }
-
-    js.forEach(user => {
-        const userElement = document.createElement('div');
-        userElement.classList.add('col-12', 'col-sm-6', 'col-md-4', 'col-lg-3', 'mb-4');
-        userElement.innerHTML = friendData(user);
-        userListElement.appendChild(userElement);
-
-        let frlink = document.getElementById(`userlink${user.id}`);
-        frlink.addEventListener('click', (e)=>{
-            e.preventDefault();
-            pushUrl(`/userid/${user.id}`);
-        })
-    });
+    catch (err)
+    {
+        alert ("something went wrong");
+        pushUrl('/');
+    }
 }
 
 
 function friendsHtml()
 {
     return (`
+    <div class="container mt-5">
+    <h3 class="text-white">Profile</h3>
+    <div class="row friends-list">
+    
+    <!-- Repeat for more friends -->
+    </div>
+    </div>
     <div class="container mt-5">
         <h3 class="text-white">Friends List</h3>
         <div class="row friends-list">

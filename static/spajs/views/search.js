@@ -1,11 +1,13 @@
 import {pushUrl} from "./../utils/urlRoute.js"
-
+import { translations } from "../utils/localization.js";
 export function searchView ()
 {
     console.log("lolo")
     let app = document.getElementById("app");
     app.innerHTML = searchHtml();
     let searchButton = document.getElementById("search-form");
+    let sear = document.getElementById("search-input");
+    sear.addEventListener('input', searchElementsEvent);
     searchButton.addEventListener('submit', searchElementsEvent);
 }
 
@@ -14,7 +16,7 @@ function searchHtml()
 {
     return (`
             <div class="container search-container">
-            <h2>User Search</h2>
+            <h2>User ${translations['en']['search']}</h2>
             <form id="search-form">
                 <div class="form-group">
                     <input name="q" type="text" class="form-control" id="search-input" placeholder="Search for users by username">
@@ -45,6 +47,21 @@ async function searchElementsEvent(e)
     try
     {
         let res = await fetch(request);
+
+        if (!res.ok)
+        {
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                    pushUrl('/signin');
+                return 
+            }
+            throw new Error('Error: /api/search/');
+        }
+
         let js = await res.json();
         const filteredUsers = js;
     

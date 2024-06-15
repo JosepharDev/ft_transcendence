@@ -9,7 +9,7 @@ export let dataGlobal = {
     idInterval : -1,
     csrftoken : "",
     sentOnline : false,
-
+    selectedLanguage : "en"
 }
 
 export function closSockets(data)

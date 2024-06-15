@@ -121,14 +121,14 @@ export async function remoteGame4()
     function drawBall(x, y, radius)
     {
       ctx.fillStyle = "#FFF";
-      ctx.beginPath ();
+      ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fill();
     }
     
     function remoteGameLoop()
     {
-      ctx.fillStyle = "rgba(0,0,0,1)"
+      ctx.fillStyle = "rgba(0, 0, 0, 1)"
       ctx.fillRect(0,0,canvas.width, canvas.height);
     }
     

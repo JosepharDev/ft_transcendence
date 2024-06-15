@@ -326,7 +326,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         await asyncio.sleep(2)
         async def gameLoop():
-            try:
+            # try:
                 while True:
 
                     if (self.room_room not in rooms):
@@ -371,8 +371,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                         self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
                     )
                     await asyncio.sleep(0.016)
-            except:
-                pass
+            # except:
+            #     pass #add no_game
 
         asyncio.create_task(gameLoop())
 

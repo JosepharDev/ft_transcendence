@@ -35,6 +35,7 @@ export async function AJAX_(req)
     try
     {
         let res = await fetch(req);
+        console.log(`status code ${res.status}`);
         let js = await res.json();
         return js;
     }

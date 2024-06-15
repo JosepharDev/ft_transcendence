@@ -3,7 +3,6 @@ import { AJAX_ } from './checkAuth.js';
 
 export async function  homeView()
 {
-
     let app = document.getElementById('app');
     app.innerHTML = homeHtml();
     const matches = document.querySelectorAll(".btn-sm");
@@ -16,11 +15,6 @@ export async function  homeView()
             })
         })   
     }
-    // dataGlobal.csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    // </div>
-
-
 }
 
 

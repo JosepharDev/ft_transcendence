@@ -11,6 +11,22 @@ export async function settingView()
             }
         );
         let res = await fetch(request);
+
+        if (!res.ok)
+        {
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                    pushUrl('/signin');
+                return 
+            }
+            throw new Error('Error: /api/friends/');
+        }
+
+
         let js = await res.json();
     
         let isEnable = "Enable 2FA";
@@ -88,8 +104,20 @@ async function profileFormSettingsEvent(e)
 
 
     let res = await fetch(request);
+
     if (!res.ok)
+    {
+        if (res.status === 401)
+        {
+            let messageStatus = await res.json();
+            if (messageStatus === "2fa")
+                pushUrl('/twofa');
+            else
+                pushUrl('/signin');
+            return 
+        }
         alert ("not updated");
+    }
     else
         alert ("updated");
 }

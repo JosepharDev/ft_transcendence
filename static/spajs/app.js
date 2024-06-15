@@ -78,7 +78,7 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
     let js = await res.json();
     if (js.message === "success")
     {
-        document.querySelector("nav").classList.add("hideme");
+        document.querySelector("#navi").classList.add("hideme");
         
         pushUrl('/signin');
     }

@@ -1,3 +1,4 @@
+import { pushUrl } from "../utils/urlRoute.js";
 
 
 export async function profileFriend2(id)
@@ -5,7 +6,8 @@ export async function profileFriend2(id)
     let app = document.getElementById("app");
     app.innerHTML = profileFriendHtml();
 
-    try{
+    try
+    {
 
         let jj = `/api/userid/${id}/`;
         const request = new Request(
@@ -14,13 +16,27 @@ export async function profileFriend2(id)
                 method: 'GET',
             }
         );
+        
         const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error('Failed to fetch user profile');
+
+        if (!response.ok)
+        {
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                    pushUrl('/signin');
+                return 
+            }
+            throw new Error('Error: /api/userid/');
         }
+        
+
         const userData = await response.json();
+
         document.getElementById("firstPartData").innerHTML = profileFirstPart(userData);
-        console.log(userData.avatar);
         document.querySelector("#statsPart").innerHTML = profileStatsPart(userData);
         historyMatchView(userData.matches);
 
@@ -36,28 +52,35 @@ export async function profileFriend2(id)
                         method: 'POST',
                         body: formData,
                     });
-                    
-                    if (response.ok) {
-                        let js = await response.json()
-                        if (js.message === "Friend removed successfully")
-                        {
-                            btn.textContent = "Follow";
-                            console.log(`FF${js.message}`);
 
-                        }
-                        else if (js.message === "Friend added successfully")
+
+                    if (!response.ok)
+                    {
+                        if (res.status === 401)
                         {
-                            btn.textContent = "Unfollow";
-                            console.log(js.message);
+                            let messageStatus = await res.json();
+                            if (messageStatus === "2fa")
+                                pushUrl('/twofa');
+                            else
+                                pushUrl('/signin');
+                            return 
                         }
-                        console.log(btn);
-                    } else {
-                        alert('Something went wrong!');
+                        throw new Error('Error: /api/friends/');
                     }
+
+
+                    let js = await response.json()
+
+                    if (js.message === "Friend removed successfully")
+                        btn.textContent = "Follow";
+
+                    else if (js.message === "Friend added successfully")
+                        btn.textContent = "Unfollow";
+
                 }
                 catch (err)
                 {
-            
+                    alert('Something went wrong!');
                 }
             }
 
@@ -69,8 +92,8 @@ export async function profileFriend2(id)
     }
     catch (err)
     {
-        // document.querySelector(".profile-section").innerHTML = 
-        // '<div class="username-display">Error loading user profile</div>';
+        alert('Something went wrong!');
+        pushUrl('/');
     }
 }
 
@@ -105,12 +128,11 @@ function profileFriendHtml()
 
 function profileFirstPart(data)
 {
-    console.log(data.its_me);
-    console.log(data.friend);
+
     let followShow = "";
     let onlineStatus = data.is_online ? "Online" : "Offline";
     let statusIndicator = data.is_online ? "" : "offline";
-    console.log(data.is_online);
+
     if (!data.its_me)
     {
         let followPlace = ""
@@ -120,6 +142,7 @@ function profileFirstPart(data)
             followPlace = "Follow";
         followShow = `<button class="btn btn-sm btn-outline-light follow-btn">${followPlace}</button>`;
     }
+
     return (`
     <img src="${data.avatar}" class="profile-avatar" alt="User Avatar">
     <div class="ml-3">
@@ -153,20 +176,17 @@ function profileStatsPart(data)
 
 function historyMatchView(data)
 {
-    let hi = document.querySelector("#matchHis");
-    // const emptyHistoryMessage = document.getElementById('emptyHistoryMessage');
+    let matches = document.querySelector("#matchHis");
     if (data.length > 0)
-        {
-            // emptyHistoryMessage.style.display = 'none';
+    {
             data.forEach(element => {
                 let newDiv = document.createElement('div');
                 newDiv.innerHTML = historyMatchHelper(element);
-                // newDiv.className = "match-item";
-            hi.appendChild(newDiv);
+                
+                matches.appendChild(newDiv);
         });
     }
 }
-
 
 function historyMatchHelper(data)
 {
@@ -174,13 +194,13 @@ function historyMatchHelper(data)
     <div class="match d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center flex-grow-1">
             <img src="${data.plr1img}" class="player-avatar" alt="Player 1">
-            <span class="player-name ml-2">${data.player1Email}</span>
+            <span class="player-name ml-2">${data.player1Username}</span>
             <span class="match-score ml-2">${data.player1Score}</span>
         </div>
         <span class="vs">vs</span>
         <div class="d-flex align-items-center flex-grow-1 justify-content-end">
             <span class="match-score mr-2">${data.player2Score}</span>
-            <span class="player-name mr-2">${data.player2Email}</span>
+            <span class="player-name mr-2">${data.player2Username}</span>
             <img src="${data.plr2img}" class="player-avatar" alt="Player 2">
         </div>
         <span class="match-date ml-3">2023-05-01</span>
