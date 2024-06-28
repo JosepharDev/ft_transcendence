@@ -9,183 +9,207 @@
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>Transcendence</title>
 </head>
-
 <body>
   <div id="root"></div>
-  
-  <!-- /////////////////////////////////// -->
 
   <!-- /////////////////////////////////// -->
-
+  <!-- <search-page>
+    <div class="find-friends-container">
+      <div class="find-friends-header">
+        <div class="heading">Find Friends</div>
+        <div class="search">
+          <i class='bx bx-search'></i>
+          <input type="text" placeholder="Enter a friend's name">
+        </div>
+      </div>
+      <div class="find-friends-body">
+        <div class="user-row">
+          <div class="user-info">
+            <button><img src="asset/zlazrak.jpeg" alt="user"></button>
+            <span>zlazrak</span>
+          </div>
+          <button class="action-follow">
+            Follow 
+          </button>
+        </div>
+        <div class="user-row">
+          <div class="user-info">
+            <button><img src="asset/yoyahya.jpeg" alt="user"></button>
+            <span>yoyahya</span>
+          </div>
+          <button class="action-unfollow">
+            Unfollow 
+          </button>
+        </div>
+      </div>
+    </div>
+  </search-page> -->
+  <!-- /////////////////////////////////// -->
 
   <template id="profile_template">
-    <div class="profile">
-      <div class="information">
-        <div class="head-profile">
-          <div class="container">
-            <div class="user">
-              <img src="asset/aahrach.jpeg" alt="avatar">
-              <div class="online"></div>
-              <h3>aahrach</h3>
+    <div class="information">
+      <div class="head-profile">
+        <div class="container">
+          <div class="user">
+            <img src="asset/aahrach.jpeg" alt="avatar">
+            <div class="online"></div>
+            <h3>aahrach</h3>
+          </div>
+          <button>
+            Follow
+          </button>
+        </div>
+      </div>
+      <div class="results">
+        <div class="win-rate">
+          <h4>Win Rate</h4>
+          <div class="number">80</div>
+        </div>
+        <div class="total-win">
+          <h4>Total Win</h4>
+          <div class="number">20</div>
+        </div>
+        <div class="best-time">
+          <h4>Best Time</h4>
+          <div class="number">180</div>
+        </div>
+      </div>
+      <div class="latest-games">
+        <div class="container">
+          <div class="number-games">
+            <h2>Latest Games</h2>
+            <h2>300</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Result</th>
+                <th>Opponent</th>
+                <th>Rank</th>
+                <th></th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>VICTORY</td>
+                <td>
+                  <img src="asset/yoyahya.jpeg" alt="image">
+                  <h4>yoyahya</h4>
+                </td>
+                <td>#12</td>
+                <td><i class='bx bxs-up-arrow' style='color:#00f635'></i></td>
+                <td>51*</td>
+              </tr>
+              <tr>
+                <td>DEFEAT</td>
+                <td>
+                  <img src="asset/zlazrak.jpeg" alt="image">
+                  <h4>zlazrak</h4>
+                </td>
+                <td>#22</td>
+                <td><i class='bx bxs-down-arrow' style='color:#f60004'></i></td>
+                <td>302*</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="friends">
+      <div class="container">
+        <div class="number-friends">
+          <h2>Friends</h2>
+          <h2>10</h2>
+        </div>
+        <ul>
+          <li>
+            <div>
+              <img src="./asset/yoyahya.jpeg" alt="friend image">
+              <h4>yoyahya</h4>
             </div>
             <button>
               Follow
             </button>
-          </div>
-        </div>
-        <div class="results">
-          <div class="win-rate">
-            <h4>Win Rate</h4>
-            <div class="number">80</div>
-          </div>
-          <div class="total-win">
-            <h4>Total Win</h4>
-            <div class="number">20</div>
-          </div>
-          <div class="best-time">
-            <h4>Best Time</h4>
-            <div class="number">180</div>
-          </div>
-        </div>
-        <div class="latest-games">
-          <div class="container">
-            <div class="number-games">
-              <h2>Latest Games</h2>
-              <h2>300</h2>
+          </li>
+          <li>
+            <div>
+              <img src="./asset/zlazrak.jpeg" alt="friend image">
+              <h4>zlazrak</h4>
             </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Result</th>
-                  <th>Opponent</th>
-                  <th>Rank</th>
-                  <th></th>
-                  <th>Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>VICTORY</td>
-                  <td>
-                    <img src="asset/yoyahya.jpeg" alt="image">
-                    <h4>yoyahya</h4>
-                  </td>
-                  <td>#12</td>
-                  <td><i class='bx bxs-up-arrow' style='color:#00f635'></i></td>
-                  <td>51*</td>
-                </tr>
-                <tr>
-                  <td>DEFEAT</td>
-                  <td>
-                    <img src="asset/zlazrak.jpeg" alt="image">
-                    <h4>zlazrak</h4>
-                  </td>
-                  <td>#22</td>
-                  <td><i class='bx bxs-down-arrow' style='color:#f60004'></i></td>
-                  <td>302*</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="friends">
-        <div class="container">
-          <div class="number-friends">
-            <h2>Friends</h2>
-            <h2>10</h2>
-          </div>
-          <ul>
-            <li>
-              <div>
-                <img src="./asset/yoyahya.jpeg" alt="friend image">
-                <h4>yoyahya</h4>
-              </div>
-              <button>
-                Follow
-              </button>
-            </li>
-            <li>
-              <div>
-                <img src="./asset/zlazrak.jpeg" alt="friend image">
-                <h4>zlazrak</h4>
-              </div>
-              <button>
-                Follow
-              </button>
-            </li>
-          </ul>
-        </div>
+            <button>
+              Follow
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </template>
   
   <template id="settings_template">
-    <div class="settings_template">
-      <div class="profile">
-        <h2>My account</h2>
-        <div class="profile-header">
-          <div class="profile-image">
-            <button>
-              <i class='bx bxs-pencil' style='color:#faf9f9'></i>
-            </button>
-            <img src="asset/aahrach.jpeg" alt="Profile Image">
+    <div class="profile">
+      <h2>My account</h2>
+      <div class="profile-header">
+        <div class="profile-image">
+          <button>
+            <i class='bx bxs-pencil' style='color:#faf9f9'></i>
+          </button>
+          <img src="asset/aahrach.jpeg" alt="Profile Image">
+        </div>
+        <div class="title">
+          <h1 class="Username">aahrach</h1>
+          <button class="see-profile">See Public Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="main-profile">
+      <div class="information">
+        <div class="container">
+          <div class="Username">
+            <div>
+              <h3>USERNAME</h3>
+              <h4>aahrach</h4>
+            </div>
+            <button>Edit</button>
           </div>
-          <div class="title">
-            <h1 class="Username">aahrach</h1>
-            <button class="see-profile">See Public Profile</button>
+          <div class="nickname">
+            <div>
+              <h3>NICKNAME</h3>
+              <h4>nickname</h4>
+            </div>
+            <button>Edit</button>
+          </div>
+          <div class="email">
+            <div>
+              <h3>EMAIL</h3>
+              <h4>achrafahrach44@gmail.com</h4>
+            </div>
+            <button>Edit</button>
+          </div>
+          <div class="phone-number">
+            <div>
+              <h3>PHONE NUMBER</h3>
+              <h4>0628224327</h4>
+            </div>
+            <button>Edit</button>
+          </div>
+          <div class="two-factor">
+            <h4>Two Factor authentication enabled</h4>
+            <button>Remove 2FA</button>
           </div>
         </div>
       </div>
-      <div class="main-profile">
-        <div class="information">
-          <div class="container">
-            <div class="Username">
-              <div>
-                <h3>USERNAME</h3>
-                <h4>aahrach</h4>
-              </div>
-              <button>Edit</button>
+      <div class="friends">
+        <h2>FRIENDS</h2>
+        <ul>
+          <li>
+            <div>
+              <img src="./asset/yoyahya.jpeg" alt="Profile image">
+              <h4>yoyahya</h4>
             </div>
-            <div class="nickname">
-              <div>
-                <h3>NICKNAME</h3>
-                <h4>nickname</h4>
-              </div>
-              <button>Edit</button>
-            </div>
-            <div class="email">
-              <div>
-                <h3>EMAIL</h3>
-                <h4>achrafahrach44@gmail.com</h4>
-              </div>
-              <button>Edit</button>
-            </div>
-            <div class="phone-number">
-              <div>
-                <h3>PHONE NUMBER</h3>
-                <h4>0628224327</h4>
-              </div>
-              <button>Edit</button>
-            </div>
-            <div class="two-factor">
-              <h4>Two Factor authentication enabled</h4>
-              <button>Remove 2FA</button>
-            </div>
-          </div>
-        </div>
-        <div class="friends">
-          <h2>FRIENDS</h2>
-          <ul>
-            <li>
-              <div>
-                <img src="./asset/yoyahya.jpeg" alt="Profile image">
-                <h4>yoyahya</h4>
-              </div>
-              <button>Show Profile</button>
-            </li>
-          </ul>
-        </div>
+            <button>Show Profile</button>
+          </li>
+        </ul>
       </div>
     </div>
   </template>
@@ -213,7 +237,7 @@
       </div>
     </div>
   </template>
-  
+
   <template id="change-image">
     <div class="change-image">
       <h4>Edit your picture</h4>
@@ -225,16 +249,14 @@
     </div>
   </template>
   
-  <template id="nav-bar">
-    <div class="nav-bar">
-      <div class="container">
-        <button class="home"><i class='bx bxs-home' ></i></button>
-        <button class="friends"><i class='bx bx-male-female'></i></button>
-        <button class="leaderboard"><i class='bx bxs-bar-chart-alt-2'></i></button>
-        <button class="play"><i class='bx bxs-joystick' ></i></button>
-        <button class="exit"><i class='bx bx-exit bx-flip-vertical' ></i></button>
-      </div>
-      <button class="my-account"><i class='bx bxs-user-circle' ></i></button>
+  <template id="nav-bar_template">
+    <button class="settings"><i class='bx bxs-user-circle' ></i></button>
+    <div class="container">
+      <button class="home"><i class='bx bxs-home' ></i></button>
+      <button class="search"><i class='bx bx-male-female'></i></button>
+      <button class="language"><i class='bx bxs-bar-chart-alt-2'></i></button>
+      <button class="play"><i class='bx bxs-joystick' ></i></button>
+      <button class="exit"><i class='bx bx-exit bx-flip-vertical' ></i></button>
     </div>
   </template>
 
@@ -267,27 +289,69 @@
 
   <template id="home_template">
     <div class="container">
-      <button class="home"><i class='bx bxs-home' ></i></button>
-      <button class="friends"><i class='bx bx-male-female'></i></button>
-      <button class="leaderboard"><i class='bx bxs-bar-chart-alt-2'></i></button>
-      <button class="play"><i class='bx bxs-joystick' ></i></button>
-      <button class="exit"><i class='bx bx-exit bx-flip-vertical' ></i></button>
+      <div class="tournament">
+        <div class="overlay">
+          <div class="text">Tournament</div>
+          <button>GO</button>
+        </div>
+      </div>
+      <div class="oneVSone-local">
+        <div class="overlay">
+          <div class="text">1vs1 local</div>
+          <button>GO</button>
+        </div>
+      </div>
+      <div class="oneVSone-remote">
+        <div class="overlay">
+          <div class="text">1vs1 remote</div>
+          <button>GO</button>
+        </div>
+      </div>
+      <div class="oneVSone-bot">
+        <div class="overlay">
+          <div class="text">1vs1 bot</div>
+          <button>GO</button>
+        </div>
+      </div>
+      <div class="twoVStwo-remote">
+        <div class="overlay">
+          <div class="text">2vs2 remote</div>
+          <button>GO</button>
+        </div>
+      </div>
     </div>
-    <button class="my-account"><i class='bx bxs-user-circle' ></i></button>
   </template>
 
-  <template id="profile_template">
-    <nav-bar></nav-bar>
-    <main>
-      <h1>PROFILE</h1>
-    </main>
-  </template>
-
-  <template id="settings_template">
-    <nav-bar></nav-bar>
-    <main>
-      <h1>Settings</h1>
-    </main>
+  <template id="search_template">
+    <div class="find-friends-container">
+      <div class="find-friends-header">
+        <div class="heading">Find Friends</div>
+        <div class="search">
+          <i class='bx bx-search'></i>
+          <input type="text" placeholder="Enter a friend's name">
+        </div>
+      </div>
+      <div class="find-friends-body">
+        <div class="user-row">
+          <div class="user-info">
+            <button><img src="asset/zlazrak.jpeg" alt="user"></button>
+            <span>zlazrak</span>
+          </div>
+          <button class="action-follow">
+            Follow 
+          </button>
+        </div>
+        <div class="user-row">
+          <div class="user-info">
+            <button><img src="asset/yoyahya.jpeg" alt="user"></button>
+            <span>yoyahya</span>
+          </div>
+          <button class="action-unfollow">
+            Unfollow 
+          </button>
+        </div>
+      </div>
+    </div>
   </template>
 </body>
 

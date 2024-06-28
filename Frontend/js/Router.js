@@ -16,8 +16,8 @@ const Router = {
         let pageElement = null;
         switch (route) {
             // add this just test
-            case "/":
-                break;
+            // case "/":
+            //     break;
             ///////////////////
             case "/":
             case "/home":
@@ -32,15 +32,23 @@ const Router = {
             case "/settings":
                 pageElement = document.createElement("settings-page");
                 break;
-            default:
-                pageElement = document.createElement("h1");
-                pageElement.textContent = "Orilli yat sa3ta"
+            case "/search":
+                pageElement = document.createElement("search-page");
                 break;
+            // default:
+            //     pageElement = document.createElement("h1");
+            //     pageElement.textContent = "Orilli yat sa3ta"
+            //     break;
         }
         if (pageElement) {
             document.getElementById("root").innerHTML = ""
+            if (/^(\/home|\/settings|\/profile|\/search)$/.test(route)) {
+                let navbar_element = document.createElement("nav-bar");
+                document.getElementById("root").appendChild(navbar_element)
+            }
             document.getElementById("root").appendChild(pageElement)
             window.scrollTo(0, 0);
+            // console.log("hello")
         }
    }
 }

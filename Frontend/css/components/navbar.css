@@ -1,28 +1,27 @@
 
-.nav-bar {
-    display: flex;
+nav-bar {
+    /* display: flex; */
     /* min-height: 100vh; */
     background: #292D32;
 }
 
-
-.nav-bar .container {
+nav-bar .container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 65px;
-    height: 500px;
+    width: 70px;
+    height: 50vh;
     border-radius: 1px 45px 45px 1px;
     border: 0.8px 0px 0px 0px;
     opacity: 0px;
     background: #31353C;
     position: fixed;
     left: 0;
-    top: 30%;
+    top: 20%;
     box-shadow: -5px -5px 15px 0px rgba(54, 60, 69, 1);
 }
 
-.nav-bar .container button {
+nav-bar .container button {
     background: #292D32;
     position: relative;
     border: 0;
@@ -31,20 +30,20 @@
     cursor: pointer;
 }
 
-.nav-bar .container i {
+nav-bar .container i {
     background-color: #31353C;
     box-shadow: 0px 0px 13px 2px #2F3655;
     font-size: 30px;
     border: 0.5px;
 }
 
-.nav-bar .container i:hover {
+nav-bar .container i:hover {
     color: #abafb7;
-    font-size: 45px;
+    font-size: 40px;
     transition-property: .5s;
 }
 
-.nav-bar .my-account {
+nav-bar .settings {
     font-size: 55px;
     position: fixed;
     cursor: pointer;
@@ -56,14 +55,26 @@
     box-shadow: -5px -5px 15px 0px #373535;
 }
 
-.nav-bar .my-account i {
+nav-bar .settings i {
     position: relative;
     top: 5px;
     color: #656668;
 }
 
-.nav-bar .my-account i:hover {
-    color: #abafb7;
-    font-size: 75px;
+nav-bar .settings i:hover {
+    color: hsl(220, 8%, 69%);
+    font-size: 60px;
     transition-property: .5s;
+}
+
+nav-bar .container .language img {
+    width: 30px;
+    height: 30px;
+}
+
+nav-bar .container .language img:hover {
+    width: 45px;
+    height: 45px;
+    background: rgb(49,53,60);
+    background: linear-gradient(90deg, rgba(49,53,60,1) 0%, rgba(213,218,217,0.9023984593837535) 140%);
 }

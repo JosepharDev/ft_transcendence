@@ -5,6 +5,7 @@ export default class SettingsPage extends HTMLElement {
     connectedCallback(){
         const template = document.getElementById("settings_template")
         const content = template.content.cloneNode(true)
+
         this.appendChild(content)
     }
 }

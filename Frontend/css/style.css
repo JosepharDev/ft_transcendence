@@ -1,9 +1,13 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Spicy+Rice&display=swap');
+
 @import "./global.css";
 @import "./components/navbar.css";
 @import "./pages/home.css";
 @import "./pages/profile.css";
 @import "./pages/login.css";
 @import "./pages/settings.css";
+@import "./pages/search.css";
 
 @import "./components/edit-myacount.css";
 @import "./components/remove-two-factor.css";

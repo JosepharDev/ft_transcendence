@@ -1,5 +1,5 @@
 
-login-page {
+.login-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,7 @@ login-page {
     background-position: center; */
 }
 
-login-page .container {
+.login-page .container {
     width: 420px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
@@ -22,19 +22,19 @@ login-page .container {
     padding: 30px 40px;
 }
 
-login-page .container h1 {
+.login-page .container h1 {
     font-size: 36px;
     text-align: center;
 }
 
-login-page .container .input-box {
+.login-page .container .input-box {
     position: relative;
     width: 100%;
     height: 50px;
     margin: 30px 0;
 }
 
-login-page .input-box input {
+.login-page .input-box input {
     width: 100%;
     height: 100%;
     background: transparent;
@@ -45,11 +45,11 @@ login-page .input-box input {
     padding: 20px 45px 20px 20px;
 }
 
-login-page .input-box input::placeholder {
+.login-page .input-box input::placeholder {
     color: #fff;
 }
 
-login-page .input-box i {
+.login-page .input-box i {
     position: absolute;
     right: 20px;
     top: 50%;
@@ -57,28 +57,28 @@ login-page .input-box i {
     font-size: 20px;
 }
 
-login-page .container .remember-forgot {
+.login-page .container .remember-forgot {
     display: flex;
     justify-content: space-between;
     font-size: 14.5px;
     margin: -15px 0 15px;
 }
 
-login-page .container .remember-forgot input {
+.login-page .container .remember-forgot input {
     accent-color: #fff;
     margin-right: 3px;
 }
 
-login-page .remember-forgot a {
+.login-page .remember-forgot a {
     color: #fff;
     text-decoration: none;
 }
 
-login-page .remember-forgot a:hover {
+.login-page .remember-forgot a:hover {
     text-decoration: underline;
 }
 
-login-page .container .btn {
+.login-page .container .btn {
     width: 100%;
     height: 45px;
     background-color: #fff;
@@ -91,24 +91,24 @@ login-page .container .btn {
     font-weight: 600;
 }
 
-login-page .container .btn:hover {
+.login-page .container .btn:hover {
     background: #d3d2d2;
     font-size: 17px;
 }
 
-login-page .register-link p {
+.login-page .register-link p {
     font-size: 14.5;
     text-align: center;
     margin: 20px 0 15px;
 
 }
 
-login-page .register-link a {
+.login-page .register-link a {
     color: #fff;
     text-decoration: none;
     font-weight: 600;
 }
 
-login-page .register-link a:hover {
+.login-page .register-link a:hover {
     text-decoration: underline;
 }

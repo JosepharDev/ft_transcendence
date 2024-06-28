@@ -9,17 +9,20 @@ export default class Navbar extends HTMLElement {
         const content = template.content.cloneNode(true)
         this.appendChild(content)
 
-        this.querySelector(".login_button").addEventListener("click", (event) => {
-            Router.go("/login")
-        })
-        this.querySelector(".home_button").addEventListener("click", (event) => {
-            Router.go("/home")
-        })
-        this.querySelector(".profile_button").addEventListener("click", (event) => {
-            Router.go("/profile")
-        })
-        this.querySelector(".settings_button").addEventListener("click", (event) => {
+        this.querySelector(".settings").addEventListener("click", (event) => {
             Router.go("/settings")
+        })
+        this.querySelector(".home").addEventListener("click", (event) => {
+            Router.go("/home")
+            })
+        this.querySelector(".search").addEventListener("click", (event) => {
+            Router.go("/search")
+        })
+        this.querySelector(".language").addEventListener("click", (event) => {
+            // Router.go("")
+        })
+        this.querySelector(".exit").addEventListener("click", (event) => {
+            // Router.go("")
         })
     }
 }

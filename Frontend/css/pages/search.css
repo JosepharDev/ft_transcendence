@@ -1,0 +1,139 @@
+
+search-page {
+    display: flex;
+    flex: 1 80%;
+    padding: 3rem 0 0 0;
+    margin: 30px 20px 30px 90px;
+    background-color: #25282C;
+    border-style: solid;
+    border-color:  white;
+    min-height: 92vh;
+    color: #DADADA;
+    justify-content: center;
+    background-color: #1f67dc;
+    overflow: hidden;
+}
+
+search-page .find-friends-container {
+    width: 50rem;
+    max-height: 11vh;
+    box-shadow: 5px 5px 20px #0C44A4;
+}
+
+search-page .find-friends-header {
+    background: rgb(12,68,164);
+    background: linear-gradient(90deg, rgba(12,68,164,1) 0%, rgba(31,103,220,1) 100%);
+}
+
+search-page .find-friends-header .heading {
+    color: #F1F1F1;
+    font-size: 30px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    padding: 25px 0;
+}
+
+search-page .find-friends-header .search {
+    position: relative;
+}
+
+search-page .find-friends-header .search i {
+    position: absolute;
+    top: 17px;
+    left: 42px;
+    font-size: x-large;
+}
+
+search-page .find-friends-header .search input {
+    border: none;
+    outline: none;
+    margin: 0 25px 25px 25px;
+    width: calc(100% - 50px);
+    font-size: 1.7rem;
+    color: #d0e7f8;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px 50px;
+    border-radius: 40px;
+}
+
+search-page .find-friends-header .search input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+search-page .find-friends-body {
+    background-color: #d0e7f8;
+    max-height: 52vh;
+    overflow: auto;
+}
+
+search-page .find-friends-body .user-row {
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+search-page .find-friends-body .user-row .user-info {
+    display: flex;
+    align-items: center;
+}
+
+search-page .find-friends-body .user-row .user-info button {
+    border: none;
+    outline: none;
+    padding: 0;
+    margin-right: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+search-page .find-friends-body .user-row .user-info img {
+    width: 120px;
+    border-radius: 50%;
+}
+    
+search-page .find-friends-body .user-row .user-info img:hover {
+    box-shadow: 2px 2px 10px rgba(12, 68, 164, 0.6);
+    border: 0.5px solid #d0e7f8;
+}
+    
+search-page .find-friends-body .user-row .user-info span {
+    color: #0C44A4;
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+
+search-page .find-friends-body .user-row .action-follow {
+    border: none;
+    outline: none;
+    background: rgb(12,68,164);
+    background: linear-gradient(90deg, rgba(12,68,164,1) 0%, rgba(31,103,220,1) 100%);
+    border-radius: 40px;
+    color: #fff;
+    height: 56px;
+    width: 135px;
+    box-shadow: 2px 2px 10px rgba(12, 68, 164, 0.5);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: large;
+}
+
+search-page .find-friends-body .user-row .action-unfollow {
+    border: 1px solid #1f67dc;
+    outline: none;
+    background-color: #d0e7f8;
+    border-radius: 40px;
+    color: #1f67dc;
+    height: 56px;
+    width: 135px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: large;
+}
+
+search-page .find-friends-body .user-row .action-follow:hover,
+search-page .find-friends-body .user-row .action-unfollow:hover {
+    font-size: 1.25rem;
+    box-shadow: 2px 2px 10px rgba(12, 68, 164, 0.8);
+}

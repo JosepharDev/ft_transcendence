@@ -1,71 +1,124 @@
 
 home-page {
     display: flex;
-    min-height: 100vh;
-    background: #292D32;
+    flex: 1 80%;
+    padding: 10px;
+    margin: 30px 20px 30px 90px;
+    background-color: #25282C;
+    border-style: solid;
+    border-color:  white;
+    height: 100%;
+    color: #DADADA;
+    justify-content: center;
+    align-items: center;
+    min-height: 92vh;
 }
 
 home-page .container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-areas:
+        "tournament tournament oneVSone-local oneVSone-local oneVSone-remote oneVSone-remote"
+        "tournament tournament oneVSone-local oneVSone-local oneVSone-remote oneVSone-remote"
+        ". . . . . ."
+        "oneVSone-bot oneVSone-bot oneVSone-bot twoVStwo-remote twoVStwo-remote twoVStwo-remote"
+        "oneVSone-bot oneVSone-bot oneVSone-bot twoVStwo-remote twoVStwo-remote twoVStwo-remote";
+    border: 1px solid white;
+    height: 90%;
+    width: 90%;
+    padding: 2rem;
+    background-color: #2C3035;
+}
+
+home-page .container .tournament,
+home-page .container .oneVSone-local,
+home-page .container .oneVSone-remote,
+home-page .container .oneVSone-bot,
+home-page .container .twoVStwo-remote {
     display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+home-page .container .overlay {
+    display: flex;
+    background-color: #2A2E33;
+    border-radius: 2rem;
+    box-shadow: 4px 4px 10px 0px rgb(198, 181, 181);
+    color: white;
+    width: 15rem;
+    height: 10rem;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
-    justify-content: space-around;
-
-    width: 65px;
-    height: 500px;
-    border-radius: 1px 45px 45px 1px;
-    border: 0.8px 0px 0px 0px;
-    opacity: 0px;
-    background: #31353C;
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-    box-shadow: -5px -5px 15px 0px rgba(54, 60, 69, 1);
-
+    gap: 2rem;
 }
 
-home-page .container button {
-    background: #292D32;
-    position: relative;
-    border: 0;
-    width: 0;
-    right: -14px;
-    cursor: pointer;
-}
-
-home-page .container i {
-    background-color: #31353C;
-    box-shadow: 0px 0px 13px 2px #2F3655;
+home-page .container .overlay .text{
     font-size: 30px;
-    border: 0.5px;
+    font-family: "Spicy Rice", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
-home-page .container i:hover {
-    color: #abafb7;
-    font-size: 45px;
-    transition-property: .5s;
-}
-
-home-page .my-account {
-    font-size: 55px;
-    position: fixed;
+home-page .container .overlay button {
+    
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    background-color: #f0a500;
+    border: none;
+    color: #fff;
     cursor: pointer;
-    top: 20px;
-    left: 13px;
-    border-radius: 50%;
-    background: transparent;
-    border: 0;
-    box-shadow: -5px -5px 15px 0px #373535;
+    font-size: large;
 }
 
-home-page .my-account i {
-    position: relative;
-    top: 5px;
-    color: #656668;
+home-page .container .overlay button:hover {
+    border-radius: 1.2rem;
+    font-size: large;
+    color: rgb(10, 50, 227);;
 }
 
-home-page .my-account i:hover {
-    color: #abafb7;
-    font-size: 75px;
-    transition-property: .5s;
+home-page .container .tournament {
+    grid-area: tournament;
 }
 
+home-page .container .oneVSone-local {
+    grid-area: oneVSone-local;
+}
+
+home-page .container .oneVSone-remote {
+    grid-area: oneVSone-remote;
+}
+
+home-page .container .oneVSone-bot {
+    grid-area: oneVSone-bot;
+}
+
+home-page .container .twoVStwo-remote {
+    grid-area: twoVStwo-remote;
+
+}
+
+@media screen and (max-width: 1250px) {
+    home-page .container {
+        gap: 1rem;
+        grid-template-areas:
+        "tournament tournament tournament oneVSone-local oneVSone-local oneVSone-local"
+        "tournament tournament tournament oneVSone-local oneVSone-local oneVSone-local"
+        "oneVSone-remote oneVSone-remote oneVSone-remote oneVSone-bot oneVSone-bot oneVSone-bot"
+        "oneVSone-remote oneVSone-remote oneVSone-remote oneVSone-bot oneVSone-bot oneVSone-bot"
+        "twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote";
+    }
+}
+
+@media screen and (max-width: 685px) {
+    home-page .container {
+        grid-template-areas:
+        "tournament tournament tournament tournament tournament tournament"
+        "oneVSone-local oneVSone-local oneVSone-local oneVSone-local oneVSone-local oneVSone-local"
+        "oneVSone-remote oneVSone-remote oneVSone-remote oneVSone-remote oneVSone-remote oneVSone-remote"
+        "oneVSone-bot oneVSone-bot oneVSone-bot oneVSone-bot oneVSone-bot oneVSone-bot"
+        "twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote twoVStwo-remote";
+    }
+}
