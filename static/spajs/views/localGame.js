@@ -2,20 +2,47 @@ import { dataGlobal } from "./globalData.js";
 
 export async function localPong(isVsBot, objConf)
 {
-    let app = document.getElementById("app");
-    app.innerHTML = `<div id="game-container">
+
+
+  let timeId = -1;
+
+  
+  let app = document.getElementById("app");
+
+  app.innerHTML = `
+
+    <div class="container settings-container">
+        <h2 class="settings-title">Players</h2>
+        <form id="profile-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">Player 1</label>
+                <input type="text" class="form-control" id="username" placeholder="player1 name">
+            </div>
+            <div class="form-group">
+            <label for="nickname">Player 2</label>
+            <input type="text" class="form-control" id="nickname" placeholder="player1 name">
+          </div>
+            <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Start</button>
+        </form>
+    </div>
+    )
+  `
+
+  // return ;
+  app.innerHTML = `<div id="game-container">
     <div class="player-info">
         <div class="player">
-            <img src="media/blank-profile-picture.png" alt="Player 1">
             <p id="player1-name">player1</p>
         </div>
         <div class="player">
-            <img src="media/blank-profile-picture.png" alt="Player 2">
             <p id="player2-name">player2</p>
         </div>
     </div>
-    <canvas id="pongCanvas" width="800" height="450"></canvas>
+    <canvas id="pongCanvas" width="600" height="400"></canvas>
+    <p>left : w and s</p>
+    <p>right : up and <span>&#8595;</span></p>
 </div>`;
+
 
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
@@ -26,8 +53,8 @@ export async function localPong(isVsBot, objConf)
         // document.getElementById('player22').textContent = objConf.vs2;
         
     }
-    canvas.width = 800;// window.innerWidth;
-    canvas.height = 450;//window.innerHeight;
+    canvas.width = 700;// window.innerWidth;
+    canvas.height = 350;//window.innerHeight;
     let flag = isVsBot;
 
     const keyPressed = [];
@@ -240,6 +267,13 @@ export async function localPong(isVsBot, objConf)
           j = -1
       ball.velocity.x = 13 * j
 
+      clearInterval(dataGlobal.idInterval);
+      setTimeout (()=>
+        {
+          dataGlobal.idInterval = setInterval(gameLoop, 20)
+    
+        }, 3000)
+
     }
 
     function increaseScore(ball, paddle_1, paddle_2)
@@ -312,7 +346,7 @@ export async function localPong(isVsBot, objConf)
     {
 
       // ctx.clearRect(0, 0 , canvas.width, canvas.height);
-      ctx.fillStyle = "rgba(0,0,34,1)"
+      ctx.fillStyle = "rgba(0,0,0,1)"
       ctx.fillRect(0,0,canvas.width, canvas.height);
     //   window.requestAnimationFrame(gameLoop);
         gameUpdate();
@@ -324,10 +358,19 @@ export async function localPong(isVsBot, objConf)
             dataGlobal.idInterval = -1;
             if (obj.game === "bot" || obj.game === "justTwo")
             {
+              ctx.fillStyle = "rgba(0,0,0,1)"
+              ctx.fillRect(0,0,canvas.width, canvas.height);
+              drawText("Winner", canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
                 if (paddle2.score >= 5 )
-                    alert (`winner ${paddle2.username}`);
+                {
+                  drawText(paddle2.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+
+                }
+                    // alert (`winner ${paddle2.username}`);
                 else
-                    alert (`winner ${paddle1.username}`);
+                  drawText(paddle1.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+
+                    // alert (`winner ${paddle1.username}`);
                 return;
             }
             else
@@ -381,6 +424,10 @@ export async function localPong(isVsBot, objConf)
     
 }
 
-    dataGlobal.idInterval = setInterval(gameLoop, 20)
+    setTimeout (()=>
+    {
+      dataGlobal.idInterval = setInterval(gameLoop, 20)
+
+    }, 2000)
 
 }

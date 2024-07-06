@@ -66,7 +66,7 @@ export async function remoteTournament()
 
 
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/tournament/'
         + '3'

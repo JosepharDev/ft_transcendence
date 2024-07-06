@@ -32,6 +32,7 @@ class User(AbstractUser):
     #zakaria
     game_type = models.CharField(max_length=1, default="N")
     current_room = models.CharField(max_length=30, blank=True)
+    tournament_wins = models.IntegerField(default=0)
 
 
 

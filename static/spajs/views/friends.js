@@ -29,7 +29,7 @@ export async function friendsView()
         let app = document.getElementById("app");
         app.innerHTML = friendsHtml();
     
-        const userListElement = document.querySelector('.friends-list');
+        const userListElement = document.querySelector('.friends');
         userListElement.innerHTML = '';
     
         if (!js.length)
@@ -37,6 +37,28 @@ export async function friendsView()
             return;
         }
     
+        
+
+        const userProfileElement = document.querySelector('.prfl');
+        userProfileElement.innerHTML = '';
+
+        const profileElement = document.createElement('div');
+        profileElement.classList.add('col-12', 'col-sm-6', 'col-md-4', 'col-lg-3', 'mb-4');
+        profileElement.innerHTML = friendData(js[js.length - 1]);
+        userProfileElement.appendChild(profileElement);
+
+        // console.log(.id);
+        let profileData = js[js.length - 1]
+        let prfllink = document.getElementById(`userlink${profileData.id}`);
+        prfllink.addEventListener('click', (e)=>{
+            e.preventDefault();
+            pushUrl(`/userid/${profileData.id}`);
+        })
+        console.log(js);
+    
+        js.pop();
+        console.log(js);
+
         js.forEach(user => {
             const userElement = document.createElement('div');
             userElement.classList.add('col-12', 'col-sm-6', 'col-md-4', 'col-lg-3', 'mb-4');
@@ -63,14 +85,14 @@ function friendsHtml()
     return (`
     <div class="container mt-5">
     <h3 class="text-white">Profile</h3>
-    <div class="row friends-list">
+    <div class="row friends-list prfl">
     
     <!-- Repeat for more friends -->
     </div>
     </div>
-    <div class="container mt-5">
+    <div class="container mt-2">
         <h3 class="text-white">Friends List</h3>
-        <div class="row friends-list">
+        <div class="row friends-list friends">
         
         <!-- Repeat for more friends -->
         </div>

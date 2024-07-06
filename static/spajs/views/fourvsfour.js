@@ -7,7 +7,7 @@ export async function remoteGame4()
     let app = document.getElementById("app");
     app.innerHTML = '\
     <div id="game-container">\
-    <div id="game-info">\
+    <div class="player-info">\
     </div>\
     <canvas id="pongCanvas" width="800" height="450"></canvas>\
     </div>';
@@ -20,7 +20,7 @@ export async function remoteGame4()
 
 
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/multiple/'
         + '3'
@@ -82,12 +82,28 @@ export async function remoteGame4()
 
             drawSceneGame();
             drawText(data.message.paddle_1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
-            drawText(data.message.paddle_2.score, 3 * canvas.width / 4, 50, "#FFF"); 
+            drawText(data.message.paddle_4.score, 3 * canvas.width / 4, 50, "#FFF"); 
         }
         else if (data.message.action === 'users')
         {
-            document.getElementById("game-info").innerHTML =
-            `<h2 id="remoteUsers">${data.message.user1} ${data.message.user2} vs ${data.message.user3} ${data.message.user4}</h2>`;
+            document.querySelector(".player-info").innerHTML =
+            `<div class="player">
+                    <img src="${data.message.avatar1}" alt="Player 1">
+                    <p id="player1-name">${data.message.user1}</p>
+                    
+                    <img src="${data.message.avatar2}" alt="Player 1">
+                    <p id="player1-name">${data.message.user2}</p>
+            </div>
+            <div class="player">
+                <img src="${data.message.avatar3}" alt="Player 2">
+                <p id="player2-name">${data.message.user3}</p>
+
+                <img src="${data.message.avatar4}" alt="Player 2">
+                <p id="player2-name">${data.message.user4}</p>
+            </div>
+        `
+
+            // `<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>`;
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
@@ -96,20 +112,37 @@ export async function remoteGame4()
     }
 
 
+
     function onKeyDownEvent(e)
     {
         if (e.keyCode != 38 && e.keyCode != 40)  
         return;
 
         let msg = {
-            'action': 'press',
+            'action': 'P',
             'user' : iamuser,
             'code': e.keyCode,
         }
-        chatSocket.send(JSON.stringify(msg));
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
     }
-    window.addEventListener("keydown", onKeyDownEvent)
+    function onKeyUpEvent(e)
+    {
+        console.log("testtttt");
+        if (e.keyCode != 38 && e.keyCode != 40)  
+        return;
 
+        let msg = {
+            'action': 'U',
+            'user' : iamuser,
+            'code': e.keyCode,
+        }
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
+    }
+
+    window.addEventListener("keydown", onKeyDownEvent)
+    window.addEventListener("keyup", onKeyUpEvent)
     
     function drawText(text, x, y, color) {
         ctx.fillStyle = color;

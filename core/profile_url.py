@@ -1,6 +1,6 @@
 from django.urls import path
 from .profile_view import signin , logout, UsersList, UpdateUser, SearchUsers, UserFriends,\
- UserHistory, Spa, Pong, AuthUser ,UserData , Toto, Enable2fa, IsTwoEnabled
+ UserHistory, Spa, Pong, AuthUser ,UserData , Toto, Enable2fa, IsTwoEnabled, ProfileData
 from .qr_code import twofa , twofa_process
 from .s42_auth_view import auth_42_api, auth_42_api_callback
 urlpatterns = [
@@ -26,4 +26,6 @@ urlpatterns = [
 
     #zakaria added this
     path('istwofa/', IsTwoEnabled.as_view(), name='twofa'),
+    path('profile/', ProfileData.as_view(), name='ooo'),
+    
 ]

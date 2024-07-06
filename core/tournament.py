@@ -468,16 +468,33 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def finishMatch(self, roomName):
+
+        if rooms[self.room_room].paddle_1.score >= 7:
+            winn = rooms[self.room_room].paddle_1.id
+        else:
+            winn = rooms[self.room_room].paddle_2.id
+
         u1 = User.objects.get(pk=rooms[roomName].user1_id)
         u2 = User.objects.get(pk=rooms[roomName].user2_id)
         u3 = User.objects.get(pk=rooms[roomName].user3_id)
         u4 = User.objects.get(pk=rooms[roomName].user4_id)
+
+
+        if winn == rooms[roomName].user1_id:
+            u1.tournament_wins += 1
+        elif winn == rooms[roomName].user2_id:
+            u2.tournament_wins += 1
+        elif winn == rooms[roomName].user3_id:
+            u3.tournament_wins += 1
+        else:
+            u4.tournament_wins += 1
 
         u1.game_status = "no_game"
         u2.game_status = "no_game"
         u3.game_status = "no_game"
         u4.game_status = "no_game"
 
+        
         u1.save()
         u2.save()
         u3.save()

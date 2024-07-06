@@ -56,7 +56,7 @@ export async function urlLocationHandler()
 
 
     if (parsedUrl === "/userid/:id")
-        profileFriend2(request.id);
+        profileFriend2(request.id, false);
     else if (path === '/remote')
         remoteGame1();
     else if (path === "/search")
@@ -66,7 +66,8 @@ export async function urlLocationHandler()
     else if (path === "/remote4")
         remoteGame4();
     else if (path === "/s")
-        friendsView();
+        profileFriend2(0, true);
+        // friendsView();
     else if (path === "/settings")
         settingView();
     else if (path === "/tournament")

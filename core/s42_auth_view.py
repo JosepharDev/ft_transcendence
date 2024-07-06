@@ -52,6 +52,7 @@ def auth_42_api_callback(request):
     user_info_url = 'https://api.intra.42.fr/v2/me'
     headers = {'Authorization': f"Bearer {token_json['access_token']}"}
     user_info_response = requests.get(user_info_url, headers=headers)
+    
     if user_info_response.status_code != 200:
         return Response({'error': 'Failed to retrieve user info'}, status=user_info_response.status_code)
 
@@ -95,6 +96,6 @@ def auth_42_api_callback(request):
 
 
     r = HttpResponseRedirect('/api/spa/')
-    r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
+    r.set_cookie(key="jwt", value=jwt_token, httponly=True, samesite='Lax', secure=True)
     return r
 

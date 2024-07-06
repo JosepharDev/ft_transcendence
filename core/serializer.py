@@ -5,7 +5,7 @@ from .models import HistoryMatch
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 're', 'username', 'avatar', 'loses', 'wins', 'email', 'nickname'] # i delete status , because required error in signup
+        fields = ['id', 're', 'username', 'avatar', 'loses', 'wins', 'email', 'nickname', 'tournament_wins'] # i delete status , because required error in signup
         extra_kwargs = {
             'id': {'read_only': True},
             'loses': {'read_only': True},

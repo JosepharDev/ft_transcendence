@@ -59,7 +59,7 @@ function settingsHtml(isEnable)
         <form id="profile-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="profile-image">Profile Image</label>
-                <input type="file" class="form-control-file" id="profile-image" accept="image/*">
+                <input type="file" class="form-control-file" id="profile-image" >
             </div>
             <div class="form-group">
                 <label for="username">Username</label>
@@ -73,7 +73,7 @@ function settingsHtml(isEnable)
         </form>
         <div class="two-factor-auth">
             <button id="toggle-2fa-btn" class="btn btn-secondary btn-block">${isEnable}</button>
-            <img id="2fa-image" src="https://pbs.twimg.com/profile_images/1701878932176351232/AlNU3WTK_400x400.jpg" alt="2FA QR Code" style="display: none;">
+            <img id="2fa-image" src="" alt="2FA QR Code" style="display: none;">
             <input type="text" id="2fa-code" class="form-control mt-2" placeholder="Enter 2FA code" style="display: none;">
             <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;">Submit 2FA Code</button>
         </div>
@@ -86,10 +86,13 @@ async function profileFormSettingsEvent(e)
 {
     e.preventDefault();
     const username = document.getElementById('username').value;
+    const nickname = document.getElementById('nickname').value;
     const profileImage = document.getElementById('profile-image').files[0];
     const formData = new FormData();
     if (username.length > 0)
-        formData.append('username', username);
+        formData.append('username', username);    
+    if (nickname.length > 0)
+            formData.append('nickname', nickname);
     if (profileImage) {
         formData.append('avatar', profileImage);
     }

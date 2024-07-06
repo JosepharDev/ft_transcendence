@@ -20,8 +20,8 @@ from django.conf import settings
 import random
 import string
 
-canvasWidth__ = 800
-canvasHeight__ = 450
+canvasWidth__ = 700
+canvasHeight__ = 350
 
 def vec2(x, y):
     return {'x': x, 'y': y}
@@ -97,6 +97,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
         global canvasHeight__
         global curr_room
 
+        self.justDisconnect = True
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
@@ -135,6 +136,22 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
                 print(f"=============>{self.room_room}")
+
+                data_ = {
+                    'action': 'reconnect',
+                    'user1': rooms[self.room_room].user1_username ,
+                    'user2': rooms[self.room_room].user2_username ,
+                    'avatar1': rooms[self.room_room].user1_avatar,
+                    'avatar2': rooms[self.room_room].user2_avatar,
+                }
+
+
+                await self.channel_layer.group_send(
+                        self.user_group_name,
+                        {"type": "send.message", "message": data_}
+                    )
+
+
                 await self.channel_layer.group_add(
                     self.room_room, self.channel_name
                 )
@@ -197,24 +214,24 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
             paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1,  queue[0]['id'])
             paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  self.scope['user'].id)
-            ball = Ball(vec2(20,20), vec2(10,10), 10)
+            ball = Ball(vec2(20,20), vec2(9,9), 10)
 
             rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0], queue[1])
 
-
-            #send users data && starts counter in the client
             data_ = {
                 'action': 'users',
                 'user1': queue[0]['username'],
                 'user2': queue[1]['username'],
                 'avatar1': queue[0]['avatar'],
                 'avatar2': queue[1]['avatar'],
-            }
+                }
+
             await self.channel_layer.group_send(
                     self.room_room,
                     {"type": "send.message", "message": data_}
                 )
 
+            
 
             await self.update_room(queue[0]['id'], self.room_room)
             await self.update_room(queue[1]['id'], self.room_room)
@@ -241,6 +258,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         try:
             if self.justDisconnect:
+                print ("GAGAGAGGGGGG")
                 return
 
             if (self.iam_playing == False):
@@ -363,13 +381,17 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
                     await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
                     await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
-                    await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_2, canvasWidth__, canvasHeight__)
+                    #if increase score wait little more
+
+                    kk = await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_2, canvasWidth__, canvasHeight__)
                     await rooms[self.room_room].ball.update()
 
 
                     await self.channel_layer.group_send(
                         self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
                     )
+                    if (kk):
+                        await asyncio.sleep(1)
                     await asyncio.sleep(0.016)
             # except:
             #     pass #add no_game
@@ -386,6 +408,14 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         u1.game_status = "no_game"
         u2.game_status = "no_game"
+
+        if rooms[roomName].paddle_1.score > rooms[roomName].paddle_2.score:
+            u1.wins += 1
+            u2.loses += 1
+        else:
+            u2.wins += 1
+            u1.loses += 1
+
         u1.save()
         u2.save()
 
@@ -432,7 +462,7 @@ async def ballPaddleCollision(ball, paddle):
         if ((ball.velocity['x'] < 0)):
             j = -1
 
-        ball.velocity['x'] = (abs(ball.velocity['x']) + 0.06) * j
+        ball.velocity['x'] = (abs(ball.velocity['x']) + 0.1) * j
 
 async def respawnBall(ball, canvasWidth, canvasHeight):
     if (ball.velocity['x'] > 0):
@@ -449,7 +479,7 @@ async def respawnBall(ball, canvasWidth, canvasHeight):
     if ((ball.velocity['x'] < 0)):
         j = -1
 
-    ball.velocity['x'] = 10 * j
+    ball.velocity['x'] = 12 * j
 
 
 
@@ -457,10 +487,12 @@ async def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
     if ball.pos['x'] <= -ball.radius:
         paddle_2.score += 1
         await respawnBall(ball, canvasWidth, canvasHeight)
+        return True
     if ball.pos['x'] >= canvasWidth + ball.radius:
         paddle_1.score += 1
         await respawnBall(ball, canvasWidth, canvasHeight)
-
+        return True
+    return False
 
 class Paddle:
     def __init__(self, pos , velocity, width, height, leftOrRight, id):

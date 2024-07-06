@@ -8,7 +8,7 @@ export async function remoteGame1()
     app.innerHTML = `<div id="game-container">
     <div class="player-info">
     </div>
-    <canvas id="pongCanvas" width="800" height="450"></canvas>
+    <canvas id="pongCanvas" width="700" height="350"></canvas>
     </div>`;
 
 
@@ -21,13 +21,13 @@ export async function remoteGame1()
 
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 450;
+    canvas.width = 700;
+    canvas.height = 350;
 
 
 
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/pongTest/'
         + '3'
@@ -55,8 +55,13 @@ export async function remoteGame1()
         }
         else if (data.message.action === 'finish')
         {          
-            alert (`${data.message.winner} WON`);
-            pushUrl('/');
+
+            ctx.fillStyle = "rgba(0,0,34,1)"
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            drawText("Winner", canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
+            drawText(data.message.winner, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            // alert (`${data.message.winner} WON`);
+            // pushUrl('/');
         }
         else if (data.message.action === 'data')
         {
@@ -97,6 +102,19 @@ export async function remoteGame1()
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
+        else if (data.message.action === 'reconnect')
+            {
+                document.querySelector(".player-info").innerHTML =
+                `<div class="player">
+                <img src="${data.message.avatar1}" alt="Player 1">
+                <p id="player1-name">${data.message.user1}</p>
+                </div>
+                <div class="player">
+                    <img src="${data.message.avatar2}" alt="Player 2">
+                    <p id="player2-name">${data.message.user2}</p>
+                    </div>
+            `
+            }
 
     }
 
@@ -111,7 +129,8 @@ export async function remoteGame1()
             'user' : iamuser,
             'code': e.keyCode,
         }
-        chatSocket.send(JSON.stringify(msg));
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
     }
     function onKeyUpEvent(e)
     {
@@ -123,7 +142,8 @@ export async function remoteGame1()
             'user' : iamuser,
             'code': e.keyCode,
         }
-        chatSocket.send(JSON.stringify(msg));
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
     }
 
     window.addEventListener("keydown", onKeyDownEvent)

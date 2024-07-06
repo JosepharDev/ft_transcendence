@@ -17,7 +17,7 @@ services:
     ports:
       - "5432:5432"
   web:
-    build: /home/josephardev/Desktop/ft_transcendence/docker/django/
+    build: /home/z/intra/docker/django
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
     # command: daphne -b 0.0.0.0 -p 443 tests.asgi:application
@@ -35,7 +35,7 @@ services:
     # ports:
     #   - 8001:8001
   server:
-    build: /home/josephardev/Desktop/ft_transcendence/docker/nginx/
+    build: /home/z/intra/docker/nginx/
     image: nginx_image
     container_name: nginx_container
     ports:
@@ -58,11 +58,11 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/josephardev/Desktop/ft_transcendence/
+      device: /home/z/intra/
       o: bind
   db:
     driver: local
     driver_opts:
       type: none
-      device: /home/josephardev/Desktop/ft_transcendence/database/
+      device: /home/z/intra/database/
       o: bind

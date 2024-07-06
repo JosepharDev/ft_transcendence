@@ -25,7 +25,7 @@ OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django_container','djangocontainer', 'localhost', '0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['django_container','djangocontainer', 'localhost', '0.0.0.0', '127.0.0.1', '192.168.43.211']
 
 
 # Application definition
