@@ -14,6 +14,8 @@ const Router = {
         }
 
         let pageElement = null;
+        pageElement = document.createElement("profile-page");
+/*
         switch (route) {
             // add this just test
             // case "/":
@@ -40,7 +42,11 @@ const Router = {
             //     pageElement.textContent = "Orilli yat sa3ta"
             //     break;
         }
-        if (pageElement) {
+        pageElement = document.createElement("profile-page");
+*/
+
+        if (pageElement)
+        {
             document.getElementById("root").innerHTML = ""
             if (/^(\/home|\/settings|\/profile|\/search)$/.test(route)) {
                 let navbar_element = document.createElement("nav-bar");

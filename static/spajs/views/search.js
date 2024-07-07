@@ -11,7 +11,6 @@ export function searchView ()
     searchButton.addEventListener('submit', searchElementsEvent);
 }
 
-
 function searchHtml()
 {
     return (`
@@ -69,6 +68,9 @@ async function searchElementsEvent(e)
             filteredUsers.forEach(user => {
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
+                if (user.username.length > 30)
+                    user.username = user.username.substring(0, 27) + "...";
+                
                 userItem.innerHTML = `
                     <a id="userlink${user.id}" href="/userid/${user.id}">
                     <img src="${user.avatar}" alt="${user.username} Profile Image">

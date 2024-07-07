@@ -8,14 +8,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="/static/css/bootstrap.min.css"  rel="stylesheet">
+
     <link href="/static/css/stackboots.css"  rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+<!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,629;1,629&display=swap" rel="stylesheet"> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Bangers&family=Orbitron:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Bangers&family=Orbitron:wght@400;700&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
     
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
     <script defer src="/static/spajs/app.js" type="module"></script>
@@ -37,7 +37,7 @@
     font-family: sans-serif;
     /* border : 1px solid rgba(212,155,32,1); */
     /* border-color: rgba(212,155,32,1); */
-    border: 1px solid #821e50;
+    border: 1px solid #339ce2;
 
     border-radius: 5px;
 }
@@ -52,16 +52,17 @@
 
 .user-profile {
     /* background-color: rgba(246,1,136,0.8); */
-    background-color: rgba(0,0,34,1);
+    background-color: rgba(0,0,0,1);
 
     /* border: 1px solid #fff; */
+    border: 1px solid rgba(51, 156, 226, 1)    ;
     border-radius: 15px;
-    max-width: 400px;
+    width: 500px;
     overflow: hidden;
 }
 
 .card-header {
-    background-color: rgba(0,0,34,0.9);
+    background-color: rgba(0,0,0,0.9);
     padding: 20px;
 }
 
@@ -137,15 +138,21 @@
             margin-right: 3px;
             padding: 10px;
             /* background-color:rgba(40,40,40,255); */
-            background-color: rgba(0,0,34,1);
-            border-top: 1px solid rgba(255,9,124,0.6);
-            border-bottom: 1px solid rgba(255,9,124,0.6);
+            background-color: rgba(0,0,0,1);
+            border-top: 1px solid rgba(51, 156, 226, 1);
+            border-bottom: 1px solid rgba(51, 156, 226, 1);
             border-radius: 5px;
             text-align: center;
             padding-left: 3px;
         }
 
-
+#player1-name, #player2-name
+{
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px; /* Adjust max-width as needed */
+}
 /* .match:last-child {
     border-bottom: none;
 } */
@@ -157,12 +164,14 @@
     object-fit: cover;
 }
 
+
 .player-name {
-    font-weight: bold;
+    font-size: 14px;
+    /* font-weight: bold; */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 80px; /* Adjust max-width as needed */
+    width: 100px; /* Adjust max-width as needed */
 }
 
 .vs {
@@ -226,16 +235,18 @@
     overflow: hidden;
     border-radius: 2px; 
     /* background-size: cover; */
-    background: url("https://img.freepik.com/free-vector/ping-pong_78370-259.jpg")  no-repeat;
+
     /* backgr   ound: url('path_to_your_image.jpg') no-repeat center center; */ 
     background-size: cover;
 }
 
 .bg-lightgreen {
-    background-color: rgba(0, 0, 34, 0.9);
+    background-color: rgba(0, 0, 0, 1);
+
     /* border: 2px solid #821e50 ; */
-    box-shadow: 0 0 5px 3px rgba(246,34,221,255);
-    border: 0.1px solid rgba(246,34,221,255) ;
+    box-shadow: 0 0 5px 3px #339ce2;
+    border: 0.1px solid #339ce2 ;
+    /* width: 400px; */
 
 }
 
@@ -305,7 +316,7 @@
         margin-bottom: 10px;
         /* background-color: #fff; */
         /* background-color: #3a3a3a; Background color for each match */
-        background: rgba(0, 0, 34, 0.7);
+        background: rgba(51, 156, 226, 0.2);
         
     }
     .user-item a
@@ -440,11 +451,11 @@
             /* height: calc(100vh - 56px); Adjust based on navbar height */
         }
         canvas {
-            background: rgba(0,0,34,255);
+            background: rgba(0,0,0,255);
             display: block;
             margin: 20px auto;
             border: 0.2px solid #FFF;
-            box-shadow: 0 0 5px 3px rgba(246,34,221,255);
+            box-shadow: 0 0 5px 3px #339ce2;
             /* border-radius: 6px; */
         }
         #game-info {
@@ -474,6 +485,7 @@
 
 body 
         {
+            margin: 0;
             background: rgba(40,40,40,255);
         }
         .settings-container {
@@ -528,21 +540,21 @@ body
             background-color: rgba(0, 0, 0, 0);
             /* border: 3px solid rgba(212,155,32,255) */
             /* border: 2px solid #821e50 ; */
-            border: 2px solid rgba(246,34,221,255) ;
+            border: 2px solid #339ce2 ;
             
 
         }
         .btn-primary:hover {
             background-color: rgba(0, 0, 0, 0);
-            border: 3px solid rgba(212,155,32,255);
+            border: 3px solid green;
             background-color: #FFF
         }
         #mybtn:active,#mybtn:focus, #mybtn:focus:active {
-            background-color: rgba(212,155,32,255);
+            background-color: #339ce2;
             /* border: 3px solid rgba(212,155,32,255); */
             
             /* border: 2px solid #821e50 ; */
-            border: 2px solid rgba(246,34,221,255) ;
+            border: 2px solid #339ce2 ;
 
             color: white;
             box-shadow: none;
@@ -557,7 +569,7 @@ body
             align-items: center;
             height: 100vh;
             background: rgba(40,40,40,255);
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
         }
         .form-container, .matches-container {
             background: rgba(0, 0, 0, 0.3);
@@ -592,7 +604,7 @@ body
         }
         #mybtn:active,#mybtn:focus, #mybtn:focus:active {
             /* background-color: rgba(212,155,32,255); */
-            border: 2px solid rgba(212,155,32,255);
+            border: 2px solid red;
             color: white;
             box-shadow: none;
         }
@@ -610,7 +622,7 @@ body
             align-items: center;
             height: 100vh;
             /* background: #ff6600; */
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
             background-size: cover;
         }
         .form-container {
@@ -634,19 +646,19 @@ body
             background-color: rgba(0, 0, 0, 0);
             /* border: 2px solid rgba(212,155,32,255); */
     /* border: 2px solid #821e50 ; */
-    border: 2px solid rgba(246,34,221,255) ;
+    border: 2px solid #339ce2 ;
 
 
         }
         .btn-primary:hover {
             /* background-color: rgba(212,155,32,255);  lastii */
-            background-color: rgba(246,34,221,0.5);
-            border: 2px solid rgba(246,34,221,255);
+            background-color: #339ce2;
+            border: 2px solid #339ce2;
         }
         #mybtn:active, #mybtn:focus, #mybtn:focus:active
         {
-            background-color: rgba(212,155,32,255);
-            border: 2px solid rgba(212,155,32,255);
+            background-color: blue;
+            border: 1px solid green;
             color: white;
             box-shadow: none;
         }
@@ -668,6 +680,11 @@ body
 /********************************************************/
 
 
+.dodo
+{
+    margin: 10px 5px;
+    font-size: 16px;
+}
 
 /************************************************************/
 
@@ -685,14 +702,19 @@ h3 {
     align-items: center;
     padding: 10px;
     border-radius: 5px;
-    background-color: rgba(0,0 ,34,0.9);
+    border: 1px solid #339ce2
+    /* background-color: rgba(0,0 ,34,0.9); */
 ;
     transition: background-color 0.3s;
     color: #f8f9fa;
+    text-decoration: none;
 }
 
 .friend:hover {
-    background-color: rgba(0,0 ,34,1);
+    background-color: rgba(51, 156, 226, 0.1);
+    color: #f8f9fa;
+
+
 }
 
 .friend-avatar {
@@ -726,24 +748,17 @@ body
     /* background-size: cover; */
     /* background: url(images/bg.jpg)  */
     /* background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(2,54,91,1) 37%, rgba(2,82,120,1) 52%, rgba(0,212,255,1) 88%, rgba(0,181,223,1) 100%, rgba(0,212,255,1) 100%); */
-    /* height: 100vh; */
-    background: url('/static/css/p.png');
-    /* background-image: url('images/background.png'); */
-    background-size: cover; /* Ensures the background image covers the entire screen */
-    background-repeat: no-repeat; /* Prevents the background image from repeating */
-    background-position: center center; /* Centers the background image */
-    background-attachment: fixed; /* Keeps the background image fixed when scrolling */
-    height: 100%; /* Ensures the body takes up the full viewport height */
-    margin: 0; /* Removes default margin */
+    /* height: 100vh; */ /* Removes default margin */
     /* font-family: 'Nunito', 'Orbitron', sans-serif; */
-    font-family: "Poppins", sans-serif;
+    background: black;
+    font-family: sans-serif;
     font-weight: 700;
     font-style: normal;
 }
 
 #home, #logout
 {
-    font-family: 'Orbitron', sans-serif;
+    font-family: sans-serif;
 
 }
 /* #jbi
@@ -757,10 +772,10 @@ body
 #navi {
 
             max-width: 700px;
-            border: 0.2px solid rgba(246,34,221,255) ;
+            border: 0.2px solid #339ce2 ;
             /* box-shadow: 0 0 4px 1px #b7599b; */
             border-radius: 3px;
-            background-color: rgba(0, 0, 34, 0.7);
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
             margin: 0 auto;
             margin-top: 10px;
@@ -768,20 +783,20 @@ body
         }
 
         #logout, .nav-link {
-            color: white;
             color: #24f6e4;
+            color: white;
 
             /* color: rgba(212,155,32,1); */
-            font-family: 'Orbitron', sans-serif;
-            border: 1px solid #821e50;
+            font-family: sans-serif;
+            border: 1px solid #339ce2;
             border-radius: 5px;
             padding: 5px 10px;
             text-decoration: none;
         }
 
         #logout:hover, .nav-link:hover, #home:hover , #search:hover, #friends:hover {
-            background-color: #821e50;
-            box-shadow: 0 0 10px #821e50;
+            background-color: #339ce2;
+            box-shadow: 0 0 10px #339ce2;
 
             /* color: black; */
         }
@@ -798,6 +813,7 @@ body
 
         .nav-link.active {
             color: #24f6e4;
+            color: white;
         }
 
         .avatarr {
@@ -837,7 +853,7 @@ body
             /* height: 100vh; */
         }
         canvas {
-            background: rgba(0, 0, 34, 255);
+            background: rgba(0, 0, 0, 255);
             display: block;
             margin: 10px auto;
             border: 0.2px solid #FFF;
@@ -857,6 +873,7 @@ body
             background: rgba(0, 0, 34, 0.9);
             border: 0.2px solid rgba(31, 145, 226, 0.8);
             padding: 5px;
+            margin-top: 5px;
         }
         .player img {
             border-radius: 50%;
@@ -885,7 +902,7 @@ body
             margin-top: 5px;
             background: rgba(0, 0, 0, 0.5);
             color: #d4d4d4;
-            font-family: 'Orbitron', sans-serif;
+            font-family:  sans-serif;
             padding: 20px;
             text-align: center;
         }
@@ -941,9 +958,25 @@ body
         }
 
         .final-winner{
-            border: 2px solid rgba(246,34,221,255);
+            border: 2px solid #339ce2;
         }
 
+
+
+
+
+        .bobo
+{
+    margin: 0 auto;
+}
+
+
+.ball {
+  position: absolute;
+  border-radius: 100%;
+  opacity: 0.7;
+  z-index: -1;
+}
 </style>
 
 
@@ -954,11 +987,29 @@ body
     <!-- <nav class="navbar navbar-light bg-light" style="display: none;"> -->
         <nav id="navi" class="navbar navbar-light hideme">
             <div class="container-fluid">
-                <a class="nav-link navbar-brand" id="logout" href="#"><i class="fas fa-sign-out-alt"></i></a>
+                <!-- <a class="nav-link navbar-brand" id="logout" href="#"><i class="fas fa-sign-out-alt"></i></a> -->
+
+                <a class="nav-link navbar-brand" aria-current="page" id="logout" href="#">
+                    <img src="/static/css/sign-out-alt.png" alt="logout" style="width: 24px; height: 24px;">
+                </a>
+
                 <div class="mx-auto d-flex align-items-center">
-                    <a class="nav-link active" aria-current="page" id="home" href="#"><i class="fas fa-home"></i></a>
+                    <!-- <a class="nav-link active" aria-current="page" id="home" href="#"><i class="fas fa-home"></i></a>
                     <a class="nav-link active" aria-current="page" id="search" href="#"><i class="fas fa-search"></i></a>
-                    <a class="nav-link active" aria-current="page" id="friends" href="#"><i class="fas fa-user-friends"></i></a>
+                    <a class="nav-link active" aria-current="page" id="friends" href="#"><i class="fas fa-user-friends"></i></a> -->
+                                    
+                    <a class="nav-link active" aria-current="page" id="home" href="#">
+                        <img src="/static/css/home.png" alt="Home" style="width: 24px; height: 24px;">
+                    </a>
+                    
+                    <a class="nav-link active" aria-current="page" id="search" href="#">
+                        <img src="/static/css/search.png" alt="Search" style="width: 24px; height: 24px;">
+                    </a>
+                    
+                    <a class="nav-link active" aria-current="page" id="friends" href="#">
+                        <img src="/static/css/user.png" alt="profile" style="width: 24px; height: 24px;">
+                    </a>
+
                 </div>
                 <div class="d-flex align-items-center">
                     <select class="form-control form-control-sm mr-2" id="language-selector">
@@ -966,7 +1017,9 @@ body
                         <option value="es">Spanish</option>
                         <option value="fr">French</option>
                     </select>
-                    <a id="set" href="#"><img src="https://staticg.sportskeeda.com/editor/2022/06/508cd-16557590423635-1920.jpg?w=640" alt="Avatar" class="avatarr"></a>
+                    <a id="set" href="#"><img src="/media/profile_images/Screen_Shot_2024-06-12_at_20.00.48.png " alt="Avatar" class="avatarr"></a>
+
+
                 </div>
             </div>
         </nav>
@@ -977,4 +1030,3 @@ body
     </div>
 </body>
 </html>
-

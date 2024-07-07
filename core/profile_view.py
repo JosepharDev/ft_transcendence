@@ -17,6 +17,7 @@ from django.utils.decorators import method_decorator
 #return 401
 signInTwoFa = {"message": "2fa"}
 signInFailed = {"message": "unauthorized"}
+userNotfound = {"message": "notfound"}
 
 #return 200
 signInSucess = {"message": "success"}
@@ -71,7 +72,7 @@ class SignIn(APIView):
         else:
             response = Response({"message": "success"}, status=200)
 
-        response.set_cookie(key='jwt', value=payload, httponly=True)
+        response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
         return response
 
 
@@ -79,7 +80,8 @@ class Logout(APIView):
     @method_decorator(check_auth)
     def get(self, request):
         response = Response({"message": "success"})
-        response.delete_cookie('jwt')
+        # response.delete_cookie('jwt')
+        response.set_cookie('jwt', '', max_age=-1, samesite='Lax', secure=True)
         return response
 
 class SearchUsers(APIView):
@@ -186,9 +188,21 @@ class UserData(APIView):
                 'plr1img': match.player1.avatar.url,
                 'plr2img': match.player2.avatar.url,
             }
+            print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)
 
         userRequestedData['matches'] = allUserRequestedMatches
+
+
+        friends = Friend.objects.filter(from_user = userFriend)
+        userFriends = []
+        for friend in friends:
+            userFriends.append({'username' : friend.to_user.username,
+                'id':friend.to_user.id,
+                'avatar' : friend.to_user.avatar.url
+            })
+
+        userRequestedData['friends'] = userFriends
 
         return Response(userRequestedData)
 
@@ -283,6 +297,12 @@ class UserFriends(APIView):
                 'avatar' : friend.to_user.avatar.url
             })
 
+
+        userFriends.append({'username' : user.username,
+            'id': user.id,
+            'avatar' : user.avatar.url
+                })
+        
         return Response(userFriends)
 
     def post(self, request, id):
@@ -322,13 +342,11 @@ class UserFriends(APIView):
             friendship = Friend.objects.get(from_user=user_obj, to_user=friend)
             friendship.delete()
             return Response({"message": "Friend removed successfully"}, status=201)
-        elif (not is_friend and request.POST['data'] == "Follow"):
+        elif (not is_friend and request.POST['data'] == "Follow" and user_obj.id != friend.id):
             Friend.objects.create(from_user=user_obj, to_user=friend)
             return Response({"message": "Friend added successfully"}, status=201)
 
         return Response({"message": "Nothing happened"}, status=200)
-
-
 
 
 
@@ -354,3 +372,57 @@ class UserFriends(APIView):
 #         user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
 #         his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
 #         return Response(his_serializer.data)
+
+class ProfileData(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            return Response({"message": "unauthorized"}, status=401)
+
+        try:
+            user = decode_jwt(token)
+        except jwt.ExpiredSignatureError:
+            return Response({'message':"unauthorized"}, status=401)
+
+        token_code = decode(token)
+        if user.is_2fa == True and token_code['code'] == False:
+            return Response({"message": "2fa"}, status=401)
+
+
+        serializer = UserSerializer(user)
+
+
+        userRequestedData = serializer.data
+        userRequestedData['friend'] = False
+        userRequestedData['its_me'] = True
+        userRequestedData['is_online'] = user.profile_status == 'online'
+
+        matches = Match.objects.filter(Q(player1=user.id) | Q(player2=user.id))
+        allUserRequestedMatches = []
+
+        for match in matches:
+            newMatch = {
+                'player1Username' : match.player1.username,
+                'player2Username' : match.player2.username,
+                'player1Score' : match.plr1_count,
+                'player2Score' : match.plr2_count,
+                'plr1img': match.player1.avatar.url,
+                'plr2img': match.player2.avatar.url,
+            }
+            print(f'---------->{match.match_date}')
+            allUserRequestedMatches.append(newMatch)
+
+        userRequestedData['matches'] = allUserRequestedMatches
+
+
+        friends = Friend.objects.filter(from_user = user)
+        userFriends = []
+        for friend in friends:
+            userFriends.append({'username' : friend.to_user.username,
+                'id':friend.to_user.id,
+                'avatar' : friend.to_user.avatar.url
+            })
+
+        userRequestedData['friends'] = userFriends
+
+        return Response(userRequestedData)

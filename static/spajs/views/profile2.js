@@ -1,7 +1,7 @@
 import { pushUrl } from "../utils/urlRoute.js";
 
 
-export async function profileFriend2(id)
+export async function profileFriend2(id, is_me)
 {
     let app = document.getElementById("app");
     app.innerHTML = profileFriendHtml();
@@ -10,6 +10,9 @@ export async function profileFriend2(id)
     {
 
         let jj = `/api/userid/${id}/`;
+        if (is_me)
+            jj = `/api/profile/`;
+
         const request = new Request(
             jj,
             {
@@ -39,7 +42,7 @@ export async function profileFriend2(id)
         document.getElementById("firstPartData").innerHTML = profileFirstPart(userData);
         document.querySelector("#statsPart").innerHTML = profileStatsPart(userData);
         historyMatchView(userData.matches);
-
+        friendsView(userData.friends);
         if (!userData.its_me)
         {
             async function toggleFollow(userId, btn)
@@ -119,6 +122,11 @@ function profileFriendHtml()
                 
 
             </div>
+            <h5 class="mt-4">Following</h5>
+            <div class="match-history allFriends">
+
+
+            </div>
         </div>
     </div>
 </div>
@@ -168,8 +176,8 @@ function profileStatsPart(data)
             <p>${data.loses}</p>
         </div>
         <div class="stat">
-            <h5>Matches</h5>
-            <p>${data.wins + data.loses}</p>
+            <h5>Tournaments Wins</h5>
+            <p>${data.tournament_wins}</p>
         </div>
     `)
 }
@@ -179,7 +187,7 @@ function historyMatchView(data)
     let matches = document.querySelector("#matchHis");
     if (data.length > 0)
     {
-            data.forEach(element => {
+        data.forEach(element => {
                 let newDiv = document.createElement('div');
                 newDiv.innerHTML = historyMatchHelper(element);
                 
@@ -209,4 +217,40 @@ function historyMatchHelper(data)
 }
 
 
+
+
+function friendsView(data)
+{
+    let matches = document.querySelector(".allFriends");
+    if (data.length > 0)
+    {
+        data.forEach(element => {
+                let newDiv = document.createElement('div');
+                newDiv.innerHTML = friendData(element);
+                
+                matches.appendChild(newDiv);
+                
+                let frlink = document.getElementById(`userlink${element.id}`);
+                frlink.addEventListener('click', (e)=>{
+                e.preventDefault();
+                pushUrl(`/userid/${element.id}`);
+            })
+        });
+    }
+}
+
+function friendData(data)
+{
+    // <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+    return (
+        `
+            <a id="userlink${data.id}" href="/userid/${data.id}" class="friend d-flex align-items-center mt-2 text-decoration-none">
+                <img src="${data.avatar}" class="friend-avatar mr-3" alt="${data.username}">
+                <span class="friend-name">${data.username}</span>
+            </a>
+            `
+        )
+    // </div>
+
+}
 

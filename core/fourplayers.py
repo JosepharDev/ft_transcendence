@@ -127,7 +127,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             self.user_group_name, self.channel_name
         )
         
-#----------------------------------
+
 
         stats = await self.checkUserStatus(self.scope['user'].id)
         if (stats == 'in_game' ):
@@ -160,7 +160,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                         {"type": "send.message", "message": {'action': 'NA'}} )
             return
 
-#----------------------------------
+
         print("=======================================================================================")
         print(self.scope['user'].username)
         print("=======================================================================================")
@@ -197,17 +197,10 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             random.shuffle(queue)
             rooms[self.room_room] = roomData(queue[0], queue[1], queue[2], queue[3])
 
-            rooms[self.room_room].paddle_1 = Paddle(vec2(0,0), vec2(10,10), 10 , 70, 1, queue[0]['id'])
-            rooms[self.room_room].paddle_2 = Paddle(vec2(0,canvasHeight__ - 70), vec2(10, 10), 10 ,70, 1,  queue[1]['id'])
-
-            rooms[self.room_room].paddle_3 = Paddle(vec2(canvasWidth__ - 10, 0), vec2(10, 10), 10 ,70, 2, queue[2]['id'])
-            rooms[self.room_room].paddle_4 = Paddle(vec2(canvasWidth__ - 10, canvasHeight__ - 70), vec2(10, 10), 10 ,70, 2, queue[3]['id'])
-            
-            rooms[self.room_room].ball = Ball(vec2(20,20), vec2(10,10), 10)
 
             #send users data && starts counter in the client
             data_ = {
-                'action': 'users',
+                'action': 'allusers',
                 'user1': queue[0]['username'], #change to nickname
                 'user2': queue[1]['username'],
                 'user3': queue[2]['username'],
@@ -366,7 +359,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                     if (self.room_room not in rooms):
                         break
                     
-                    if rooms[self.room_room].paddle_1.score >= 70 or rooms[self.room_room].paddle_2.score >= 70:
+                    if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_2.score >= 7:
                         if rooms[self.room_room].paddle_1.score >= 7:
                             id1 = rooms[self.room_room].paddle_1.id
                             id2 = rooms[self.room_room].paddle_2.id

@@ -17,8 +17,15 @@ export function pushUrl (href)
         console.log(`-> ${href}   ${window.location.pathname}`)
 
 
+        if (history.state && history.state.href === href) {
+            history.replaceState({ href }, '', href);
+        } else {
+            history.pushState({ href }, '', href);
+        }
         
-        history.pushState({}, '', href);
+        // history.pushState({}, '', href);
+
+        
         window.dispatchEvent(new Event('popstate'));
     }
     catch (err)

@@ -4,6 +4,8 @@ import { sendOnline } from "./online.js";
 
 export async function signin()
 {
+    document.querySelector("#navi").classList.add("hideme");
+    
     let app = document.getElementById("app");
     app.innerHTML = `
     <div class="signin">
@@ -14,11 +16,11 @@ export async function signin()
         <form id="signinForm">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username">
+                <input type="text" class="form-control" id="username" placeholder="Enter username" autocomplete="username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter password">
+                <input type="password" class="form-control" id="password" placeholder="Enter password" autocomplete="current-password">
             </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
