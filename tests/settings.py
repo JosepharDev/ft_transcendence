@@ -20,24 +20,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(-6$r49vr7whr_1!%)yc!63$$ge2f3io4h3gohip4vua^ui_fe'
+
+SECRET_KEY = os.environ["SECRET_KEY"]
 OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['django_container','djangocontainer', 'localhost', '0.0.0.0', '127.0.0.1', '192.168.43.211']
 
 
-# Application definition
-# INTRA_SECRET = "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"
-# UID = 'u-s4t2ud-edd902aa7a0724afcecb181aa52a85e851372bf4c82f58515d10c2bb0b1b1170'
-# REDIRECT_INTRA = 'http://127.0.0.1:8000/profile/signin/auth_42_api_callback/'
+UID = os.environ["UID"]
+REDIRECT_INTRA = os.environ["REDIRECT_INTRA"]
+INTRA_SECRET = os.environ["INTRA_SECRET"]
 
-UID = 'u-s4t2ud-ae61902bb44be96297aed24ad416ddf495663ee448129e62ebd58a16982cfd93'
-REDIRECT_INTRA = 'https://127.0.0.1:443/api/signin/auth_42_api_callback/'
-INTRA_SECRET = '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'
-
-# Application definition
 
 INSTALLED_APPS = [
     'daphne',
@@ -60,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'tests.urls' # 'core.urls'
+ROOT_URLCONF = 'tests.urls'
 
 TEMPLATES = [
     {
@@ -110,11 +107,11 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db',
-        'USER': 'yoyahya',
-        'PASSWORD': 'yoyahya',
-        'HOST': 'db_container',
-        'POST': '5432'
+        'NAME': os.environ["POSTGRES_DB"],
+        'USER': os.environ["POSTGRES_USER"],
+        'PASSWORD': os.environ["POSTGRES_PASSWORD"],
+        'HOST': os.environ["HOST"],
+        'POST': os.environ["PORT"]
     }
 }
 

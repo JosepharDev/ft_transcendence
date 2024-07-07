@@ -8,14 +8,16 @@ services:
     restart: 'always'
     networks:
       - net
-    environment:
-      - POSTGRES_DB=db
-      - POSTGRES_USER=yoyahya
-      - POSTGRES_PASSWORD=yoyahya
+    env_file: "env.env"
+    # environment:
+    #   - POSTGRES_DB=db
+    #   - POSTGRES_USER=yoyahya
+    #   - POSTGRES_PASSWORD=yoyahya
     volumes:
       - db:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+    restart: 'always'
   web:
     build: docker/django
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
@@ -26,10 +28,12 @@ services:
     container_name: djangocontainer
     volumes:
       - vol:/usr/src/
+    restart: 'always'
     networks:
       - net
-    environment:
-      - DJANGO_SETTINGS_MODULE=tests.settings
+    env_file: "env.env"
+    # environment:
+      # - DJANGO_SETTINGS_MODULE=tests.settings
     depends_on:
       - db
     # ports:

@@ -13,13 +13,13 @@ from django.core.validators import RegexValidator
 #         user.set_password(password)
 #         user.save(using=self._db)
 #         return user
-#     def create_superuser(self, username, password=None, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-#         return self.create_user(username, password, **extra_fields)
+    # def create_superuser(self, username, password=None, **extra_fields):
+    #     extra_fields.setdefault('is_staff', True)
+    #     extra_fields.setdefault('is_superuser', True)
+    #     return self.create_user(username, password, **extra_fields)
 
-#     def get_by_natural_key(self, username):
-#         return self.get(username=username)
+    # def get_by_natural_key(self, username):
+    #     return self.get(username=username)
 
 # class User(AbstractBaseUser, PermissionsMixin):
 class User(AbstractUser):
