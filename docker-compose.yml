@@ -17,7 +17,7 @@ services:
     ports:
       - "5432:5432"
   web:
-    build: ocker/django
+    build: docker/django
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
     # command: daphne -b 0.0.0.0 -p 443 tests.asgi:application
@@ -64,5 +64,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /database/
+      device: ./database
       o: bind

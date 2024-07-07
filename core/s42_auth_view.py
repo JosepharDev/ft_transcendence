@@ -89,9 +89,9 @@ def auth_42_api_callback(request):
                 user = user.save()
                 r = HttpResponseRedirect('/api/spa/')
                 if user.is_2fa == True:
-                    r.set_cookie(key='jwt', value=generate_jwt(u, False))
+                    r.set_cookie(key='jwt', value=generate_jwt(user, False))
                 else:
-                    r.set_cookie(key='jwt', value=generate_jwt(u, True))
+                    r.set_cookie(key='jwt', value=generate_jwt(user, True))
                 return r
 
     # r = HttpResponseRedirect('/api/spa/')

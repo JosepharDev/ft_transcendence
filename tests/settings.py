@@ -33,9 +33,9 @@ ALLOWED_HOSTS = ['django_container','djangocontainer', 'localhost', '0.0.0.0', '
 # UID = 'u-s4t2ud-edd902aa7a0724afcecb181aa52a85e851372bf4c82f58515d10c2bb0b1b1170'
 # REDIRECT_INTRA = 'http://127.0.0.1:8000/profile/signin/auth_42_api_callback/'
 
-UID = 'u-s4t2ud-8c97348a7851d0c9cc2dccb5d7a9c3c6169d104705e7cb810a7a429f498b6ad8'
-REDIRECT_INTRA = 'http://127.0.0.1:8000/api/signin/auth_42_api_callback/'
-INTRA_SECRET = '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'
+UID = 'u-s4t2ud-ae61902bb44be96297aed24ad416ddf495663ee448129e62ebd58a16982cfd93'
+REDIRECT_INTRA = 'https://127.0.0.1:443/api/signin/auth_42_api_callback/'
+INTRA_SECRET = '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'
 
 # Application definition
 
@@ -100,23 +100,23 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'db',
-#         'USER': 'yoyahya',
-#         'PASSWORD': 'yoyahya',
-#         'HOST': 'db_container',
-#         'POST': '5432'
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',
+        'USER': 'yoyahya',
+        'PASSWORD': 'yoyahya',
+        'HOST': 'db_container',
+        'POST': '5432'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
