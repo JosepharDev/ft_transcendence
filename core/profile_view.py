@@ -3,18 +3,17 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .serializer import UserSerializer, HistoryMatchSerializer
 from rest_framework import status
-
 from django.contrib.auth.decorators import login_required
 from .models import User, Match, HistoryMatch, Friend
 from django.shortcuts import render, redirect
 from .jwt import generate_jwt, decode_jwt, decode
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
 import jwt
-from django.core.serializers import serialize
 from django.db.models import Q
+# from django.core.exceptions import User
 
-
-
+from .utils import check_auth
+from django.utils.decorators import method_decorator
 #return 401
 signInTwoFa = {"message": "2fa"}
 signInFailed = {"message": "unauthorized"}
@@ -23,42 +22,49 @@ signInFailed = {"message": "unauthorized"}
 signInSucess = {"message": "success"}
 
 
+class SignUp(APIView):
+    def post(self, request):
+        if 'username' in request.POST and 'password' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            if User.objects.filter(username=username).exists():
+                return Response({"message": "there is already user with this name"})
+            else:
+                print("++++++++", username, "+++++++", password)
+                user = User.objects.create(username=username, password=password, remote=True, p_username=username)
+                user.set_password(password)
+                user.save()
+                response = Response({"message": "success"})
+                response.set_cookie(key='jwt', value=generate_jwt(user, True), httponly=True)
+                return response
+        else:
+            return Response({"message": "Please Provide Both username and password"})
 
-class signin(APIView):
+
+class SignIn(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        
-        
-        
-        token = request.COOKIES.get('jwt')
-        if not token:
-            # return Response({"message": "not signin"}, status=200)
-            return render(request, 'signin.html')
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return render(request, 'signin.html')
-        token_code = decode(token)
-
-
-
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"})
+        user = User.objects.get(request.user_id)
         serializer = UserSerializer(user)
-        return Response(serializer.data)
-    
+        return Response(serializer.data, status=status.HTTP_200_OK)    
 
     def post(self, request):
-
-        username = request.POST['username']
-        user = User.objects.filter(username=username).first()
-        if user is None:
-            response = Response({"message": "notfound"}, status=404)
-            return response
-
-        if user.is_2fa == True:
-            payload = generate_jwt(user, False)
+        if 'username' in request.POST and 'password' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            try:
+                user = User.objects.get(username=username)
+                if user.check_password(password):
+                    if user.is_2fa == True:
+                        payload = generate_jwt(user, False)
+                    else:
+                        payload = generate_jwt(user, True)
+                else:
+                    return Response({"message":"username or password not correct"})
+            except User.DoesNotExist:
+                return Response({"message":"username or password not correct"})
         else:
-            payload = generate_jwt(user, True)
+            return Response({"message": "Please Provide Both username and password"})
 
         if user.is_2fa == True:
             response = Response({"message": "2fa"}, status=401)
@@ -69,81 +75,16 @@ class signin(APIView):
         return response
 
 
-class logout(APIView):
-
+class Logout(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-        
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-        
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-        
         response = Response({"message": "success"})
         response.delete_cookie('jwt')
         return response
 
-class UsersList(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=403)
-        
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
-
-class UserHistory(APIView):
-    def get(self, request, id):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-    
-        user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
-        his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
-        return Response(his_serializer.data)
-
 class SearchUsers(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
-        print(request.query_params)
         query = request.query_params.get('q', None)
         if not query:
             return HttpResponseBadRequest("bad Request")
@@ -154,22 +95,11 @@ class SearchUsers(APIView):
 
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-    
+
+
 class UpdateUser(APIView):
+    @method_decorator(check_auth)
     def patch(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
         user = User.objects.get(id=user.id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
@@ -226,46 +156,14 @@ class AuthUser(APIView):
 
         return Response({"message": "authenticated"})
 
-
-
-# class SearchUsers(APIView):
-#     def get(self, request):
-#         print(request.query_params)
-#         query = request.query_params.get('q', None)
-#         if not query:
-#             return HttpResponseBadRequest("Bad Request")
-#         elif query:
-#             users = User.objects.get(username__icontains=query)
-#         else:
-#             users = User.objects.all()
-#         serializer = UserSerializer(users, many=True)
-#         return Response(serializer.data)
-
-
-# protect
 class UserData(APIView):
+    @method_decorator(check_auth)
     def get(self, request, id):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
-    
-        # users = User.objects.get(pk=id)
-
         try:
             userFriend = User.objects.get(id=id)
+            user = User.objects.get(id=request.user_id)
         except User.DoesNotExist:
             return Response({"message": "notfound"}, status=404)
-        #here i need protection if user does not exist with this id
 
         serializer = UserSerializer(userFriend)
 
@@ -429,3 +327,30 @@ class UserFriends(APIView):
             return Response({"message": "Friend added successfully"}, status=201)
 
         return Response({"message": "Nothing happened"}, status=200)
+
+
+
+
+
+# import jwt
+# from django.http import JsonResponse
+# from django.utils.deprecation import MiddlewareMixin
+
+# class JWTMiddleware(MiddlewareMixin):
+#     def process_request(self, request):
+#         token = request.COOKIES.get('jwt_token')
+        
+    
+# class UsersList(APIView):
+#     @method_decorator(check_auth)
+#     def get(self, request): 
+#         users = User.objects.all()
+#         serializer = UserSerializer(users, many=True)
+#         return Response(serializer.data)
+
+# class UserHistory(APIView):
+#     @method_decorator(check_auth)
+#     def get(self, request, id):    
+#         user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
+#         his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
+#         return Response(his_serializer.data)

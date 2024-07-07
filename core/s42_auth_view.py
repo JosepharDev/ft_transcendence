@@ -58,10 +58,11 @@ def auth_42_api_callback(request):
     user_info = user_info_response.json()
 
     user_data = {
-        're': user_info['id'],
+        'remote_id': user_info['id'],
         'username': user_info['login'],
-        'email': user_info.get('email', ''), 
-        'status': 'active',  
+        'p_username': user_info['login'],
+        'remote': True,
+        'status': 'active',
     }
     avatar_link = user_info.get('image', {}).get('link', '')
     if avatar_link:
@@ -70,31 +71,29 @@ def auth_42_api_callback(request):
             avatar_content = ContentFile(avatar_response.content, name="avatar.JPG")
             user_data['avatar'] = avatar_content
     try:
-        u = User.objects.get(re=user_info['id'])
-    except:
-        u = None
-    if u:
-        jwt_payload = {
-            'user_id': u.id,
-            'username': u.username,
-            'exp': datetime.now() + timedelta(hours=24),
-        }
-        jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
-    else:
-        user_serializer = UserSerializer(data=user_data)
-        if user_serializer.is_valid(raise_exception=True):
-            user = user_serializer.save() 
-            user.intra = True
-            user.save()
-            jwt_payload = {
-                'user_id': user.id,
-                'username': user.username,
-                'exp': datetime.now() + timedelta(hours=24),
-            }
-            jwt_token = jwt.encode(jwt_payload, settings.SECRET_KEY, algorithm='HS256')
+        u = User.objects.get(remote_id=user_info['id'])
+        response = HttpResponseRedirect('/api/spa/')
+        if u.is_2fa == True:
+            response.set_cookie(key='jwt', value=generate_jwt(u, False))
+        else:
+            response.set_cookie(key='jwt', value=generate_jwt(u, True))
+        return response
+    except User.DoesNotExist:
+        try:
+            u = User.objects.get(username=user_info['login'])
+            return Response({"message": "there is already user with this name"})
+        except User.DoesNotExist:
+            user = UserSerializer(data=user_data)
+            if user.is_valid(raise_exception=True):
+                user = user.save()
+                r = HttpResponseRedirect('/api/spa/')
+                if user.is_2fa == True:
+                    r.set_cookie(key='jwt', value=generate_jwt(u, False))
+                else:
+                    r.set_cookie(key='jwt', value=generate_jwt(u, True))
+                return r
 
-
-    r = HttpResponseRedirect('/api/spa/')
-    r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
-    return r
+    # r = HttpResponseRedirect('/api/spa/')
+    # r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
+    # return r
 

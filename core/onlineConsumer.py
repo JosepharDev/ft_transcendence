@@ -55,7 +55,7 @@ class OnlineConsumer(AsyncWebsocketConsumer):
                     user.profile_status = status
             user.save()
             print("cccccccccccccccccccccccccccccccccccccccccccddddddddddddccccccc")
-            print(user.status)
+            # print(user.status)
         except User.DoesNotExist:
             # Handle the case where the user does not exist
             pass

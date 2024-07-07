@@ -2,14 +2,33 @@ from rest_framework import serializers
 from .models import User
 from .models import HistoryMatch
 
+extra_kwargs = {
+            'id': {'read_only': True},
+            'loses': {'read_only': True},
+            'wins': {'read_only': True} ,
+            'password': {'write_only': True}}
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 're', 'username', 'avatar', 'loses', 'wins', 'email', 'nickname'] # i delete status , because required error in signup
-        extra_kwargs = {
-            'id': {'read_only': True},
-            'loses': {'read_only': True},
-            'wins': {'read_only': True} }
+        fields = '__all__' # i delete status , because required error in signup
+        extra_kwargs
+    def create(self, validated_data):
+        remote = validated_data.pop('remote', None)
+        if remote == False:
+            user = super().create(validated_data)
+        else:
+            user = super().create(validated_data)
+            user.set_unusable_password()
+        user.save()
+        return user
+    # def validate_username(self, value):
+    #     if User.objects.filter(username=value).exists():
+    #         raise serializers.ValidationError("Username Already Exists")
+    #     return value
+    # check password in serializer create function if remote pass it if user hashe it 
+    # check if you can validate username if already exist and in case of remote change it here and send him message
+
 
 
 class HistoryMatchSerializer(serializers.ModelSerializer):

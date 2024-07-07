@@ -1,42 +1,79 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager, AbstractUser
+from django.core.validators import MinLengthValidator
+from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
 
+# class UserManager(BaseUserManager):
+#     def create_user(self, username, password=None, **extra_fields):
+#         if not username:
+#             raise ValueError(_('The username must be set'))
+#         print(extra_fields)
+#         user = self.model(username=username,p_username=username, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
+#     def create_superuser(self, username, password=None, **extra_fields):
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+#         return self.create_user(username, password, **extra_fields)
+
+#     def get_by_natural_key(self, username):
+#         return self.get(username=username)
+
+# class User(AbstractBaseUser, PermissionsMixin):
 class User(AbstractUser):
+    class GameStatus(models.TextChoices):
+        IN_GAME = "in game", "In Game"
+        WAITING = "waiting", "Waiting"
+        NO_GAME = "no game", "No Game"
 
-    class gamestatus(models.TextChoices):
-        in_game = "in game"
-        waiting = "waiting"
-        no_game  = "no_game"
+    class Status(models.TextChoices):
+        ONLINE = "online", "Online"
+        OFFLINE = "offline", "Offline"
+    
+    class language(models.TextChoices):
+        fr = "fransh"
+        eng = "english"
+        sp = "spanish"
+        
 
-    class status(models.TextChoices):
-        online = "online"
-        offline = "offline"
+    id = models.AutoField(unique=True, primary_key=True, blank=False)
+    remote_id = models.IntegerField(blank=True, null=True)
+    p_username = models.CharField(max_length=100, unique=True, blank=True)
+    username = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=100, blank=True)
+    nickname = models.CharField(max_length=100, blank=True, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
+    is_2fa = models.BooleanField(default=False)
+    remote = models.BooleanField(default=False)
 
-    re = models.IntegerField(default=0)
-    email = models.CharField(max_length=100)
-    # password = models.CharField(max_length=100, blank=True)
+    # is_staff = models.BooleanField(default=False)
+    # is_superuser = models.BooleanField(default=False)
+
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
-    profile_status = models.CharField(max_length=20, choices=status.choices, default=status.offline)
-    game_status = models.CharField(max_length=20, choices=gamestatus.choices, default=gamestatus.no_game)
+    profile_status = models.CharField(max_length=20, choices=Status.choices, default=Status.OFFLINE)
+    game_status = models.CharField(max_length=20, choices=GameStatus.choices, default=GameStatus.NO_GAME)
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
-    nickname = models.CharField(max_length=100, blank=True)
-    is_2fa = models.BooleanField(default=False)
-    friends = models.ManyToManyField('User', blank=True)
-    # intra = models.BooleanField(default=False)
-    REQUIRED_FIELDS = []
+    friends = models.ManyToManyField('self', blank=True)
+    # lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
+    # secret_key = models.CharField(max_length=20)
 
-
-    #zakaria
     game_type = models.CharField(max_length=1, default="N")
     current_room = models.CharField(max_length=30, blank=True)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['password']
+
+    # objects = UserManager()
+
+    def __str__(self):
+        return self.username
 
 
 class Match(models.Model):
-    match_id = models.IntegerField(primary_key=True)
+    match_id = models.AutoField(primary_key=True)
     player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player1")
     player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player2")
     winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_winner")
@@ -50,7 +87,7 @@ class Match(models.Model):
         # return f"{self.player1.nickname} vs {self.player2.nickname} - {self.match_date}"
 
 class HistoryMatch(models.Model):
-    history_id = models.IntegerField(primary_key=True)
+    history_id = models.AutoField(primary_key=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='history_player1')
     player2 = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='history_player2')
