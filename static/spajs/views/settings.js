@@ -75,12 +75,16 @@ function settingsHtml(isEnable, datalocalise)
             </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block" data-localize="updateProfile">${translations[dataGlobal.selectedLanguage]['updateProfile']}</button>
         </form>
+            <p id="error-msg-update"><p>
+
         <div class="two-factor-auth">
             <button id="toggle-2fa-btn" class="btn btn-secondary btn-block" data-localize="${datalocalise}">${isEnable}</button>
             <img id="2fa-image" src="" alt="2FA QR Code" style="display: none;">
             <input type="text" id="2fa-code" class="form-control mt-2" data-localize="enterOtp" placeholder="${translations[dataGlobal.selectedLanguage]['enterOtp']}" style="display: none;">
             <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;" data-localize="submitOtp">${translations[dataGlobal.selectedLanguage]['submitOtp']}</button>
         </div>
+            <p id="error-msg-twofa"><p>
+
     </div>
     `)
 }
@@ -89,6 +93,7 @@ function settingsHtml(isEnable, datalocalise)
 async function profileFormSettingsEvent(e)
 {
     e.preventDefault();
+    const isupdated = document.getElementById('error-msg-update');
     const username = document.getElementById('username').value;
     const nickname = document.getElementById('nickname').value;
     const profileImage = document.getElementById('profile-image').files[0];
@@ -123,10 +128,17 @@ async function profileFormSettingsEvent(e)
                 pushUrl('/signin');
             return 
         }
-        alert ("not updated");
+        // alert ("not updated");
+        isupdated.textContent = 'failed to update';
     }
     else
-        alert ("updated");
+    {
+        // alert ("updated");
+        isupdated.textContent = 'updated succesfully';
+        isupdated.style.color = '#508D4E';
+
+
+    }
 }
 
 
@@ -195,6 +207,8 @@ async function twofaButtonEvent(e)
 async function submit2faButtonEvent(e)
 {
     const code = document.getElementById('2fa-code').value;
+    const isoptok = document.getElementById('error-msg-twofa');
+
     e.preventDefault();
     let formData = new FormData();
     formData.append('code', code);
@@ -233,12 +247,15 @@ async function submit2faButtonEvent(e)
         }
         else
         {
-            alert("false otp");
+            // alert("false otp");
+            console.log(js.message);
+            isoptok.textContent = "Wrong Code"
         }
     }
     catch (err)
     {
-        alert("otp ERROR");
-
+        console.log(js.message);
+        console.log('js.message');
+        isoptok.textContent = "Wrong Code"
     }
 }

@@ -101,7 +101,7 @@ async function submitSigninEvent(e)
         {
             document.querySelector("#navi").classList.remove("hideme");
             sendOnline();
-            pushUrl('/');
+            pushUrl('/home');
         }
 
     }

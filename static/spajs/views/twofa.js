@@ -2,7 +2,7 @@ import { sendOnline } from "./online.js";
 import { pushUrl } from "../utils/urlRoute.js";
 export async function twofaView()
 {
-    app = document.getElementById("app");
+    let app = document.getElementById("app");
     app.innerHTML = `
     <div class="signin">
         <div class="form-container">

@@ -223,7 +223,7 @@ function historyMatchHelper(data)
             <span class="player-name mr-2">${data.player2Username}</span>
             <img src="${data.plr2img}" class="player-avatar" alt="Player 2">
         </div>
-        <span class="match-date ml-3">2023-05-01</span>
+        <span class="match-date ml-3">${data.date}</span>
     </div>
     `)
 }

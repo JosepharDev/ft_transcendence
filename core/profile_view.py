@@ -105,7 +105,7 @@ class SearchUsers(APIView):
 class UpdateUser(APIView):
     @method_decorator(check_auth)
     def patch(self, request):
-        user = User.objects.get(id=user.id)
+        user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             # if ('password' in request.data and request.data['password'] == ""):
@@ -411,6 +411,7 @@ class ProfileData(APIView):
                 'player2Score' : match.plr2_count,
                 'plr1img': match.player1.avatar.url,
                 'plr2img': match.player2.avatar.url,
+                'date': match.match_date.date(),
             }
             print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)
