@@ -29,19 +29,19 @@ class SignUp(APIView):
             username = request.POST['username']
             password = request.POST['password']
             if not username or not password:
-                return Response({"message": "Please Provide Both username and password"})
+                return Response({"message": "Please Provide Both username and password"}, status=401)
             if User.objects.filter(username=username).exists():
-                return Response({"message": "there is already user with this name"})
+                return Response({"message": "there is already user with this name"}, status=401)
             else:
                 print("++++++++", username, "+++++++", password)
                 user = User.objects.create(username=username, password=password, remote=True, p_username=username)
                 user.set_password(password)
                 user.save()
-                response = Response({"message": "success"})
+                response = Response({"message": "success"}, status=200)
                 response.set_cookie(key='jwt', value=generate_jwt(user, True), httponly=True)
                 return response
         else:
-            return Response({"message": "Please Provide Both username and password"})
+            return Response({"message": "Please Provide Both username and password"}, status=401)
 
 
 class SignIn(APIView):
@@ -63,11 +63,11 @@ class SignIn(APIView):
                     else:
                         payload = generate_jwt(user, True)
                 else:
-                    return Response({"message":"username or password not correct"})
+                    return Response({"message":"username or password not correct"}, status=401)
             except User.DoesNotExist:
-                return Response({"message":"username or password not correct"})
+                return Response({"message":"username or password not correct"}, status=401)
         else:
-            return Response({"message": "Please Provide Both username and password"})
+            return Response({"message": "Please Provide Both username and password"}, status=401)
 
         if user.is_2fa == True:
             response = Response({"message": "2fa"}, status=401)
@@ -389,6 +389,7 @@ class ProfileData(APIView):
                 'player2Score' : match.plr2_count,
                 'plr1img': match.player1.avatar.url,
                 'plr2img': match.player2.avatar.url,
+                'date': match.match_date.date(),
             }
             print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)

@@ -5,81 +5,31 @@ import {urlLocationHandler} from './utils/locationHandles.js'
 import {urlRoute} from './utils/urlRoute.js'
 import { pushUrl } from './utils/urlRoute.js'
 import { checkAuthentication } from './views/checkAuth.js'
-const translations = {
-    en: {
-        tournament: "Tournament",
-        "tournament-desc": "Participate in tournaments.",
-        training: "Training",
-        "training-desc": "Improve your skills.",
-        remote1vs1: "Remote 1vs1",
-        "remote1vs1-desc": "Play 1vs1 remotely.",
-        remote2vs2: "Remote 2vs2",
-        "remote2vs2-desc": "Play 2vs2 remotely.",
-        search: "Search",
-        "search-desc": "Search for players.",
-        friends: "Friends",
-        "friends-desc": "Connect with friends.",
-        go: "Go"
-    },
-    es: {
-        tournament: "Torneo",
-        "tournament-desc": "Participa en torneos.",
-        training: "Entrenamiento",
-        "training-desc": "Mejora tus habilidades.",
-        remote1vs1: "Remoto 1vs1",
-        "remote1vs1-desc": "Juega 1vs1 a distancia.",
-        remote2vs2: "Remoto 2vs2",
-        "remote2vs2-desc": "Juega 2vs2 a distancia.",
-        search: "Buscar",
-        "search-desc": "Busca jugadores.",
-        friends: "Amigos",
-        "friends-desc": "Conéctate con amigos.",
-        go: "Ir"
-    },
-    fr: {
-        tournament: "Tournoi",
-        "tournament-desc": "Participez à des tournois.",
-        training: "Entraînement",
-        "training-desc": "Améliorez vos compétences.",
-        remote1vs1: "Distant 1vs1",
-        "remote1vs1-desc": "Jouez 1vs1 à distance.",
-        remote2vs2: "Distant 2vs2",
-        "remote2vs2-desc": "Jouez 2vs2 à distance.",
-        search: "Recherche",
-        "search-desc": "Rechercher des joueurs.",
-        friends: "Amis",
-        "friends-desc": "Connectez-vous avec des amis.",
-        go: "Aller"
-    }
-};
+import { signin } from './views/signin.js'
+import { twofaView } from './views/twofa.js'
 
-document.getElementById("language-selector").addEventListener("change", function() {
-    const selectedLanguage = this.value;
-    document.querySelectorAll("[data-localize]").forEach(element => {
-        const key = element.getAttribute("data-localize");
-        element.textContent = translations[selectedLanguage][key];
-    });
-});
 
-// Set default language to English
-document.getElementById("language-selector").value = "en";
-document.getElementById("language-selector").dispatchEvent(new Event("change"));
-// </div>
 
 document.getElementById("logout").addEventListener('click', async (e)=>{
     e.preventDefault();
-    const request = new Request(
-        '/api/logout/',
-        {
-            method: 'GET',
-        }
-    );
-    let res = await fetch(request);
-    let js = await res.json();
-    if (js.message === "success")
+    try
     {
-        document.querySelector("#navi").classList.add("hideme");
-        
+        const request = new Request(
+            '/api/logout/',
+            {
+                method: 'GET',
+            }
+        );
+        let res = await fetch(request);
+        let js = await res.json();
+        if (js.message === "success")
+        {
+            document.querySelector("#navi").classList.add("hideme");
+            pushUrl('/signin');
+        }
+    }
+    catch (err)
+    {
         pushUrl('/signin');
     }
 })
@@ -131,48 +81,33 @@ for (let i = 0; i < numBalls; i++) {
   document.body.append(ball);
 }
 
-// // Keyframes
-// balls.forEach((el, i, ra) => {
-//   let to = {
-//     x: Math.random() * (i % 2 === 0 ? -11 : 11),
-//     y: Math.random() * 12
-//   };
 
-//   let anim = el.animate(
-//     [
-//       { transform: "translate(0, 0)" },
-//       { transform: `translate(${to.x}rem, ${to.y}rem)` }
-//     ],
-//     {
-//       duration: (Math.random() + 1) * 2000, // random duration
-//       direction: "alternate",
-//       fill: "both",
-//       iterations: Infinity,
-//       easing: "ease-in-out"
-//     }
-//   );
-// });
-
-
-
+    if (!history.state) {
+        const initialHref = window.location.pathname;
+        console.log("Initializing history with initial state:", initialHref);
+        history.replaceState({ href: initialHref }, '', initialHref);
+    }
 
     window.onpopstate = urlLocationHandler;
     window.route = urlRoute;
 
     const authStatus = await checkAuthentication();
+    console.log(authStatus);
     if (authStatus === "2fa") {
-        pushUrl('/twofa');
+        twofaView();
+        // pushUrl('/twofa');
         return;
     }
-    else if (authStatus === 'signin' || authStatus === 'notfff')
+    else if (authStatus === 'signin')
     {
-        pushUrl('/signin');
+        console.log('authStatus');
+        // pushUrl('/signin');
+        signin()
         return ;
     }
     document.querySelector(".hideme").classList.remove("hideme");
 
     urlLocationHandler();
-
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {

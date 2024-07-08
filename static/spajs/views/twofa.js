@@ -2,7 +2,7 @@ import { sendOnline } from "./online.js";
 import { pushUrl } from "../utils/urlRoute.js";
 export async function twofaView()
 {
-    app = document.getElementById("app");
+    let app = document.getElementById("app");
     app.innerHTML = `
     <div class="signin">
         <div class="form-container">
@@ -15,11 +15,37 @@ export async function twofaView()
                     <input type="text" class="form-control otpcode" id="username"  placeholder="Enter otp code">
                 </div>
                 <button id="mybtn" type="submit" class="btn btn-primary btn-block">Submit</button>
+                <button id="logoutbtn" type="button" class="btn btn-primary btn-block">Logout</button>
             </form>
+            <p id="error-msg"><p>
         </div>
     </div>
     `;
     document.getElementById('signinForm').addEventListener('submit', submitOTPButtonEvent);
+    document.getElementById('logoutbtn').addEventListener('click', async () =>
+    {
+        console.log('yo');
+        try
+        {
+            const request = new Request(
+                '/api/logout/',
+                {
+                    method: 'GET',
+                }
+            );
+            let res = await fetch(request);
+            let js = await res.json();
+            if (js.message === "success")
+            {
+                pushUrl('/signin');
+            }
+            console.log('y89998o');
+        }
+        catch (err)
+        {
+            console.log('y88o');
+        }
+    });
 }
 
 
@@ -60,13 +86,12 @@ async function submitOTPButtonEvent(e)
         }
         else
         {
-            alert("false otp");
+            document.getElementById('error-msg').textContent = 'Invalid OTP Code';
         }
     }
     catch (err)
     {
-        alert("otp ERROR");
-
+        document.getElementById('error-msg').textContent = 'Invalid OTP Code';
     }
 
 

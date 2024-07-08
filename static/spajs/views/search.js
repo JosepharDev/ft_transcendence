@@ -1,5 +1,6 @@
 import {pushUrl} from "./../utils/urlRoute.js"
 import { translations } from "../utils/localization.js";
+import { dataGlobal } from "./globalData.js";
 export function searchView ()
 {
     console.log("lolo")
@@ -15,12 +16,12 @@ function searchHtml()
 {
     return (`
             <div class="container search-container">
-            <h2>User ${translations['en']['search']}</h2>
+            <h2 data-localize="usersSearch">${translations[dataGlobal.selectedLanguage]['usersSearch']}</h2>
             <form id="search-form">
                 <div class="form-group">
-                    <input name="q" type="text" class="form-control" id="search-input" placeholder="Search for users by username">
+                    <input name="q" type="text" class="form-control" id="search-input" data-localize="usernameSearch" placeholder="${translations[dataGlobal.selectedLanguage]['usernameSearch']}">
                 </div>
-                <button id="mybtn" type="submit" class="btn-search btn btn-primary btn-block">Search</button>
+                <button id="mybtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="search">${translations[dataGlobal.selectedLanguage]['search']}</button>
             </form>
             <div id="search-results" class="search-results"></div>
         </div>
@@ -30,7 +31,6 @@ function searchHtml()
 
 async function searchElementsEvent(e)
 {
-    console.log("jijiji")
     e.preventDefault();
     var form = document.getElementById('search-form');
     var formData = new FormData(form);
@@ -86,12 +86,12 @@ async function searchElementsEvent(e)
             });
         }
         else {
-            resultsContainer.innerHTML = '<div class="not-found">No users found</div>';
+            resultsContainer.innerHTML = `<div class="not-found" data-localize="notfound">${translations[dataGlobal.selectedLanguage]['notFound']}</div>`;
         }
     }
     catch (error)
     {
-        resultsContainer.innerHTML = '<div class="not-found">No users found</div>';
+        resultsContainer.innerHTML = `<div class="not-found" data-localize="notfound">${translations[dataGlobal.selectedLanguage]['notFound']}</div>`;
         return ;
     }
 }
