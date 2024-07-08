@@ -1,4 +1,6 @@
+import { translations } from "../utils/localization.js";
 import { pushUrl } from "../utils/urlRoute.js";
+import { dataGlobal } from "./globalData.js";
 export async function settingView()
 {
     try
@@ -14,6 +16,7 @@ export async function settingView()
 
         if (!res.ok)
         {
+
             if (res.status === 401)
             {
                 let messageStatus = await res.json();
@@ -28,15 +31,16 @@ export async function settingView()
 
 
         let js = await res.json();
-    
-        let isEnable = "Enable 2FA";
+        let isEnable = translations[dataGlobal.selectedLanguage]['enable2fa'];
+        let enableOrDisable = 'enable2fa';
         if (js.message)
-        {
-            isEnable = "Disable 2FA";
-    
-        }
-    
-        app.innerHTML = settingsHtml(isEnable);
+            {
+                isEnable = translations[dataGlobal.selectedLanguage]['disable2fa'];
+                enableOrDisable = 'disable2fa';
+            }
+            
+            console.log("AYPPPPPPPPPPPPPPPP")
+            app.innerHTML = settingsHtml(isEnable, enableOrDisable);
         let profileFormSettings =  document.getElementById('profile-form');
         profileFormSettings.addEventListener('submit', profileFormSettingsEvent);
         let twofaButton = document.getElementById('toggle-2fa-btn');
@@ -51,7 +55,7 @@ export async function settingView()
 }
 
 
-function settingsHtml(isEnable)
+function settingsHtml(isEnable, datalocalise)
 {
     return (`
     <div class="container settings-container">
@@ -62,20 +66,20 @@ function settingsHtml(isEnable)
                 <input type="file" class="form-control-file" id="profile-image" >
             </div>
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter new username">
+                <label for="username" data-localize="username">${translations[dataGlobal.selectedLanguage]['username']}</label>
+                <input type="text" class="form-control" id="username" data-localize="enterUsername" placeholder="${translations[dataGlobal.selectedLanguage]['enterUsername']}">
             </div>
             <div class="form-group">
-            <label for="nickname">Tournament nickname</label>
-            <input type="text" class="form-control" id="nickname" placeholder="Enter new nickname">
-        </div>
-            <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Update Profile</button>
+                <label for="nickname" data-localize="tournamentNickname">${translations[dataGlobal.selectedLanguage]['tournamentNickname']}</label>
+                <input type="text" class="form-control" id="nickname" data-localize="enterNickname" placeholder="${translations[dataGlobal.selectedLanguage]['enterNickname']}">
+            </div>
+            <button id="mybtn" type="submit" class="btn btn-primary btn-block" data-localize="updateProfile">${translations[dataGlobal.selectedLanguage]['updateProfile']}</button>
         </form>
         <div class="two-factor-auth">
-            <button id="toggle-2fa-btn" class="btn btn-secondary btn-block">${isEnable}</button>
+            <button id="toggle-2fa-btn" class="btn btn-secondary btn-block" data-localize="${datalocalise}">${isEnable}</button>
             <img id="2fa-image" src="" alt="2FA QR Code" style="display: none;">
-            <input type="text" id="2fa-code" class="form-control mt-2" placeholder="Enter 2FA code" style="display: none;">
-            <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;">Submit 2FA Code</button>
+            <input type="text" id="2fa-code" class="form-control mt-2" data-localize="enterOtp" placeholder="${translations[dataGlobal.selectedLanguage]['enterOtp']}" style="display: none;">
+            <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;" data-localize="submitOtp">${translations[dataGlobal.selectedLanguage]['submitOtp']}</button>
         </div>
     </div>
     `)
@@ -139,7 +143,9 @@ async function twofaButtonEvent(e)
 
     let formData = new FormData();
     
-    if (button.textContent == "Disable 2FA")
+    if (button.textContent === "Disable 2FA" || button.textContent === "Desactivar 2FA" || 
+        button.textContent === "Désactiver 2FA"
+    )
         formData.append('qrcode', "disable");
     else
         formData.append('qrcode', "enable");
@@ -151,7 +157,10 @@ async function twofaButtonEvent(e)
     console.log("i did fetch");
     if (response.ok)
     {
-        if (button.textContent == "Enable 2FA")
+        if (button.textContent === "Enable 2FA" ||
+            button.textContent === "Activer 2FA" ||
+            button.textContent === "Activar 2FA"
+        )
         {
             if (image.style.display === 'none')
             {
@@ -161,7 +170,8 @@ async function twofaButtonEvent(e)
                 image.style.display = 'block';
                 input.style.display = 'block';
                 submitButton.style.display = 'block';
-                button.textContent = 'Disable 2FA';
+                button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
+                button.setAttribute('data-localize', 'disable2fa');
             }
         }
         else {
@@ -169,7 +179,8 @@ async function twofaButtonEvent(e)
             image.style.display = 'none';
             input.style.display = 'none';
             submitButton.style.display = 'none';
-            button.textContent = 'Enable 2FA';
+            button.textContent = translations[dataGlobal.selectedLanguage]['enable2fa'];
+            button.setAttribute('data-localize', 'enable2fa');
         }
 
     }
@@ -214,7 +225,8 @@ async function submit2faButtonEvent(e)
             const submitButton = document.getElementById('submit-2fa-btn');
 
 
-            button.textContent = 'Disable 2FA';
+            button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
+            button.setAttribute('data-localize', 'disable2fa');
             image.style.display = 'none';
             input.style.display = 'none';
             submitButton.style.display = 'none';

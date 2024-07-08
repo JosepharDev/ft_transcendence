@@ -13,6 +13,7 @@ import {friendsView} from "../views/friends.js"
 import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
+import { signup } from "../views/signup.js"
 
 
 export async function urlLocationHandler()
@@ -74,8 +75,8 @@ export async function urlLocationHandler()
         remoteTournament();
     else if (path === "/bot")
         localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"});
-    else if (path === "/game")
-        homeView(); // this will be the game
+    else if (path === "/signup")
+        signup()
     else
         homeView(); // this will change just button to start
 }

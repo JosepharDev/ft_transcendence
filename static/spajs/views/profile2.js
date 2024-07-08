@@ -1,4 +1,7 @@
 import { pushUrl } from "../utils/urlRoute.js";
+import { translations } from "../utils/localization.js";
+import { dataGlobal } from "./globalData.js";
+
 
 
 export async function profileFriend2(id, is_me)
@@ -75,10 +78,10 @@ export async function profileFriend2(id, is_me)
                     let js = await response.json()
 
                     if (js.message === "Friend removed successfully")
-                        btn.textContent = "Follow";
+                        btn.textContent = translations[dataGlobal.selectedLanguage]['follow'];
 
                     else if (js.message === "Friend added successfully")
-                        btn.textContent = "Unfollow";
+                        btn.textContent = translations[dataGlobal.selectedLanguage]['unfollow'];
 
                 }
                 catch (err)
@@ -117,12 +120,12 @@ function profileFriendHtml()
                 <!-- stats part -->
             
             </div>
-            <h5 class="mt-4">Match History</h5>
+            <h5 class="mt-4" data-localize="matchHistory">${translations[dataGlobal.selectedLanguage]['matchHistory']}</h5>
             <div class="match-history" id="matchHis" >
                 
 
             </div>
-            <h5 class="mt-4">Following</h5>
+            <h5 class="mt-4" data-localize="followng">${translations[dataGlobal.selectedLanguage]['followng']}</h5>
             <div class="match-history allFriends">
 
 
@@ -138,17 +141,26 @@ function profileFirstPart(data)
 {
 
     let followShow = "";
-    let onlineStatus = data.is_online ? "Online" : "Offline";
+    let onlineStatus = data.is_online ? translations[dataGlobal.selectedLanguage]['online'] : translations[dataGlobal.selectedLanguage]['offline'];
+    let dataonlineSatus = data.is_online ? 'online' : 'offline';
+    
     let statusIndicator = data.is_online ? "" : "offline";
 
     if (!data.its_me)
     {
-        let followPlace = ""
+        let followPlace = "";
+        let datalocal = "";
         if (data.friend)
-            followPlace = "Unfollow";
+        {
+            followPlace = translations[dataGlobal.selectedLanguage]['unfollow'];
+            datalocal = 'unfollow';
+        }    
         else
-            followPlace = "Follow";
-        followShow = `<button class="btn btn-sm btn-outline-light follow-btn">${followPlace}</button>`;
+        {
+            followPlace = translations[dataGlobal.selectedLanguage]['follow'];
+            datalocal = 'follow';
+        }
+        followShow = `<button class="btn btn-sm btn-outline-light follow-btn" data-localize="${datalocal}">${followPlace}</button>`;
     }
 
     return (`
@@ -158,7 +170,7 @@ function profileFirstPart(data)
         <div class="d-flex align-items-center mt-2">
             ${followShow}
             <span class="status-indicator ${statusIndicator} ml-3"></span>
-            <span class="status-text ml-2">${onlineStatus}</span>
+            <span class="status-text ml-2" data-localize="${dataonlineSatus}">${onlineStatus}</span>
         </div>
     </div>
     `)
@@ -168,15 +180,15 @@ function profileStatsPart(data)
 {
     return (`
         <div class="stat">
-        <h5>Wins</h5>
-        <p>${data.wins}</p>
+            <h5 data-localize="wins">${translations[dataGlobal.selectedLanguage]['wins']}</h5>
+            <p>${data.wins}</p>
         </div>
         <div class="stat">
-            <h5>Losses</h5>
+            <h5 data-localize="loses">${translations[dataGlobal.selectedLanguage]['loses']}</h5>
             <p>${data.loses}</p>
         </div>
         <div class="stat">
-            <h5>Tournaments Wins</h5>
+            <h5 data-localize="tournamentwins">${translations[dataGlobal.selectedLanguage]['tournamentwins']}</h5>
             <p>${data.tournament_wins}</p>
         </div>
     `)

@@ -27,7 +27,7 @@ export async function remoteGame1()
 
 
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/pongTest/'
         + '3'

@@ -13,7 +13,7 @@ export async function signin()
         <div class="form-header">
             <h2>Sign In</h2>
         </div>
-        <form id="signinForm">
+            <form id="signinForm">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" placeholder="Enter username" autocomplete="username">
@@ -24,15 +24,24 @@ export async function signin()
             </div>
             <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
+
             <form action="api/signin/auth_42_api/" id="fortysign" method="POST">\
             <button type="submit" class="btn btn-ftwo btn-block" >Sign in with 42</button>
             </form>
+            <span>Don't have an account? </span> <a id="sup" href="/signup">Sign Up</a>
+            <p id="error-msg"><p>
     </div>
 </div>
     `
 
     let formSingin = document.querySelector("#signinForm");
     formSingin.addEventListener("submit", submitSigninEvent)
+
+    document.getElementById("sup").addEventListener('click', async (e)=>{
+        e.preventDefault();
+        pushUrl('/signup');
+    })
+    
 }
 
 
@@ -56,25 +65,48 @@ async function submitSigninEvent(e)
         }
     );
 
-    let res = await fetch(request);
-
-
-
-
-    let js = await res.json();
-
-
-
-
-    if (js.message === "success")
+    try
     {
-        document.querySelector("#navi").classList.remove("hideme");
-        
-        sendOnline();
-        pushUrl('/');
+
+        let res = await fetch(request);
+    
+        if (!res.ok)
+        {
+            if (res.status === 401)
+            {
+                let js = await res.json();
+                
+                if (js.message !== '2fa')
+                {
+                    document.getElementById('error-msg').textContent = js.message;
+                    return ;
+                }
+                else if (js.message === "2fa")
+                {
+                    pushUrl('/twofa');
+                    return ;
+                }
+            }
+        }
+            
+            
+        console.log('ffffffffffffffffff');
+        let js = await res.json();
+        console.log(js.message);
+
+    
+    
+        document.getElementById('error-msg').textContent = '';
+        if (js.message === "success")
+        {
+            document.querySelector("#navi").classList.remove("hideme");
+            sendOnline();
+            pushUrl('/');
+        }
+
     }
-    else if (js.message === "2fa")
+    catch (err)
     {
-        pushUrl('/twofa');
+        document.getElementById('error-msg').textContent = 'Error! Try again';
     }
 }

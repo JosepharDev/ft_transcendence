@@ -17,7 +17,6 @@ services:
       - db:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
-    restart: 'always'
   web:
     build: docker/django
     # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
