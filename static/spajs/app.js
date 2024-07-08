@@ -5,6 +5,8 @@ import {urlLocationHandler} from './utils/locationHandles.js'
 import {urlRoute} from './utils/urlRoute.js'
 import { pushUrl } from './utils/urlRoute.js'
 import { checkAuthentication } from './views/checkAuth.js'
+import { signin } from './views/signin.js'
+import { twofaView } from './views/twofa.js'
 
 
 
@@ -243,18 +245,24 @@ document.getElementById("language-selector").dispatchEvent(new Event("change"));
 
 document.getElementById("logout").addEventListener('click', async (e)=>{
     e.preventDefault();
-    const request = new Request(
-        '/api/logout/',
-        {
-            method: 'GET',
-        }
-    );
-    let res = await fetch(request);
-    let js = await res.json();
-    if (js.message === "success")
+    try
     {
-        document.querySelector("#navi").classList.add("hideme");
-        
+        const request = new Request(
+            '/api/logout/',
+            {
+                method: 'GET',
+            }
+        );
+        let res = await fetch(request);
+        let js = await res.json();
+        if (js.message === "success")
+        {
+            document.querySelector("#navi").classList.add("hideme");
+            pushUrl('/signin');
+        }
+    }
+    catch (err)
+    {
         pushUrl('/signin');
     }
 })
@@ -329,22 +337,32 @@ for (let i = 0; i < numBalls; i++) {
 // });
 
 
-
+        if (!history.state) {
+            const initialHref = window.location.pathname;
+            console.log("Initializing history with initial state:", initialHref);
+            history.replaceState({ href: initialHref }, '', initialHref);
+        }
 
     window.onpopstate = urlLocationHandler;
     window.route = urlRoute;
 
     const authStatus = await checkAuthentication();
+    console.log(authStatus);
     if (authStatus === "2fa") {
-        pushUrl('/twofa');
+        twofaView();
+        // pushUrl('/twofa');
         return;
     }
-    else if (authStatus === 'signin' || authStatus === 'notfff')
+    else if (authStatus === 'signin')
     {
-        pushUrl('/signin');
+        console.log('authStatus');
+        // pushUrl('/signin');
+        signin()
         return ;
     }
     document.querySelector(".hideme").classList.remove("hideme");
+
+
 
     urlLocationHandler();
 

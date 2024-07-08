@@ -62,8 +62,8 @@ function settingsHtml(isEnable, datalocalise)
         <h2 class="settings-title">Profile Settings</h2>
         <form id="profile-form" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="profile-image">Profile Image</label>
-                <input type="file" class="form-control-file" id="profile-image" >
+                <label id="upload-label" for="profile-image" data-localize="uploadAvatar">${translations[dataGlobal.selectedLanguage]['uploadAvatar']}</label>
+                <input type="file" class="form-control-file" id="profile-image">
             </div>
             <div class="form-group">
                 <label for="username" data-localize="username">${translations[dataGlobal.selectedLanguage]['username']}</label>

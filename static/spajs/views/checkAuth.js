@@ -21,6 +21,7 @@ export async function checkAuthentication()
         }
         return 'authenticated';
     }
+    
     if (answer.message === "2fa")
         return '2fa'
         //pushUrl('/twofa');

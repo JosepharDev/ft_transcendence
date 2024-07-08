@@ -5,7 +5,7 @@ export function sendOnline()
         return ;
     console.log("SENDONLINE");
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/onlineUser/'
         + '3'

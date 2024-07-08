@@ -43,6 +43,7 @@ export async function urlLocationHandler()
 
     if (location === '/signin')
     {
+        console.log("YOO");
         signin();
         return ;
     }
