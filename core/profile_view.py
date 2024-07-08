@@ -28,6 +28,8 @@ class SignUp(APIView):
         if 'username' in request.POST and 'password' in request.POST:
             username = request.POST['username']
             password = request.POST['password']
+            if not username or not password:
+                return Response({"message": "Please Provide Both username and password"})
             if User.objects.filter(username=username).exists():
                 return Response({"message": "there is already user with this name"})
             else:
@@ -76,6 +78,7 @@ class SignIn(APIView):
         return response
 
 
+# may use @login_required and use login(request, user) and logout(request) 
 class Logout(APIView):
     @method_decorator(check_auth)
     def get(self, request):
@@ -102,7 +105,7 @@ class SearchUsers(APIView):
 class UpdateUser(APIView):
     @method_decorator(check_auth)
     def patch(self, request):
-        user = User.objects.get(id=user.id)
+        user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             # if ('password' in request.data and request.data['password'] == ""):
@@ -119,42 +122,20 @@ class Spa(APIView):
         return render(request, 'newSpa/newSpa.html')
         return render(request, 'spa/spa.html')
 
-class Pong(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return render(request, 'signin.html')
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return render(request, 'signin.html')
-        return render(request, 'pong.html')
-
-class Toto(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return render(request, 'signin.html')
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return render(request, 'signin.html')
-        return render(request, 'oneone.html')
-
 class AuthUser(APIView):
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
+        # token = request.COOKIES.get('jwt')
+        # if not token:
+        #     return Response({"message": "unauthorized"}, status=401)
 
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
+        # try:
+        #     user = decode_jwt(token)
+        # except jwt.ExpiredSignatureError:
+        #     return Response({'message':"unauthorized"}, status=401)
 
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
+        # token_code = decode(token)
+        # if user.is_2fa == True and token_code['code'] == False:
+        #     return Response({"message": "2fa"}, status=401)
 
         return Response({"message": "authenticated"})
 

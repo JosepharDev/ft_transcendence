@@ -3,6 +3,7 @@ from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseU
 from django.core.validators import MinLengthValidator
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 # class UserManager(BaseUserManager):
 #     def create_user(self, username, password=None, **extra_fields):
@@ -22,6 +23,11 @@ from django.core.validators import RegexValidator
     #     return self.get(username=username)
 
 # class User(AbstractBaseUser, PermissionsMixin):
+
+def validate_input(value):
+    if value.strip() == '':
+        raise ValidationError("You must provide more than just whitespace.")
+
 class User(AbstractUser):
     class GameStatus(models.TextChoices):
         IN_GAME = "in game", "In Game"
@@ -40,8 +46,8 @@ class User(AbstractUser):
 
     id = models.AutoField(unique=True, primary_key=True, blank=False)
     remote_id = models.IntegerField(blank=True, null=True)
-    p_username = models.CharField(max_length=100, unique=True, blank=True)
-    username = models.CharField(max_length=100, unique=True)
+    p_username = models.CharField(max_length=100, blank=True)
+    username = models.CharField(max_length=100, unique=True, blank=False, validators=[validate_input])
     password = models.CharField(max_length=100, blank=True)
     nickname = models.CharField(max_length=100, blank=True, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
     is_2fa = models.BooleanField(default=False)
@@ -50,13 +56,14 @@ class User(AbstractUser):
     # is_staff = models.BooleanField(default=False)
     # is_superuser = models.BooleanField(default=False)
 
+    otp_secret = models.CharField(max_length=100, blank=True)
     wins = models.IntegerField(default=0)
     loses = models.IntegerField(default=0)
     profile_status = models.CharField(max_length=20, choices=Status.choices, default=Status.OFFLINE)
     game_status = models.CharField(max_length=20, choices=GameStatus.choices, default=GameStatus.NO_GAME)
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
-    friends = models.ManyToManyField('self', blank=True)
+    # friends = models.ManyToManyField('self', blank=True)
     # lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
     # secret_key = models.CharField(max_length=20)
 

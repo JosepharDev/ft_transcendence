@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__' # i delete status , because required error in signup
         extra_kwargs
     def create(self, validated_data):
+        print("}}}}}}}}}}}}}}}}}}}]]]", validated_data , "}}}}}}}}}}}}}}}}}}}")
         remote = validated_data.pop('remote', None)
         if remote == False:
             user = super().create(validated_data)

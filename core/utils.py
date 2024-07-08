@@ -5,7 +5,7 @@ from django.conf import settings
 from .models import User
 import jwt
 def check_auth(func):
-    def wrapper(request):
+    def wrapper(request, *args, **kwargs):
         token = request.COOKIES.get('jwt')
         if not token:
             return Response({"message": "not Signin"}, status=401)
@@ -20,7 +20,7 @@ def check_auth(func):
                 request.user_id = token['user_id']
             except User.DoesNotExist:
                 return Response({"message": "user Does Not Exist"})
-            return func(request)
+            return func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:
             return Response({'message': 'Token has expired'})
         except jwt.InvalidTokenError:
