@@ -11,6 +11,7 @@ export async function remoteTournament()
     <canvas id="pongCanvas" width="800" height="450"></canvas>
     </div>
     
+        <button id="mybtn" type="submit" class="btn btn-primary btn-block">Leave</button>
     
         
         <div class="bracket-wrapper hideme">
@@ -66,7 +67,7 @@ export async function remoteTournament()
 
 
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/tournament/'
         + '3'
@@ -149,28 +150,61 @@ export async function remoteTournament()
             document.querySelector('.us3').textContent = data.message.user3;
             document.querySelector('.us4').textContent = data.message.user4;
         }
-        else if (data.message.action === 'round1')
-        {
-            // canvasContainer.classList.add('hideme');
-            canvasContainer.style.display = 'none';
-            tournamentBracket.classList.remove('hideme');   
-            document.querySelector('.rone').textContent = data.message.winner;
-        }
-        else if (data.message.action === 'round2')
+        else if (data.message.action === 'round1' || data.message.action === 'round2' || data.message.action === 'final')
         {
             // canvasContainer.classList.add('hideme');
             canvasContainer.style.display = 'none';
             tournamentBracket.classList.remove('hideme');
-            document.querySelector('.rtwo').textContent = data.message.winner;
-        }
-        else if (data.message.action === 'final')
-        {
-            // canvasContainer.classList.add('hideme');
-            canvasContainer.style.display = 'none';
-            tournamentBracket.classList.remove('hideme');
-            document.querySelector('.final-winner').textContent = data.message.winner;
-        }
 
+
+            document.querySelector('.us1').textContent = data.message.user1;
+            document.querySelector('.us2').textContent = data.message.user2;
+            document.querySelector('.us3').textContent = data.message.user3;
+            document.querySelector('.us4').textContent = data.message.user4;
+            document.querySelector('.rone').textContent = data.message.win1;
+            document.querySelector('.rtwo').textContent = data.message.win2;
+
+            if (data.message.action === 'round1')
+            {
+                document.querySelector('.rone').textContent = data.message.winner;
+            }
+            else if (data.message.action === 'round2')
+            {
+                // canvasContainer.classList.add('hideme');
+                document.querySelector('.rtwo').textContent = data.message.winner;
+            }
+            else if (data.message.action === 'final')
+            {
+                document.querySelector('.final-winner').textContent = data.message.winner;
+            }
+        }
+        else if (data.message.action === 'reconnect')
+        {
+            canvasContainer.style.display = 'none';
+            tournamentBracket.classList.remove('hideme');
+            document.querySelector('.us1').textContent = data.message.user1;
+            document.querySelector('.us2').textContent = data.message.user2;
+            document.querySelector('.us3').textContent = data.message.user3;
+            document.querySelector('.us4').textContent = data.message.user4;
+            document.querySelector('.rone').textContent = data.message.win1;
+            document.querySelector('.rtwo').textContent = data.message.win2;
+
+            if (data.message.isplaying)
+            {
+                canvasContainer.style.display = 'flex';
+                tournamentBracket.classList.add('hideme');
+                document.querySelector(".player-info").innerHTML =
+                `<div class="player">
+                <img src="${data.message.plr1Avatar}" alt="Player 1">
+                <p id="player1-name">${data.message.plr1Username}</p>
+                </div>
+                <div class="player">
+                    <img src="${data.message.plr2Avatar}" alt="Player 2">
+                    <p id="player2-name">${data.message.plr2Username}</p>
+                </div>
+            `
+            }
+        }
 
 
 
