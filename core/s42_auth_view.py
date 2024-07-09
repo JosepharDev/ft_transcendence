@@ -1,5 +1,5 @@
 from .serializer import UserSerializer
-from .jwt import generate_jwt, decode_jwt
+from .jwt import generate_jwt
 from .models import User
 from rest_framework.decorators import api_view
 from django.conf import settings

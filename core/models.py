@@ -39,9 +39,9 @@ class User(AbstractUser):
         OFFLINE = "offline", "Offline"
     
     class language(models.TextChoices):
-        fr = "fransh"
-        eng = "english"
-        sp = "spanish"
+        fr = "fr"
+        eng = "eng"
+        sp = "esp"
         
 
     id = models.AutoField(unique=True, primary_key=True, blank=False)
@@ -63,8 +63,8 @@ class User(AbstractUser):
     game_status = models.CharField(max_length=20, choices=GameStatus.choices, default=GameStatus.NO_GAME)
     status_count = models.IntegerField(default=0)
     avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
-    # friends = models.ManyToManyField('self', blank=True)
-    # lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
+    # friends = models.ManyToManyField('self', blank=True)\
+    lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
     # secret_key = models.CharField(max_length=20)
 
     game_type = models.CharField(max_length=1, default="N")

@@ -11,7 +11,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from django import forms
 from django.contrib import messages
-from .jwt import generate_jwt, decode_jwt
+# from .jwt import generate_jwt, decode_jwt
 import jwt
 from django.conf import settings
 import json

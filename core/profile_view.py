@@ -6,14 +6,17 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from .models import User, Match, HistoryMatch, Friend
 from django.shortcuts import render, redirect
-from .jwt import generate_jwt, decode_jwt, decode
+from .jwt import generate_jwt
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
 import jwt
 from django.db.models import Q
 # from django.core.exceptions import User
 
-from .utils import check_auth
+from .utils import check_auth, check_auth1
 from django.utils.decorators import method_decorator
+
+from django.views.decorators.http import require_POST
+from django.contrib.auth import login, logout
 #return 401
 signInTwoFa = {"message": "2fa"}
 signInFailed = {"message": "unauthorized"}
@@ -34,7 +37,7 @@ class SignUp(APIView):
                 return Response({"message": "there is already user with this name"}, status=401)
             else:
                 print("++++++++", username, "+++++++", password)
-                user = User.objects.create(username=username, password=password, remote=True, p_username=username)
+                user = User.objects.create(username=username, password=password, remote=False, nickname=username)
                 user.set_password(password)
                 user.save()
                 response = Response({"message": "success"}, status=200)
@@ -60,8 +63,13 @@ class SignIn(APIView):
                 if user.check_password(password):
                     if user.is_2fa == True:
                         payload = generate_jwt(user, False)
+                        response = Response({"message": "2fa"}, status=401)
                     else:
                         payload = generate_jwt(user, True)
+                        response = Response({"message": "success"}, status=200)
+                   
+                    response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
+                    return response
                 else:
                     return Response({"message":"username or password not correct"}, status=401)
             except User.DoesNotExist:
@@ -69,19 +77,20 @@ class SignIn(APIView):
         else:
             return Response({"message": "Please Provide Both username and password"}, status=401)
 
-        if user.is_2fa == True:
-            response = Response({"message": "2fa"}, status=401)
-        else:
-            response = Response({"message": "success"}, status=200)
+        # if user.is_2fa == True:
+        #     response = Response({"message": "2fa"}, status=401)
+        # else:
+        #     response = Response({"message": "success"}, status=200)
 
-        response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
-        return response
+        # response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
+        # return response
 
 
 # may use @login_required and use login(request, user) and logout(request) 
 class Logout(APIView):
-    @method_decorator(check_auth)
+    @method_decorator(check_auth1)
     def get(self, request):
+        user = User.objects.get(id=request.user_id)
         response = Response({"message": "success"})
         # response.delete_cookie('jwt')
         response.set_cookie('jwt', '', max_age=-1, samesite='Lax', secure=True)
@@ -116,6 +125,18 @@ class UpdateUser(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@require_POST
+@check_auth
+def language(request):
+    if "language" in request.POST:
+        lang = request.POST['language']
+        if lang:
+            user = User.objects.get(id=request.user_id)
+            user.lang = lang
+            return Response({"message": "Updated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
 
 class Spa(APIView):
     def get(self, request):
@@ -123,21 +144,9 @@ class Spa(APIView):
         return render(request, 'spa/spa.html')
 
 class AuthUser(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        # token = request.COOKIES.get('jwt')
-        # if not token:
-        #     return Response({"message": "unauthorized"}, status=401)
-
-        # try:
-        #     user = decode_jwt(token)
-        # except jwt.ExpiredSignatureError:
-        #     return Response({'message':"unauthorized"}, status=401)
-
-        # token_code = decode(token)
-        # if user.is_2fa == True and token_code['code'] == False:
-        #     return Response({"message": "2fa"}, status=401)
-
-        return Response({"message": "authenticated"})
+        return Response({"message": "authenticated"}, status=200)
 
 class UserData(APIView):
     @method_decorator(check_auth)
@@ -188,64 +197,29 @@ class UserData(APIView):
         return Response(userRequestedData)
 
 class HistoMatch(APIView):
+    @method_decorator(check_auth)
     def get(self, request, id):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=403)
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"invalid signature"}, status=400)
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=403)
-
+        user = User.objects.get(id=request.user_id)
         # user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
         matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
         print(matches)
         # his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
         return Response({'message': 'ok'})
 
+
 class Enable2fa(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
+        user = User.objects.get(id=request.user_id)
         if user.is_2fa:
             return Response({"message": "yes"})
         else:
             return Response({"message": "no"})
 
-
-
-
-
-
 class IsTwoEnabled(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
+        user = User.objects.get(id=request.user_id)
         d = {"message": user.is_2fa == True}
         return Response(d)
 
@@ -256,20 +230,9 @@ class IsTwoEnabled(APIView):
 
 
 class UserFriends(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
+        user = User.objects.get(id=request.user_id)
         friends = Friend.objects.filter(from_user=user)
         userFriends = []
         for friend in friends:
@@ -286,20 +249,9 @@ class UserFriends(APIView):
         
         return Response(userFriends)
 
+    @method_decorator(check_auth)
     def post(self, request, id):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
+        user = User.objects.get(id=request.user_id)
         if (user.id == id):
             return Response({"message": "not allowed"}, status=401)#follow yourserlf ?
         
@@ -355,24 +307,10 @@ class UserFriends(APIView):
 #         return Response(his_serializer.data)
 
 class ProfileData(APIView):
+    @method_decorator(check_auth)
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if not token:
-            return Response({"message": "unauthorized"}, status=401)
-
-        try:
-            user = decode_jwt(token)
-        except jwt.ExpiredSignatureError:
-            return Response({'message':"unauthorized"}, status=401)
-
-        token_code = decode(token)
-        if user.is_2fa == True and token_code['code'] == False:
-            return Response({"message": "2fa"}, status=401)
-
-
+        user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user)
-
-
         userRequestedData = serializer.data
         userRequestedData['friend'] = False
         userRequestedData['its_me'] = True

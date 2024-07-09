@@ -12,16 +12,16 @@ def generate_jwt(user, code):
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
-def decode_jwt(token):
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['user_id']
-        return User.objects.get(pk=user_id)
-    except (jwt.DecodeError, User.DoesNotExist):
-        return None
+# def decode_jwt(token):
+#     try:
+#         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+#         user_id = payload['user_id']
+#         return User.objects.get(pk=user_id)
+#     except (jwt.DecodeError, User.DoesNotExist):
+#         return None
 
-def decode(token):
-    try:
-        return jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-    except jwt.DecodeError:
-        return None
+# def decode(token):
+#     try:
+#         return jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+#     except jwt.DecodeError:
+#         return None
