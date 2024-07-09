@@ -1,6 +1,7 @@
 import { pushUrl } from "../utils/urlRoute.js";
 import { dataGlobal } from "./globalData.js";
 import { sendOnline } from "./online.js";
+
 export async function checkAuthentication()
 {
     const request = new Request(

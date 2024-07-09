@@ -102,6 +102,8 @@ async function submitSigninEvent(e)
             document.querySelector("#navi").classList.remove("hideme");
             sendOnline();
             document.getElementById('avatarProfile').src = js.avatar;
+            document.getElementById("language-selector").value = js.language;
+            dataGlobal.selectedLanguage = js.language;
             console.log(js.avatar);
             pushUrl('/home');
         }

@@ -40,8 +40,8 @@ class User(AbstractUser):
     
     class language(models.TextChoices):
         fr = "fr"
-        eng = "eng"
-        sp = "esp"
+        eng = "en"
+        sp = "es"
         
 
     id = models.AutoField(unique=True, primary_key=True, blank=False)

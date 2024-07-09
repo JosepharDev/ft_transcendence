@@ -66,7 +66,7 @@ class SignIn(APIView):
                         response = Response({"message": "2fa"}, status=401)
                     else:
                         payload = generate_jwt(user, True)
-                        response = Response({"message": "success", "avatar": user.avatar.url}, status=200)
+                        response = Response({"message": "success", "avatar": user.avatar.url, "language" : user.lang}, status=200)
                    
                     response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
                     return response
@@ -126,15 +126,29 @@ class UpdateUser(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-@require_POST
-@check_auth
-def language(request):
-    if "language" in request.POST:
-        lang = request.POST['language']
-        if lang:
-            user = User.objects.get(id=request.user_id)
-            user.lang = lang
-            return Response({"message": "Updated"}, status=status.HTTP_200_OK)
+# @require_POST
+# @check_auth
+# def language(request):
+#     if "language" in request.POST:
+#         lang = request.POST['language']
+#         if lang:
+#             user = User.objects.get(id=request.user_id)
+#             user.lang = lang
+#             return Response({"message": "Updated"}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
+
+class Language(APIView):
+    @method_decorator(check_auth)
+    def post(self, request):
+        if "language" in request.POST:
+            print('logeed')
+            lang = request.POST['language']
+            if lang:
+                user = User.objects.get(id=request.user_id)
+                user.lang = lang
+                user.save()
+                return Response({"message": "Updated"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
 

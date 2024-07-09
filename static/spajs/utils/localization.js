@@ -130,7 +130,7 @@ export const translations = {
 
 
 
-document.getElementById("language-selector").addEventListener("change", function() {
+document.getElementById("language-selector").addEventListener("change", async function() {
     const selectedLanguage = this.value;
     dataGlobal.selectedLanguage = selectedLanguage;
 
@@ -144,9 +144,31 @@ document.getElementById("language-selector").addEventListener("change", function
             element.setAttribute('placeholder', translations[selectedLanguage][key]);
         }
     });
+
+    try
+    {
+        const formData = new FormData();
+        formData.append('language', selectedLanguage);    
+
+        const request = new Request(
+            '/api/update/language/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+
+
+        let res = await fetch(request);
+    }
+    catch (err)
+    {
+
+    }
+
 });
 
 // Set default language to English
-document.getElementById("language-selector").value = "en";
-document.getElementById("language-selector").dispatchEvent(new Event("change"));
+// document.getElementById("language-selector").value = "en";
+// document.getElementById("language-selector").dispatchEvent(new Event("change"));
 // </div>
