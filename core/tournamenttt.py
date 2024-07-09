@@ -135,50 +135,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
                 print(f"=============>{self.room_room}")
-                
-                plr1Username = ''
-                plr2Username = ''
-                plr1Avatar= ''
-                plr2Avatar = ''
-                if (rooms[self.room_room].is_playing):
-                    plr1Username = rooms[self.room_room].mapiUsername[rooms[self.room_room].paddle_1.id]
-                    plr2Username = rooms[self.room_room].mapiUsername[rooms[self.room_room].paddle_2.id]
-                    plr1Avatar = rooms[self.room_room].mapiAvatar[rooms[self.room_room].paddle_1.id]
-                    plr2Avatar = rooms[self.room_room].mapiAvatar[rooms[self.room_room].paddle_2.id]
-                
-                win1 = '...'
-                if rooms[self.room_room].win1 != -1:
-                    win1 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win1]
-                
-                win2 = '...'
-                if rooms[self.room_room].win2 != -1:
-                    win2 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win2]
-                
-                data_ = {
-                    'action': 'reconnect',
-                    'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1], #change to nickname
-                    'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
-                    'user3': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
-                    'user4': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
-                    'win1' : win1,
-                    'win2' : win2,
-                    
-                    'isplaying' : rooms[self.room_room].is_playing,
-                    'plr1Username' : plr1Username,
-                    'plr2Username' : plr2Username,
-                    'plr1Avatar' : plr1Avatar,
-                    'plr2Avatar' : plr2Avatar,
-
-                }
-
-
-                await self.channel_layer.group_send(
-                        self.user_group_name,
-                        {"type": "send.message", "message": data_}
-                    )
-
-
-
                 await self.channel_layer.group_add(
                     self.room_room, self.channel_name
                 )
@@ -378,8 +334,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         async def gameLoop():
             # try:
                 await asyncio.sleep(4)
-                if rooms[self.room_room].round == -1:
-                    rooms[self.room_room].round = 0
 
                 if rooms[self.room_room].round == 0:
                     rooms[self.room_room].paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match1_1)
@@ -433,13 +387,12 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         self.room_room,
                             {"type": "send.message", "message": data_} )
 
+
                 await asyncio.sleep(4)
-                rooms[self.room_room].is_playing = True
                 
                 while True:
 
                     if (self.room_room not in rooms):
-                        rooms[self.room_room].is_playing = False
                         break
                     
                     if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_2.score >= 7:
@@ -457,34 +410,17 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         else:
                             typeMatch = 'final'
 
-
-                        win1 = '...'
-                        if rooms[self.room_room].win1 != -1:
-                            win1 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win1]
-                        
-                        win2 = '...'
-                        if rooms[self.room_room].win2 != -1:
-                            win2 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win2]
-                        
-
+                            
                         dta = {
                             "action": typeMatch,
-                            'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1], #change to nickname
-                            'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
-                            'user3': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
-                            'user4': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
-                            'win1' : win1,
-                            'win2' : win2,
                             "winner" : rooms[self.room_room].mapiUsername[winn]
                         }
                         await self.channel_layer.group_send(
                                 self.room_room, {"type": "send.message", "message": dta}
                             )
 
-                        rooms[self.room_room].is_playing = False
                         if typeMatch == 'final':
                             await self.finishMatch(self.room_room)
-                        
                         break
 
 
@@ -692,16 +628,15 @@ class roomData:
         self.ball = None
         self.round = 0
         self.start = True
-        self.is_playing = False
-        
+
         self.match1_1 = user1Data['id']
         self.match1_2 = user2Data['id']
 
         self.match2_1 = user3Data['id']
         self.match2_2 = user4Data['id']
 
-        self.win1 = -1
-        self.win2 = -1
+        self.win1 = 0
+        self.win2 = 0
 
         self.user1_id = user1Data['id']
         self.user2_id = user2Data['id']
