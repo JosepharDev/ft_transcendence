@@ -86,7 +86,6 @@ class SignIn(APIView):
         # return response
 
 
-# may use @login_required and use login(request, user) and logout(request) 
 class Logout(APIView):
     @method_decorator(check_auth1)
     def get(self, request):
@@ -149,6 +148,8 @@ class Language(APIView):
                 user.lang = lang
                 user.save()
                 return Response({"message": "Updated"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
 

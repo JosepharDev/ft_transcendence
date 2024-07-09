@@ -6,12 +6,13 @@ extra_kwargs = {
             'id': {'read_only': True},
             'loses': {'read_only': True},
             'wins': {'read_only': True} ,
+            'remote_id': {'read_only': True},
             'password': {'write_only': True}}
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__' # i delete status , because required error in signup
+        fields = '__all__'
         extra_kwargs
     def create(self, validated_data):
         print("}}}}}}}}}}}}}}}}}}}]]]", validated_data , "}}}}}}}}}}}}}}}}}}}", file=sys.stderr)
@@ -21,7 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             user = super().create(validated_data)
             user.set_unusable_password()
-        user.nickname = user.username
         user.save()
         return user
     
