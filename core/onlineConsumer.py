@@ -51,7 +51,8 @@ class OnlineConsumer(AsyncWebsocketConsumer):
                 user.profile_status = status
                 user.status_count += 1
             else:
-                user.status_count -= 1
+                if user.status_count > 0:
+                    user.status_count -= 1
                 if user.status_count == 0:
                     user.profile_status = status
             user.save()

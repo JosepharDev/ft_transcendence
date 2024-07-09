@@ -205,6 +205,8 @@ export async function remoteTournament()
     window.addEventListener("keydown", onKeyDownEvent)
     window.addEventListener("keyup", onKeyUpEvent)
 
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': onKeyDownEvent });
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': onKeyUpEvent });
     
     function drawText(text, x, y, color) {
         ctx.fillStyle = color;

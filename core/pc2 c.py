@@ -368,14 +368,31 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
 
 
-                    kk = await gameState(self.room_room)
+                    if  rooms[self.room_room].isKeyPdPressed_1:
+                        await rooms[self.room_room].paddle_1.update(rooms[self.room_room].whichKeyPressed_1)
+                    if  rooms[self.room_room].isKeyPdPressed_2:
+                        await rooms[self.room_room].paddle_2.update(rooms[self.room_room].whichKeyPressed_2)
+
+
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
+                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
+
+                    await ballCollisionWithEdges(rooms[self.room_room].ball, canvasHeight__)
+
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
+                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
+                    #if increase score wait little more
+
+                    kk = await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_2, canvasWidth__, canvasHeight__)
+                    await rooms[self.room_room].ball.update()
+
 
                     await self.channel_layer.group_send(
                         self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
                     )
                     if (kk):
                         await asyncio.sleep(1)
-                    await asyncio.sleep(0.016666)
+                    await asyncio.sleep(0.016)
             # except:
             #     pass #add no_game
 
@@ -410,14 +427,14 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
 
     
-def paddleCollisionWithEdges(paddle, canvasHeight):
+async def paddleCollisionWithEdges(paddle, canvasHeight):
     if paddle.pos['y'] < 0:
         paddle.pos['y'] = 0
     if paddle.pos['y'] + paddle.height > canvasHeight:
         paddle.pos['y'] = canvasHeight - paddle.height
 
 
-def ballCollisionWithEdges(ball, canvasHeight):
+async def ballCollisionWithEdges(ball, canvasHeight):
     if ball.pos['y'] + ball.radius >= canvasHeight :
         ball.velocity['y'] = abs (ball.velocity['y']) * (-1)
     elif ball.pos['y'] - ball.radius <= 0 :
@@ -427,7 +444,7 @@ def ballCollisionWithEdges(ball, canvasHeight):
 
 
 
-def ballPaddleCollision(ball, paddle):
+async def ballPaddleCollision(ball, paddle):
 
     dx = abs(ball.pos['x'] - paddle.getCenter()['x'])
     dy = abs(ball.pos['y'] - paddle.getCenter()['y'])
@@ -447,7 +464,7 @@ def ballPaddleCollision(ball, paddle):
 
         ball.velocity['x'] = (abs(ball.velocity['x']) + 0.1) * j
 
-def respawnBall(ball, canvasWidth, canvasHeight):
+async def respawnBall(ball, canvasWidth, canvasHeight):
     if (ball.velocity['x'] > 0):
         ball.pos['x'] = canvasWidth - 150
         ball.pos['y'] = random.uniform(100, canvasHeight - 100)
@@ -466,14 +483,14 @@ def respawnBall(ball, canvasWidth, canvasHeight):
 
 
 
-def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
+async def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
     if ball.pos['x'] <= -ball.radius:
         paddle_2.score += 1
-        respawnBall(ball, canvasWidth, canvasHeight)
+        await respawnBall(ball, canvasWidth, canvasHeight)
         return True
     if ball.pos['x'] >= canvasWidth + ball.radius:
         paddle_1.score += 1
-        respawnBall(ball, canvasWidth, canvasHeight)
+        await respawnBall(ball, canvasWidth, canvasHeight)
         return True
     return False
 
@@ -486,7 +503,7 @@ class Paddle:
         self.height = height
         self.score = 0
         self.id = id
-    def update (self ,key):
+    async def update (self ,key):
         if (key == 38):
             self.pos['y'] -= self.velocity['y']
         if (key == 40):
@@ -520,7 +537,7 @@ class Ball():
         self.velocity = velocity
         self.radius = radius
 
-    def update(self):
+    async def update(self):
         self.pos['x'] += self.velocity['x']
         self.pos['y'] += self.velocity['y']
 
@@ -576,22 +593,3 @@ class roomData:
         return message
 
 
-async def gameState(roomName):
-    if  rooms[roomName].isKeyPdPressed_1:
-        rooms[roomName].paddle_1.update(rooms[roomName].whichKeyPressed_1)
-    if  rooms[roomName].isKeyPdPressed_2:
-        rooms[roomName].paddle_2.update(rooms[roomName].whichKeyPressed_2)
-
-
-    paddleCollisionWithEdges(rooms[roomName].paddle_1, canvasHeight__)
-    paddleCollisionWithEdges(rooms[roomName].paddle_2, canvasHeight__)
-
-    ballCollisionWithEdges(rooms[roomName].ball, canvasHeight__)
-
-    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_1)
-    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_2)
-    #if increase score wait little more
-
-    kk = increaseScore(rooms[roomName].ball, rooms[roomName].paddle_1, rooms[roomName].paddle_2, canvasWidth__, canvasHeight__)
-    rooms[roomName].ball.update()
-    return kk

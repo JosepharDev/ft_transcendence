@@ -66,7 +66,7 @@ class SignIn(APIView):
                         response = Response({"message": "2fa"}, status=401)
                     else:
                         payload = generate_jwt(user, True)
-                        response = Response({"message": "success"}, status=200)
+                        response = Response({"message": "success", "avatar": user.avatar.url}, status=200)
                    
                     response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
                     return response
@@ -177,6 +177,8 @@ class UserData(APIView):
                 'player2Score' : match.plr2_count,
                 'plr1img': match.player1.avatar.url,
                 'plr2img': match.player2.avatar.url,
+                'date': match.match_date.date(),
+
             }
             print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)
@@ -346,3 +348,4 @@ class ProfileData(APIView):
         userRequestedData['friends'] = userFriends
 
         return Response(userRequestedData)
+

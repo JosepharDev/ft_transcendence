@@ -25,13 +25,16 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
         if (js.message === "success")
         {
             document.querySelector("#navi").classList.add("hideme");
+            dataGlobal.socketOnline.close();
+            dataGlobal.socketOnline.close();
+            dataGlobal.sentOnline = false;
             pushUrl('/signin');
         }
     }
     catch (err)
     {
-        pushUrl('/signin');
     }
+    pushUrl('/signin');
 })
 
 document.getElementById("home").addEventListener('click', async (e)=>{
