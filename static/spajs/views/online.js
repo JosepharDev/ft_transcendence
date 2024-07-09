@@ -4,7 +4,7 @@ export function sendOnline()
     if (dataGlobal.sentOnline)
         return ;
     console.log("SENDONLINE");
-    const chatSocket = new WebSocket(
+    dataGlobal.socketOnline = new WebSocket(
         'wss://'
         + window.location.host
         + '/ws/onlineUser/'

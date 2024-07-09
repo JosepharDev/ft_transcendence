@@ -75,6 +75,7 @@ export async function localPong(isVsBot, objConf)
     }
     window.addEventListener("keydown", handleKeyDownLocal);
     window.addEventListener("keyup", handleKeyUpLocal);
+
     dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': handleKeyDownLocal });
     dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': handleKeyUpLocal });
 
@@ -204,7 +205,7 @@ export async function localPong(isVsBot, objConf)
         else
           ball.pos.x = paddle.pos.x - paddle.width - 3;//ball.radius; // if ball gets stuck
           
-        let deltay = ball.pos.y - (paddle.pos.y+paddle.height/2);
+        let deltay = ball.pos.y - (paddle.pos.y + paddle.height/2);
         ball.velocity.y = deltay * 0.30
         ;
         // if (ball.velocity.y <= ball.radius)
@@ -268,11 +269,12 @@ export async function localPong(isVsBot, objConf)
       ball.velocity.x = 13 * j
 
       clearInterval(dataGlobal.idInterval);
-      setTimeout (()=>
+      dataGlobal.idInterval = -1;
+      dataGlobal.idTimeOut =  setTimeout (()=>
         {
           dataGlobal.idInterval = setInterval(gameLoop, 20)
     
-        }, 3000)
+        }, 1000)
 
     }
 
@@ -424,7 +426,7 @@ export async function localPong(isVsBot, objConf)
     
 }
 
-    setTimeout (()=>
+    dataGlobal.idTimeOut = setTimeout (()=>
     {
       dataGlobal.idInterval = setInterval(gameLoop, 20)
 

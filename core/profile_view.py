@@ -75,7 +75,7 @@ class SignIn(APIView):
         else:
             data = {
                 "message": "success",
-                'img' : user.avatar.url,
+                'avatar' : user.avatar.url,
                 # 'lng' : user.lang,
             }
             response = Response(data, status=200)
@@ -195,6 +195,8 @@ class UserData(APIView):
                 'player2Score' : match.plr2_count,
                 'plr1img': match.player1.avatar.url,
                 'plr2img': match.player2.avatar.url,
+                'date': match.match_date.date(),
+
             }
             print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)

@@ -7,9 +7,11 @@ export let dataGlobal = {
     socketDisconnect : [],
     deleteEvent: [],
     idInterval : -1,
+    idTimeOut : -1,
     csrftoken : "",
     sentOnline : false,
-    selectedLanguage : "en"
+    socketOnline : -1,
+    selectedLanguage : "en",
 }
 
 export function closSockets(data)
@@ -19,6 +21,14 @@ export function closSockets(data)
         clearInterval(data.idInterval);
         data.idInterval = -1;
     }
+    
+    if (data.idTimeOut != -1)
+    {
+        clearTimeout(data.idTimeOut);
+        data.idTimeOut = -1;
+    }
+
+
     data.socketDisconnect.forEach(element => {
         element.close();
     });
