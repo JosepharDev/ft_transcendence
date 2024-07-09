@@ -73,7 +73,12 @@ class SignIn(APIView):
         if user.is_2fa == True:
             response = Response({"message": "2fa"}, status=401)
         else:
-            response = Response({"message": "success"}, status=200)
+            data = {
+                "message": "success",
+                'img' : user.avatar.url,
+                # 'lng' : user.lang,
+            }
+            response = Response(data, status=200)
 
         response.set_cookie(key='jwt', value=payload, httponly=True, samesite='Lax', secure=True)
         return response
@@ -430,3 +435,4 @@ class ProfileData(APIView):
         userRequestedData['friends'] = userFriends
 
         return Response(userRequestedData)
+
