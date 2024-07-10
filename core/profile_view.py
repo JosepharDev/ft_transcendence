@@ -139,21 +139,27 @@ class UpdateUser(APIView):
 
 class Language(APIView):
     @method_decorator(check_auth)
+    def get(self, request):
+        user = User.objects.get(id=request.user_id)
+        return Response({"message": "Success", "lang": user.lang}, status=status.HTTP_200_OK)
+    
+    @method_decorator(check_auth)
     def post(self, request):
         if "language" in request.POST:
-            print('logeed')
+            l = {'fr', 'en', 'es'}
             lang = request.POST['language']
-            if lang:
+            if lang and lang in l:
                 user = User.objects.get(id=request.user_id)
                 user.lang = lang
                 user.save()
                 return Response({"message": "Updated"}, status=status.HTTP_200_OK)
             else:
-                return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": "You Should Set A Valid Language"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
 
 class Spa(APIView):
+
     def get(self, request):
         return render(request, 'newSpa/newSpa.html')
         return render(request, 'spa/spa.html')

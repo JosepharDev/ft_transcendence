@@ -46,7 +46,6 @@ class User(AbstractUser):
 
     id = models.AutoField(unique=True, primary_key=True, blank=False)
     remote_id = models.IntegerField(blank=True, null=True)
-    # p_username = models.CharField(max_length=100, blank=True)
     username = models.CharField(max_length=100, unique=True, blank=False, validators=[validate_input])
     password = models.CharField(max_length=100, blank=True)
     nickname = models.CharField(max_length=100, blank=True, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
