@@ -2,16 +2,16 @@ export let url = {
     'signin' : 'runthis'
 };
 
-
 export let dataGlobal = {
     socketDisconnect : [],
     deleteEvent: [],
     idInterval : -1,
     idTimeOut : -1,
     csrftoken : "",
-    sentOnline : false,
     socketOnline : -1,
+    sentOnline : false,
     selectedLanguage : "en",
+    gotData : false
 }
 
 export function closSockets(data)

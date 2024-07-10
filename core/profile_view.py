@@ -141,7 +141,7 @@ class Language(APIView):
     @method_decorator(check_auth)
     def get(self, request):
         user = User.objects.get(id=request.user_id)
-        return Response({"message": "Success", "lang": user.lang}, status=status.HTTP_200_OK)
+        return Response({"message": "success", "avatar": user.avatar.url, "language" : user.lang}, status=status.HTTP_200_OK)
     
     @method_decorator(check_auth)
     def post(self, request):

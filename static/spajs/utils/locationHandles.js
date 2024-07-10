@@ -14,6 +14,7 @@ import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
 import { signup } from "../views/signup.js"
+import { getLanguage } from "../views/getLanguage.js"
 
 
 export async function urlLocationHandler()
@@ -23,23 +24,43 @@ export async function urlLocationHandler()
     closSockets(dataGlobal);
     removeEvents(dataGlobal);
 
+    
+    
     const location = window.location.pathname;
+    let path = window.location.pathname;
+
+
     if (!location.length)
         location = "/";
     
     const params = location.split('/');
-
-
-    let path = window.location.pathname
+    
+    
     if (params.length > 3)
         path = '/';
-
+    
     const request = {
-      resource: params[1] || null,
-      id: params[2] || null,
+        resource: params[1] || null,
+        id: params[2] || null,
     };
-
+    
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
+    
+    
+    if (!dataGlobal.gotData && location !== '/signin' && location !== '/twofa')
+    {
+        let dataUser = await getLanguage();
+        if (dataUser.message === 'success')
+        {
+            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
+            document.getElementById('avatarProfile').src = dataUser.avatar;
+            console.log(dataUser.avatar);
+            document.getElementById("language-selector").value = dataUser.language;
+            dataGlobal.selectedLanguage = dataUser.language;
+            dataGlobal.gotData = true;
+        }
+    }
+
 
     if (location === '/signin')
     {
@@ -69,16 +90,13 @@ export async function urlLocationHandler()
         remoteGame4();
     else if (path === "/s")
         profileFriend2(0, true);
-        // friendsView();
     else if (path === "/settings")
         settingView();
     else if (path === "/tournament")
         remoteTournament();
-    else if (path === "/bot")
-        localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"});
     else if (path === "/signup")
         signup()
     else
-        homeView(); // this will change just button to start
+        homeView();
 }
 
