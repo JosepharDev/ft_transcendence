@@ -37,12 +37,17 @@ class SignUp(APIView):
                 return Response({"message": "there is already user with this name"}, status=401)
             else:
                 print("++++++++", username, "+++++++", password)
-                user = User.objects.create(username=username, password=password, remote=False, nickname=username)
-                user.set_password(password)
-                user.save()
-                response = Response({"message": "success"}, status=200)
-                response.set_cookie(key='jwt', value=generate_jwt(user, True), httponly=True)
-                return response
+                # user = User.objects.create(username=username, password=password, remote=False, nickname=username)
+                data = {"username": username, "password": password, "remote": False, "nickname":username}
+                user = UserSerializer(data=data)
+                if user.is_valid():
+                    user.set_password(password)
+                    user.save()
+                    response = Response({"message": "success"}, status=200)
+                    return response
+                else:
+                    return Response({"message": "Invalid Input"}, status=401)
+                # response.set_cookie(key='jwt', value=generate_jwt(user, True), httponly=True)
         else:
             return Response({"message": "Please Provide Both username and password"}, status=401)
 
@@ -141,7 +146,7 @@ class Language(APIView):
     @method_decorator(check_auth)
     def get(self, request):
         user = User.objects.get(id=request.user_id)
-        return Response({"message": "Success", "lang": user.lang}, status=status.HTTP_200_OK)
+        return Response({"message": "success", "avatar": user.avatar.url, "language" : user.lang}, status=status.HTTP_200_OK)
     
     @method_decorator(check_auth)
     def post(self, request):

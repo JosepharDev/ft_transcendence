@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager, AbstractUser
 from django.core.validators import MinLengthValidator
-from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
@@ -46,7 +45,7 @@ class User(AbstractUser):
 
     id = models.AutoField(unique=True, primary_key=True, blank=False)
     remote_id = models.IntegerField(blank=True, null=True)
-    username = models.CharField(max_length=100, unique=True, blank=False, validators=[validate_input])
+    username = models.CharField(max_length=100, unique=True, blank=False, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
     password = models.CharField(max_length=100, blank=True)
     nickname = models.CharField(max_length=100, blank=True, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
     is_2fa = models.BooleanField(default=False)
