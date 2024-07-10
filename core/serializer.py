@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User
 from .models import HistoryMatch
 from rest_framework.response import Response
+from django.core.files.base import ContentFile
 import sys
 extra_kwargs = {
             'id': {'read_only': True},
@@ -28,7 +29,8 @@ class UserSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         username = validated_data.get('username', instance.username)
-        nickname = validated_data.get('nickname', instance.username)
+        nickname = validated_data.get('nickname', instance.nickname)
+        avatar = validated_data.get('avatar', instance.avatar)
         if username:
             user = User.objects.filter(username=username).first()
             if user and user.id != instance.id:
@@ -42,6 +44,10 @@ class UserSerializer(serializers.ModelSerializer):
                 return Response({"message": "Nickname already exist"})
             else:
                 instance.nickname = nickname
+        if avatar:
+            avatar_content = ContentFile(avatar.read(), name="avatar.JPG")
+            instance.avatar = avatar_content
+            # instance.avatar.save(avatar_content.name, avatar_content)
         instance.save()
         return instance
 

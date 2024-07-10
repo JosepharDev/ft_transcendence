@@ -19,12 +19,12 @@ def check_auth(func):
                 user = User.objects.get(pk=user_id)
                 request.user_id = token['user_id']
             except User.DoesNotExist:
-                return Response({"message": "user Does Not Exist"})
+                return Response({"message": "user Does Not Exist"}, status=401)
             return func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:
-            return Response({'message': 'Token has expired'})
+            return Response({'message': 'Token has expired'}, status=401)
         except jwt.InvalidTokenError:
-            return Response({'message': 'Invalid token'})
+            return Response({'message': 'Invalid token'}, status=401)
     return wrapper     
 
 def check_auth1(func):
@@ -39,10 +39,10 @@ def check_auth1(func):
                 user = User.objects.get(pk=user_id)
                 request.user_id = token['user_id']
             except User.DoesNotExist:
-                return Response({"message": "user Does Not Exist"})
+                return Response({"message": "user Does Not Exist"}, status=401)
             return func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:
-            return Response({'message': 'Token has expired'})
+            return Response({'message': 'Token has expired'}, status=401)
         except jwt.InvalidTokenError:
-            return Response({'message': 'Invalid token'})
+            return Response({'message': 'Invalid token'}, status=401)
     return wrapper    

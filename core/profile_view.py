@@ -36,7 +36,6 @@ class SignUp(APIView):
             if User.objects.filter(username=username).exists():
                 return Response({"message": "there is already user with this name"}, status=401)
             else:
-                print("++++++++", username, "+++++++", password)
                 # user = User.objects.create(username=username, password=password, remote=False, nickname=username)
                 data = {"username": username, "password": password, "remote": False, "nickname":username}
                 user = UserSerializer(data=data)
@@ -121,10 +120,6 @@ class UpdateUser(APIView):
         user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
-            # if ('password' in request.data and request.data['password'] == ""):
-            #     print("44488888888888888888888888******************************")
-            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            # print(request.data['email'])
             serializer.save()
             return Response(serializer.data)
 
