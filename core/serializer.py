@@ -28,8 +28,8 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     def update(self, instance, validated_data):
-        username = validated_data.get('username', instance.username)
-        nickname = validated_data.get('nickname', instance.nickname)
+        username = validated_data.get('username')
+        nickname = validated_data.get('nickname')
         avatar = validated_data.get('avatar', instance.avatar)
         if username:
             user = User.objects.filter(username=username).first()

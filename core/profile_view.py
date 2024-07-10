@@ -40,6 +40,7 @@ class SignUp(APIView):
                 data = {"username": username, "password": password, "remote": False, "nickname":username}
                 user = UserSerializer(data=data)
                 if user.is_valid():
+                    user = user.save()
                     user.set_password(password)
                     user.save()
                     response = Response({"message": "success"}, status=200)
