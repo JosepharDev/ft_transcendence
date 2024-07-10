@@ -7,6 +7,7 @@ import { pushUrl } from './utils/urlRoute.js'
 import { checkAuthentication } from './views/checkAuth.js'
 import { signin } from './views/signin.js'
 import { twofaView } from './views/twofa.js'
+import { getLanguage } from './views/getLanguage.js'
 
 
 
@@ -28,6 +29,8 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
             dataGlobal.socketOnline.close();
             dataGlobal.socketOnline.close();
             dataGlobal.sentOnline = false;
+            dataGlobal.selectedLanguage = "en",
+            dataGlobal.gotData = false
             pushUrl('/signin');
         }
     }
@@ -97,19 +100,27 @@ for (let i = 0; i < numBalls; i++) {
     const authStatus = await checkAuthentication();
     console.log(authStatus);
     if (authStatus === "2fa") {
-        twofaView();
-        // pushUrl('/twofa');
+        if (window.location.pathname !== '/twofa')
+            pushUrl('/twofa');
+        else
+            twofaView();
         return;
     }
     else if (authStatus === 'signin')
     {
         console.log('authStatus');
-        // pushUrl('/signin');
-        signin()
+        if (window.location.pathname !== '/signin')
+            pushUrl('/signin');
+        else
+            signin()
         return ;
     }
     document.querySelector(".hideme").classList.remove("hideme");
 
+
+    let lang = await getLanguage();
+    if (lang != "ERR")
+        dataGlobal.selectedLanguage = lang;
     urlLocationHandler();
 }
 

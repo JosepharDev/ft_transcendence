@@ -9,17 +9,12 @@ export async function remoteGame1()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="700" height="350"></canvas>
+    <button id="leavebtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="search">Leave</button>
+
     </div>`;
 
-
-    // app.innerHTML = '\
-    // <div id="game-container">\
-    // <div id="game-info">\
-    // </div>\
-    // <canvas id="pongCanvas" width="800" height="450"></canvas>\
-    // </div>';
-
     const canvas = document.getElementById('pongCanvas');
+    const leavebtn = document.getElementById('leavebtn');
     const ctx = canvas.getContext('2d');
     canvas.width = 700;
     canvas.height = 350;
@@ -27,7 +22,7 @@ export async function remoteGame1()
 
 
     const chatSocket = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/pongTest/'
         + '3'
@@ -97,7 +92,6 @@ export async function remoteGame1()
             </div>
         `
 
-            // `<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>`;
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
@@ -146,12 +140,26 @@ export async function remoteGame1()
             chatSocket.send(JSON.stringify(msg));
     }
 
+
     window.addEventListener("keydown", onKeyDownEvent)
     window.addEventListener("keyup", onKeyUpEvent)
 
     dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': onKeyDownEvent });
     dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': onKeyUpEvent });
     
+
+    function leaveEvent(e)
+    {
+        let msg = {
+            'action': 'C',
+        }
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
+        pushUrl('/');
+    }
+    leavebtn.addEventListener('click', leaveEvent);
+
+
     function drawText(text, x, y, color) {
         ctx.fillStyle = color;
         ctx.font = "20px Arial";

@@ -50,6 +50,7 @@ async function submitSigninEvent(e)
 {
     e.preventDefault();
     
+    const error_msg = document.getElementById('error-msg');
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const formData = new FormData();
@@ -78,7 +79,7 @@ async function submitSigninEvent(e)
                 
                 if (js.message !== '2fa')
                 {
-                    document.getElementById('error-msg').textContent = js.message;
+                    error_msg.textContent = js.message;
                     return ;
                 }
                 else if (js.message === "2fa")
@@ -96,21 +97,21 @@ async function submitSigninEvent(e)
 
     
     
-        document.getElementById('error-msg').textContent = '';
+        error_msg.textContent = '';
         if (js.message === "success")
         {
             document.querySelector("#navi").classList.remove("hideme");
             sendOnline();
-            document.getElementById('avatarProfile').src = js.avatar;
-            document.getElementById("language-selector").value = js.language;
-            dataGlobal.selectedLanguage = js.language;
+
             console.log(js.avatar);
+
+
             pushUrl('/home');
         }
 
     }
     catch (err)
     {
-        document.getElementById('error-msg').textContent = 'Error! Try again';
+        error_msg.textContent = 'Error! Try again';
     }
 }

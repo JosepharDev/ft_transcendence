@@ -304,7 +304,13 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 else:
                     rooms[self.room_room].isKeyPdPressed_2 = False
                     rooms[self.room_room].whichKeyPressed_2 = message['code']
-
+            elif (message['action'] == 'C' and self.iam_playing):
+                if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
+                    rooms[self.room_room].paddle_1.score = 0
+                    rooms[self.room_room].paddle_2.score = 7
+                else:
+                    rooms[self.room_room].paddle_1.score = 7
+                    rooms[self.room_room].paddle_2.score = 0
             
         except:
             pass 

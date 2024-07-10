@@ -9,10 +9,7 @@ export async function remoteTournament()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="800" height="450"></canvas>
-    </div>
-    
-        <button id="mybtn" type="submit" class="btn btn-primary btn-block">Leave</button>
-    
+    </div>    
         
         <div class="bracket-wrapper hideme">
         <div class="container">
