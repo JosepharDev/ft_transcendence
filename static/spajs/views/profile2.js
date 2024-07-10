@@ -27,9 +27,9 @@ export async function profileFriend2(id, is_me)
 
         if (!response.ok)
         {
-            if (res.status === 401)
+            if (response.status === 401)
             {
-                let messageStatus = await res.json();
+                let messageStatus = await response.json();
                 if (messageStatus === "2fa")
                     pushUrl('/twofa');
                 else
@@ -46,6 +46,8 @@ export async function profileFriend2(id, is_me)
         document.querySelector("#statsPart").innerHTML = profileStatsPart(userData);
         historyMatchView(userData.matches);
         friendsView(userData.friends);
+
+        
         if (!userData.its_me)
         {
             async function toggleFollow(userId, btn)
@@ -62,9 +64,9 @@ export async function profileFriend2(id, is_me)
 
                     if (!response.ok)
                     {
-                        if (res.status === 401)
+                        if (response.status === 401)
                         {
-                            let messageStatus = await res.json();
+                            let messageStatus = await response.json();
                             if (messageStatus === "2fa")
                                 pushUrl('/twofa');
                             else
@@ -86,11 +88,12 @@ export async function profileFriend2(id, is_me)
                 }
                 catch (err)
                 {
-                    alert('Something went wrong!');
+                    pushUrl('/');
                 }
             }
 
             let flwbtn = document.querySelector(".follow-btn");
+
             flwbtn.addEventListener('click', () =>{
                 toggleFollow(userData.id, flwbtn);
             })
@@ -253,7 +256,6 @@ function friendsView(data)
 
 function friendData(data)
 {
-    // <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
     return (
         `
             <a id="userlink${data.id}" href="/userid/${data.id}" class="friend d-flex align-items-center mt-2 text-decoration-none">
@@ -262,7 +264,5 @@ function friendData(data)
             </a>
             `
         )
-    // </div>
-
 }
 

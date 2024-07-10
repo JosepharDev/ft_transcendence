@@ -4,6 +4,8 @@ import { pushUrl } from "../utils/urlRoute.js";
 
 export async function twofaView()
 {
+    document.querySelector("#navi").classList.add("hideme");
+
     let app = document.getElementById("app");
     app.innerHTML = `
     <div class="signin">

@@ -5,7 +5,7 @@ export function sendOnline()
         return ;
     console.log("SENDONLINE");
     dataGlobal.socketOnline = new WebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
         + '/ws/onlineUser/'
         + '3'

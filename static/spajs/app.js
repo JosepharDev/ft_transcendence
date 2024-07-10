@@ -1,4 +1,3 @@
-import {tuto} from './views/views.js'
 import {dataGlobal, url} from './views/globalData.js'
 import {homeView} from './views/home.js'
 import {urlLocationHandler} from './utils/locationHandles.js'

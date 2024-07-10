@@ -13,13 +13,6 @@ export async function remoteGame1()
 
     </div>`;
 
-    const canvas = document.getElementById('pongCanvas');
-    const leavebtn = document.getElementById('leavebtn');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 700;
-    canvas.height = 350;
-
-
 
     const chatSocket = new WebSocket(
         'ws://'
@@ -28,6 +21,13 @@ export async function remoteGame1()
         + '3'
         + '/'
         );
+    const canvas = document.getElementById('pongCanvas');
+    const leavebtn = document.getElementById('leavebtn');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 700;
+    canvas.height = 350;
+
+
 
     dataGlobal.socketDisconnect.push(chatSocket);
 
@@ -53,10 +53,8 @@ export async function remoteGame1()
 
             ctx.fillStyle = "rgba(0,0,34,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
-            drawText("Winner", canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
             drawText(data.message.winner, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-            // alert (`${data.message.winner} WON`);
-            // pushUrl('/');
+            drawText("WON", canvas.width / 2 - 25, canvas.height / 2 - 30, "#FFF"); 
         }
         else if (data.message.action === 'data')
         {

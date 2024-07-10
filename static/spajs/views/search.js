@@ -1,13 +1,18 @@
 import {pushUrl} from "./../utils/urlRoute.js"
 import { translations } from "../utils/localization.js";
 import { dataGlobal } from "./globalData.js";
+
+
+
 export function searchView ()
 {
     console.log("lolo")
     let app = document.getElementById("app");
     app.innerHTML = searchHtml();
+
     let searchButton = document.getElementById("search-form");
     let sear = document.getElementById("search-input");
+    
     sear.addEventListener('input', searchElementsEvent);
     searchButton.addEventListener('submit', searchElementsEvent);
 }
@@ -33,6 +38,8 @@ async function searchElementsEvent(e)
 {
     e.preventDefault();
     var form = document.getElementById('search-form');
+
+
     var formData = new FormData(form);
     const request = new Request(
         '/api/search/?' + new URLSearchParams(formData).toString(),
@@ -77,6 +84,7 @@ async function searchElementsEvent(e)
                     <span>${user.username}</span>
                     </a>
                 `;
+                
                 resultsContainer.appendChild(userItem);
                 document.getElementById(`userlink${user.id}`).addEventListener('click', (event) => {
                     event.preventDefault();

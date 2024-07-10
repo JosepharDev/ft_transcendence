@@ -1,6 +1,10 @@
 import { translations } from "../utils/localization.js";
 import { pushUrl } from "../utils/urlRoute.js";
 import { dataGlobal } from "./globalData.js";
+
+
+
+
 export async function settingView()
 {
     try
@@ -33,18 +37,22 @@ export async function settingView()
         let js = await res.json();
         let isEnable = translations[dataGlobal.selectedLanguage]['enable2fa'];
         let enableOrDisable = 'enable2fa';
+        
         if (js.message)
-            {
-                isEnable = translations[dataGlobal.selectedLanguage]['disable2fa'];
-                enableOrDisable = 'disable2fa';
-            }
+        {
+            isEnable = translations[dataGlobal.selectedLanguage]['disable2fa'];
+            enableOrDisable = 'disable2fa';
+        }
             
-            console.log("AYPPPPPPPPPPPPPPPP")
-            app.innerHTML = settingsHtml(isEnable, enableOrDisable);
+        console.log("AYPPPPPPPPPPPPPPPP")
+        app.innerHTML = settingsHtml(isEnable, enableOrDisable);
+        
         let profileFormSettings =  document.getElementById('profile-form');
         profileFormSettings.addEventListener('submit', profileFormSettingsEvent);
+        
         let twofaButton = document.getElementById('toggle-2fa-btn');
         twofaButton.addEventListener('click', twofaButtonEvent);
+        
         let submit2faButton = document.getElementById('submit-2fa-btn');
         submit2faButton.addEventListener('click', submit2faButtonEvent);
     }
@@ -97,14 +105,16 @@ async function profileFormSettingsEvent(e)
     const username = document.getElementById('username').value;
     const nickname = document.getElementById('nickname').value;
     const profileImage = document.getElementById('profile-image').files[0];
+    
     const formData = new FormData();
     if (username.length > 0)
         formData.append('username', username);    
+    
     if (nickname.length > 0)
             formData.append('nickname', nickname);
-    if (profileImage) {
+    
+    if (profileImage)
         formData.append('avatar', profileImage);
-    }
 
     const request = new Request(
         '/api/update/',
@@ -113,7 +123,6 @@ async function profileFormSettingsEvent(e)
             body: formData,
         }
     );
-
 
     let res = await fetch(request);
 
@@ -129,15 +138,13 @@ async function profileFormSettingsEvent(e)
             return 
         }
         // alert ("not updated");
-        isupdated.textContent = 'failed to update';
+        isupdated.textContent = 'Not valid input';
+
     }
     else
     {
-        // alert ("updated");
         isupdated.textContent = 'updated succesfully';
         isupdated.style.color = '#508D4E';
-
-
     }
 }
 
@@ -147,60 +154,68 @@ async function twofaButtonEvent(e)
 {
     e.preventDefault();
 
-    const image = document.getElementById('2fa-image');
-    const input = document.getElementById('2fa-code');
-    const button = document.getElementById('toggle-2fa-btn');
-    const submitButton = document.getElementById('submit-2fa-btn');
-
-
-    let formData = new FormData();
-    
-    if (button.textContent === "Disable 2FA" || button.textContent === "Desactivar 2FA" || 
-        button.textContent === "Désactiver 2FA"
-    )
-        formData.append('qrcode', "disable");
-    else
-        formData.append('qrcode', "enable");
-
-    const response = await fetch(`/api/signin/twofa_process/`, {
-        method: 'POST',
-        body: formData,
-    });
-    console.log("i did fetch");
-    if (response.ok)
+    try
     {
-        if (button.textContent === "Enable 2FA" ||
-            button.textContent === "Activer 2FA" ||
-            button.textContent === "Activar 2FA"
+        const image = document.getElementById('2fa-image');
+        const input = document.getElementById('2fa-code');
+        const button = document.getElementById('toggle-2fa-btn');
+        const submitButton = document.getElementById('submit-2fa-btn');
+    
+    
+        let formData = new FormData();
+        
+        if (button.textContent === "Disable 2FA" || button.textContent === "Desactivar 2FA" || 
+            button.textContent === "Désactiver 2FA"
         )
+            formData.append('qrcode', "disable");
+        else
+            formData.append('qrcode', "enable");
+    
+        const response = await fetch(`/api/signin/twofa_process/`, {
+            method: 'POST',
+            body: formData,
+        });
+    
+        console.log("i did fetch");
+        
+        if (response.ok)
         {
-            if (image.style.display === 'none')
+            if (button.textContent === "Enable 2FA" ||
+                button.textContent === "Activer 2FA" ||
+                button.textContent === "Activar 2FA"
+            )
             {
-                // Enable 2FA
-                let blob = await response.blob();
-                image.src = URL.createObjectURL(blob);
-                image.style.display = 'block';
-                input.style.display = 'block';
-                submitButton.style.display = 'block';
-                button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
-                button.setAttribute('data-localize', 'disable2fa');
+                if (image.style.display === 'none')
+                {
+                    // Enable 2FA
+                    let blob = await response.blob();
+                    image.src = URL.createObjectURL(blob);
+                    image.style.display = 'block';
+                    input.style.display = 'block';
+                    submitButton.style.display = 'block';
+                    button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
+                    button.setAttribute('data-localize', 'disable2fa');
+                }
+            }
+            else {
+                // Disable 2FA
+                image.style.display = 'none';
+                input.style.display = 'none';
+                submitButton.style.display = 'none';
+                button.textContent = translations[dataGlobal.selectedLanguage]['enable2fa'];
+                button.setAttribute('data-localize', 'enable2fa');
             }
         }
-        else {
-            // Disable 2FA
-            image.style.display = 'none';
-            input.style.display = 'none';
-            submitButton.style.display = 'none';
-            button.textContent = translations[dataGlobal.selectedLanguage]['enable2fa'];
-            button.setAttribute('data-localize', 'enable2fa');
+        else
+        {
+            // let js = await response.json();
+            // console.log(js.message)
+            console.log("nothing update");
         }
-
     }
-    else
+    catch (err)
     {
-        let js = await response.json();
-        console.log(js.message)
-        console.log("notok");
+
     }
 }
 
@@ -220,6 +235,7 @@ async function submit2faButtonEvent(e)
             body: formData,
         }
     );
+
     try
     {
         let res = await fetch(request);
@@ -228,9 +244,8 @@ async function submit2faButtonEvent(e)
             console.log("resd not ok");
         }
         
-        console.log("resd ok");
         let js = await res.json();
-        console.log(js);
+
         if (js.message === "success")
         {
             const image = document.getElementById('2fa-image');
@@ -244,18 +259,15 @@ async function submit2faButtonEvent(e)
             image.style.display = 'none';
             input.style.display = 'none';
             submitButton.style.display = 'none';
+            isoptok.textContent = "";
         }
         else
         {
-            // alert("false otp");
-            console.log(js.message);
-            isoptok.textContent = "Wrong Code"
+            isoptok.textContent = "Wrong Code";
         }
     }
     catch (err)
     {
-        console.log(js.message);
-        console.log('js.message');
-        isoptok.textContent = "Wrong Code"
+        isoptok.textContent = "Wrong Code";
     }
 }

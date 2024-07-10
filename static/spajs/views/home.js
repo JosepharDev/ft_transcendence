@@ -2,6 +2,11 @@ import {pushUrl} from './../utils/urlRoute.js';
 import { AJAX_ } from './checkAuth.js';
 import { dataGlobal } from './globalData.js';
 import { translations } from '../utils/localization.js';
+
+
+
+
+
 export async function  homeView()
 {
     let app = document.getElementById('app');
@@ -17,9 +22,6 @@ export async function  homeView()
         })   
     }
 }
-
-
-
 
 
 function homeHtml()

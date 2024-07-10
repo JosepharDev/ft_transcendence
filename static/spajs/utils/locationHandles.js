@@ -4,12 +4,12 @@ import {localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
 import {remoteGame1} from "./../views/remote1.js"
-import {tournamentView} from "./../views/tournament.js"
+// import {tournamentView} from "./../views/tournament.js"
 import { dataGlobal, removeEvents, closSockets } from "../views/globalData.js"
 import { signin } from "../views/signin.js";
 import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
-import {friendsView} from "../views/friends.js"
+// import {friendsView} from "../views/friends.js"
 import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
@@ -47,18 +47,25 @@ export async function urlLocationHandler()
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
     
     
-    if (!dataGlobal.gotData && location !== '/signin' && location !== '/twofa')
+    if ( location !== '/signin' && location !== '/twofa')
     {
-        let dataUser = await getLanguage();
-        if (dataUser.message === 'success')
+        if (!dataGlobal.gotData)
         {
-            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
-            document.getElementById('avatarProfile').src = dataUser.avatar;
-            console.log(dataUser.avatar);
-            document.getElementById("language-selector").value = dataUser.language;
-            dataGlobal.selectedLanguage = dataUser.language;
-            dataGlobal.gotData = true;
+            let dataUser = await getLanguage();
+            if (dataUser.message === 'success')
+            {
+                console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
+                document.getElementById('avatarProfile').src = dataUser.avatar;
+                console.log(dataUser.avatar);
+                document.getElementById("language-selector").value = dataUser.language;
+                dataGlobal.selectedLanguage = dataUser.language;
+                dataGlobal.gotData = true;
+            }
         }
+        const nav = document.querySelector("#navi");
+        if (location !== '/signup' && nav.classList.contains('hideme'))
+            nav.classList.remove("hideme");
+
     }
 
 
