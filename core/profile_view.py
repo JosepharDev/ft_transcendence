@@ -50,7 +50,7 @@ class SignUp(APIView):
 class SignIn(APIView):
     @method_decorator(check_auth)
     def get(self, request):
-        user = User.objects.get(request.user_id)
+        user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)    
 

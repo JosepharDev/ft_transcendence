@@ -12,3 +12,5 @@ delnet:
 
 
 clean: delcontainers delimages delvol delnet 
+
+fclean: delcontainers delvol delnet 

@@ -61,7 +61,7 @@ def auth_42_api_callback(request):
     user_data = {
         'remote_id': user_info['id'],
         'username': user_info['login'],
-        'p_username': user_info['login'],
+        'nickname': user_info['login'],
         'remote': True,
         'status': 'active',
     }
@@ -82,7 +82,20 @@ def auth_42_api_callback(request):
     except User.DoesNotExist:
         try:
             u = User.objects.get(username=user_info['login'])
-            return Response({"message": "there is already user with this name"})
+            i = 0
+            while User.objects.filter(username=f"{user_info['login']}{i}").exists():
+                i += 1
+            user_data['username'] = f"{user_info['login']}{i}"
+            user_data['nickname'] = f"{user_info['login']}{i}"
+            user = UserSerializer(data=user_data)
+            if user.is_valid(raise_exception=True):
+                user = user.save()
+                r = HttpResponseRedirect('/api/spa/')
+                if user.is_2fa == True:
+                    r.set_cookie(key='jwt', value=generate_jwt(user, False))
+                else:
+                    r.set_cookie(key='jwt', value=generate_jwt(user, True))
+                return r
         except User.DoesNotExist:
             user = UserSerializer(data=user_data)
             if user.is_valid(raise_exception=True):
