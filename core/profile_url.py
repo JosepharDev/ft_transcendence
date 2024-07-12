@@ -1,6 +1,6 @@
 from django.urls import path
 from .profile_view import SignIn , Logout, UpdateUser, SearchUsers, UserFriends, ProfileData,\
- Spa, AuthUser ,UserData , Enable2fa, IsTwoEnabled, SignUp, Language # UsersList, UserHistory, 
+ Spa, AuthUser ,UserData , IsTwoEnabled, SignUp, Language # UsersList, UserHistory, 
 from .qr_code import twofa , twofa_process
 from .s42_auth_view import auth_42_api, auth_42_api_callback
 urlpatterns = [
@@ -28,7 +28,7 @@ urlpatterns = [
     path("signin/auth_42_api_callback/", auth_42_api_callback, name="auth_42_api"),
 
     path("signin/twofa/", twofa.as_view(), name="twofa"),
-    path("enable2fa/", Enable2fa.as_view(), name="searssch"),
+    # path("enable2fa/", Enable2fa.as_view(), name="searssch"),
     path("signin/twofa_process/", twofa_process.as_view(), name="twofa_process"),
 
 

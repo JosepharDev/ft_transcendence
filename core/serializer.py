@@ -3,6 +3,7 @@ from .models import User
 from .models import HistoryMatch
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
+import base64, secrets, pyotp
 import sys
 extra_kwargs = {
             'id': {'read_only': True},
@@ -17,13 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs
     def create(self, validated_data):
-        print("}}}}}}}}}}}}}}}}}}}]]]", validated_data , "}}}}}}}}}}}}}}}}}}}", file=sys.stderr)
         remote = validated_data.pop('remote', None)
         if remote == False:
             user = super().create(validated_data)
         else:
             user = super().create(validated_data)
             user.set_unusable_password()
+        user.otp_secret = pyotp.random_base32()
         user.save()
         return user
     

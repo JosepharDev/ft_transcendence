@@ -231,14 +231,14 @@ class HistoMatch(APIView):
         return Response({'message': 'ok'})
 
 
-class Enable2fa(APIView):
-    @method_decorator(check_auth)
-    def get(self, request):
-        user = User.objects.get(id=request.user_id)
-        if user.is_2fa:
-            return Response({"message": "yes"})
-        else:
-            return Response({"message": "no"})
+# class Enable2fa(APIView):
+#     @method_decorator(check_auth)
+#     def get(self, request):
+#         user = User.objects.get(id=request.user_id)
+#         if user.is_2fa:
+#             return Response({"message": "yes"})
+#         else:
+#             return Response({"message": "no"})
 
 class IsTwoEnabled(APIView):
     @method_decorator(check_auth)
