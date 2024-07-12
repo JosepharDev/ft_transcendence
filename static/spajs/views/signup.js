@@ -15,16 +15,15 @@ export async function signup()
                 </div>
                     <form id="signinForm">
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" placeholder="Enter username" autocomplete="username">
+                            <input type="text" class="form-control" id="username" placeholder="Username" autocomplete="username">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Enter password" autocomplete="current-password">
+                            <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="current-password">
                         </div>
-                        <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                        <button id="signinBtn" type="submit" class="btn btn-primary btn-block">Sign Up</button>
                     </form>
-                    <span>Already have an account? </span> <a id="sup" href="/signin">Sign In</a>
+                    <p id="hintAccount"><span>Already have an account? </span> <a id="sup" href="/signup">Sign In</a></p>
+
                     <p id="error-msg"><p>
             </div>
         </div>

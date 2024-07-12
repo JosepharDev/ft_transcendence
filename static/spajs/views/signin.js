@@ -15,20 +15,18 @@ export async function signin()
         </div>
             <form id="signinForm">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter username" autocomplete="username">
+                <input type="text" class="form-control" id="username" placeholder="Username" autocomplete="username">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter password" autocomplete="current-password">
+                <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="current-password">
             </div>
-            <button id="mybtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <button id="signinBtn" type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
 
             <form action="api/signin/auth_42_api/" id="fortysign" method="POST">\
-            <button type="submit" class="btn btn-ftwo btn-block" >Sign in with 42</button>
+            <button id="fortySignin" type="submit" class="btn btn-ftwo btn-block" >Sign in with 42</button>
             </form>
-            <span>Don't have an account? </span> <a id="sup" href="/signup">Sign Up</a>
+            <p id="hintAccount"><span>Don't have an account?</span> <a id="sup" href="/signup">Sign Up</a></p>
             <p id="error-msg"><p>
     </div>
 </div>

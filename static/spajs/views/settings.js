@@ -74,21 +74,19 @@ function settingsHtml(isEnable, datalocalise)
                 <input type="file" class="form-control-file" id="profile-image">
             </div>
             <div class="form-group">
-                <label for="username" data-localize="username">${translations[dataGlobal.selectedLanguage]['username']}</label>
                 <input type="text" class="form-control" id="username" data-localize="enterUsername" placeholder="${translations[dataGlobal.selectedLanguage]['enterUsername']}">
             </div>
             <div class="form-group">
-                <label for="nickname" data-localize="tournamentNickname">${translations[dataGlobal.selectedLanguage]['tournamentNickname']}</label>
                 <input type="text" class="form-control" id="nickname" data-localize="enterNickname" placeholder="${translations[dataGlobal.selectedLanguage]['enterNickname']}">
             </div>
-            <button id="mybtn" type="submit" class="btn btn-primary btn-block" data-localize="updateProfile">${translations[dataGlobal.selectedLanguage]['updateProfile']}</button>
+            <button id="updateProfile" type="submit" class="btn btn-primary btn-block" data-localize="updateProfile">${translations[dataGlobal.selectedLanguage]['updateProfile']}</button>
         </form>
             <p id="error-msg-update"><p>
 
         <div class="two-factor-auth">
             <button id="toggle-2fa-btn" class="btn btn-secondary btn-block" data-localize="${datalocalise}">${isEnable}</button>
             <img id="2fa-image" src="" alt="2FA QR Code" style="display: none;">
-            <input type="text" id="2fa-code" class="form-control mt-2" data-localize="enterOtp" placeholder="${translations[dataGlobal.selectedLanguage]['enterOtp']}" style="display: none;">
+            <input type="text" id="twofa-code" class="form-control mt-2" data-localize="enterOtp" placeholder="${translations[dataGlobal.selectedLanguage]['enterOtp']}" style="display: none;">
             <button id="submit-2fa-btn" class="btn btn-success btn-block mt-2" style="display: none;" data-localize="submitOtp">${translations[dataGlobal.selectedLanguage]['submitOtp']}</button>
         </div>
             <p id="error-msg-twofa"><p>
@@ -157,7 +155,7 @@ async function twofaButtonEvent(e)
     try
     {
         const image = document.getElementById('2fa-image');
-        const input = document.getElementById('2fa-code');
+        const input = document.getElementById('twofa-code');
         const button = document.getElementById('toggle-2fa-btn');
         const submitButton = document.getElementById('submit-2fa-btn');
     
@@ -221,7 +219,7 @@ async function twofaButtonEvent(e)
 
 async function submit2faButtonEvent(e)
 {
-    const code = document.getElementById('2fa-code').value;
+    const code = document.getElementById('twofa-code').value;
     const isoptok = document.getElementById('error-msg-twofa');
 
     e.preventDefault();
@@ -249,7 +247,7 @@ async function submit2faButtonEvent(e)
         if (js.message === "success")
         {
             const image = document.getElementById('2fa-image');
-            const input = document.getElementById('2fa-code');
+            const input = document.getElementById('twofa-code');
             const button = document.getElementById('toggle-2fa-btn');
             const submitButton = document.getElementById('submit-2fa-btn');
 

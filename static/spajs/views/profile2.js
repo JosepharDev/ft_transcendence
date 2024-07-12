@@ -163,7 +163,7 @@ function profileFirstPart(data)
             followPlace = translations[dataGlobal.selectedLanguage]['follow'];
             datalocal = 'follow';
         }
-        followShow = `<button class="btn btn-sm btn-outline-light follow-btn" data-localize="${datalocal}">${followPlace}</button>`;
+        followShow = `<button id="followBtnUser" class="btn btn-sm btn-outline-light follow-btn" data-localize="${datalocal}">${followPlace}</button>`;
     }
 
     return (`
@@ -241,6 +241,7 @@ function friendsView(data)
     {
         data.forEach(element => {
                 let newDiv = document.createElement('div');
+                newDiv.classList.add('user-item-profile');
                 newDiv.innerHTML = friendData(element);
                 
                 matches.appendChild(newDiv);

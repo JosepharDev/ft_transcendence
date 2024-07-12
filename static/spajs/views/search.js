@@ -26,7 +26,7 @@ function searchHtml()
                 <div class="form-group">
                     <input name="q" type="text" class="form-control" id="search-input" data-localize="usernameSearch" placeholder="${translations[dataGlobal.selectedLanguage]['usernameSearch']}">
                 </div>
-                <button id="mybtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="search">${translations[dataGlobal.selectedLanguage]['search']}</button>
+                <button id="searchBtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="search">${translations[dataGlobal.selectedLanguage]['search']}</button>
             </form>
             <div id="search-results" class="search-results"></div>
         </div>
