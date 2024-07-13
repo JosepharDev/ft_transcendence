@@ -87,10 +87,17 @@ for (let i = 0; i < numBalls; i++) {
 }
 
 
-    if (!history.state) {
-        const initialHref = window.location.pathname;
-        console.log("Initializing history with initial state:", initialHref);
-        history.replaceState({ href: initialHref }, '', initialHref);
+    try
+    {
+        if (!history.state) {
+            const initialHref = window.location.pathname;
+            console.log("Initializing history with initial state:", initialHref);
+            history.replaceState({ href: initialHref }, '', initialHref);
+        }
+    }
+    catch (err)
+    {
+        
     }
 
     window.onpopstate = urlLocationHandler;
