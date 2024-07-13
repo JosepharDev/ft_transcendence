@@ -1,6 +1,6 @@
 import { translations } from "../utils/localization.js";
 import { pushUrl } from "../utils/urlRoute.js";
-import { dataGlobal } from "./globalData.js";
+import { dataGlobal, logout } from "./globalData.js";
 
 
 
@@ -27,7 +27,10 @@ export async function settingView()
                 if (messageStatus === "2fa")
                     pushUrl('/twofa');
                 else
+                {
+                    logout();
                     pushUrl('/signin');
+                }
                 return 
             }
             throw new Error('Error: /api/friends/');
@@ -132,7 +135,10 @@ async function profileFormSettingsEvent(e)
             if (messageStatus === "2fa")
                 pushUrl('/twofa');
             else
+            {
+                logout();
                 pushUrl('/signin');
+            }
             return 
         }
         // alert ("not updated");

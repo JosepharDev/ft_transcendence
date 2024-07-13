@@ -1,5 +1,43 @@
 import { dataGlobal } from "./globalData.js";
 
+
+
+export function localPingPong()
+{
+    
+  let app = document.getElementById("app");
+
+  app.innerHTML = `
+
+        <div class="signin" id="gameSet">
+          <div class="form-container">
+              <div class="form-header">
+                  <h2>Players</h2>
+              </div>
+                  <form id="signinForm">
+                  <div class="form-group">
+                      <input type="text" class="form-control" id="username" placeholder="Player 1 name" autocomplete="username">
+                  </div>
+                  <div class="form-group">
+                      <input  type="text" class="form-control" id="password" placeholder="Player 2 name" autocomplete="username2">
+                  </div>
+                  <button id="signinBtn" type="submit" class="btn btn-primary btn-block">Start</button>
+                  </form>
+          </div>
+        </div>
+  `
+  document.getElementById("signinBtn").addEventListener('click', async (e)=>{
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const username2 = document.getElementById('password').value;
+    if (!username.length || !username2.length || username === username2)
+      return;
+    localPong(1, {game:"justTwo", vs1: username, vs2: username2})
+})
+
+}
+
+
 export async function localPong(isVsBot, objConf)
 {
 
@@ -9,33 +47,14 @@ export async function localPong(isVsBot, objConf)
   
   let app = document.getElementById("app");
 
-  app.innerHTML = `
-
-    <div class="container settings-container">
-        <h2 class="settings-title">Players</h2>
-        <form id="profile-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="username">Player 1</label>
-                <input type="text" class="form-control" id="username" placeholder="player1 name">
-            </div>
-            <div class="form-group">
-            <label for="nickname">Player 2</label>
-            <input type="text" class="form-control" id="nickname" placeholder="player1 name">
-          </div>
-            <button id="mybtn" type="submit" class="btn btn-primary btn-block" >Start</button>
-        </form>
-    </div>
-    )
-  `
-
   // return ;
   app.innerHTML = `<div id="game-container">
     <div class="player-info">
         <div class="player">
-            <p id="player1-name">player1</p>
+            <p id="player1-name">${objConf.vs1}</p>
         </div>
         <div class="player">
-            <p id="player2-name">player2</p>
+            <p id="player2-name">${objConf.vs2}</p>
         </div>
     </div>
     <canvas id="pongCanvas" width="600" height="400"></canvas>

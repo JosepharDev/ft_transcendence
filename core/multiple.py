@@ -97,17 +97,22 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         global canvasHeight__
         global curr_room
 
+        self.justDisconnect = True
+        await self.accept()
+
+
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
             return
         try:
             self.scope['user'] =  await decode_jwt(token)
+            if (not self.scope['user']):
+                return
         except jwt.ExpiredSignatureError:
             print({"message": "Expired Signature"})
             return
 
-        await self.accept()
 
         self.iam_playing  = False
         self.update_to_nogame = False

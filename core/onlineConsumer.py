@@ -32,17 +32,28 @@ class OnlineConsumer(AsyncWebsocketConsumer):
 
 
     async def connect(self):
+
+        self.justDisconnect = True
+        await self.accept()
+
         token = self.scope['cookies'].get('jwt')
         if not token:
             print({"message": "unauthorized"})
+            return
+    
         try:
             self.scope['user'] =  await decode_jwt(token)
+            if (not self.scope['user']):
+                return; 
         except jwt.ExpiredSignatureError:
             print({"message": "Expired Signature"})
-            return 
-        await self.accept()
+            return
+
+        self.justDisconnect = False
         await self.update_user_status(self.scope['user'].id, "online")
         print('increase online ==============<>')
+
+
     @database_sync_to_async
     def update_user_status(self, user_id, status):
         try:
@@ -64,6 +75,8 @@ class OnlineConsumer(AsyncWebsocketConsumer):
             pass
 
     async def disconnect(self, close_code):
+        if (self.justDisconnect)
+            return
         await self.update_user_status(self.scope['user'].id, "offline")
         print('decrease online ==============<>')
 
