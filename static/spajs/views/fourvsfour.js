@@ -45,8 +45,10 @@ export async function remoteGame4()
         }
         else if (data.message.action === 'finish')
         {          
-            alert (`${data.message.winner} WON`);
-            pushUrl('/');
+            // alert (`${data.message.winner} WON`);
+            drawText(data.message.winner, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            drawText("WON", canvas.width / 2 - 25, canvas.height / 2 - 30, "#FFF"); 
+            // pushUrl('/');
         }
         else if (data.message.action === 'data')
         {
@@ -108,6 +110,27 @@ export async function remoteGame4()
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
+        else if (data.message.action === 'reconnect')
+        {
+            document.querySelector(".player-info").innerHTML =
+            `<div class="player">
+                    <img src="${data.message.avatar1}" alt="Player 1">
+                    <p id="player1-name">${data.message.user1}</p>
+                    
+                    <img src="${data.message.avatar2}" alt="Player 1">
+                    <p id="player1-name">${data.message.user2}</p>
+            </div>
+            <div class="player">
+                <img src="${data.message.avatar3}" alt="Player 2">
+                <p id="player2-name">${data.message.user3}</p>
+
+                <img src="${data.message.avatar4}" alt="Player 2">
+                <p id="player2-name">${data.message.user4}</p>
+            </div>
+        `
+
+        }
+
 
     }
 

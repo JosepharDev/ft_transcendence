@@ -140,6 +140,33 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
                 print(f"=============>{self.room_room}")
+
+
+
+
+                data_ = {
+                    'action': 'reconnect',
+
+                    'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].user1_id], #change to nickname
+                    'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].user2_id],
+                    'user3': rooms[self.room_room].mapiUsername[rooms[self.room_room].user3_id],
+                    'user4': rooms[self.room_room].mapiUsername[rooms[self.room_room].user4_id],
+
+                    'avatar1': rooms[self.room_room].mapiAvatar[rooms[self.room_room].user1_id], #change to nickname
+                    'avatar2': rooms[self.room_room].mapiAvatar[rooms[self.room_room].user2_id],
+                    'avatar3': rooms[self.room_room].mapiAvatar[rooms[self.room_room].user3_id],
+                    'avatar4': rooms[self.room_room].mapiAvatar[rooms[self.room_room].user4_id],
+
+                }
+
+
+                await self.channel_layer.group_send(
+                        self.user_group_name,
+                        {"type": "send.message", "message": data_}
+                    )
+
+
+
                 await self.channel_layer.group_add(
                     self.room_room, self.channel_name
                 )
@@ -371,7 +398,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                     if (self.room_room not in rooms):
                         break
                     
-                    if rooms[self.room_room].paddle_1.score >= 70 or rooms[self.room_room].paddle_2.score >= 70:
+                    if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_4.score >= 7:
                         if rooms[self.room_room].paddle_1.score >= 7:
                             id1 = rooms[self.room_room].paddle_1.id
                             id2 = rooms[self.room_room].paddle_2.id
