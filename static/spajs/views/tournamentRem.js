@@ -22,7 +22,7 @@ export async function remoteTournament()
                 </div>
                 <div class="round">
                     <div class="matchup us2">....</div>
-                    <div class="connector"></div>
+                    <div class="connector">vs</div>
                     <div class="matchup us4">....</div>
                 </div>
                 <!-- Semi-Finals -->
@@ -64,7 +64,7 @@ export async function remoteTournament()
 
 
     const chatSocket = new WebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
         + '/ws/tournament/'
         + '3'

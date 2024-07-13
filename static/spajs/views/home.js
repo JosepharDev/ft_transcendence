@@ -28,10 +28,13 @@ function homeHtml()
 {
     return (`
     <div class="container mt-5">
-    <div class="row">
-        
 
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4 bobo">
+
+
+
+    <div class="row">
+
+         <div class="col-lg-4 col-md-6 col-sm-12 mb-4 bobo">
             <div class="card h-100 bg-lightgreen small-card">
                 <div class="card-body d-flex flex-column justify-content-center text-center">
                     <a href="/localgame" class="btn btn-primary mt-auto btn-sm dodo" data-localize="local">${translations[dataGlobal.selectedLanguage]['local']}</a>
@@ -41,7 +44,6 @@ function homeHtml()
                 </div>
             </div>
         </div>
-
     </div>
 </div>
     `);

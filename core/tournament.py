@@ -342,15 +342,18 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         #     pass 
 
     async def send_message(self, event):
-        message = event["message"]
+        try:
+            message = event["message"]
 
-        if message['action'] == "play":
-            self.iam_playing = True
-            await self.update_userStatus(self.scope['user'].id, 'in_game')
-            
-            # return #added this 05/30  11:15
+            if message['action'] == "play":
+                self.iam_playing = True
+                await self.update_userStatus(self.scope['user'].id, 'in_game')
+                
+                # return #added this 05/30  11:15
 
-        await self.send(text_data=json.dumps({"message": message}))
+            await self.send(text_data=json.dumps({"message": message}))
+        except:
+            pass
 
 
 

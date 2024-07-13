@@ -62,8 +62,8 @@ export const translations = {
         online1: "1 vs 1 En línea",
         online2: "2 vs 2 En línea",
         tournament: "Torneo (4 jugadores)",
-        follow: "seguir",
-        unfollow: "dejar de seguir",
+        follow: "Seguir",
+        unfollow: "Dejar de seguir",
         wins: "Victorias",
         loses: "Derrotas",
         tournamentwins: "Victorias en torneos",
@@ -103,8 +103,8 @@ export const translations = {
         online1: "1 vs 1 En ligne",
         online2: "2 vs 2 En ligne",
         tournament: "Tournoi (4 joueurs)",
-        follow: "suivre",
-        unfollow: "ne plus suivre",
+        follow: "Suivre",
+        unfollow: "Ne plus suivre",
         wins: "Victoires",
         loses: "Défaites",
         tournamentwins: "Victoires en tournoi",
@@ -136,7 +136,18 @@ document.getElementById("language-selector").addEventListener("change", async fu
 
 
     document.querySelectorAll("[data-localize]").forEach(element => {
-        const key = element.getAttribute("data-localize");
+        let key = element.getAttribute("data-localize");
+        if (element.hasAttribute('id'))
+        {
+            if (element.id === "followBtnUser")
+            {
+                const btnVal = element.textContent;
+                if (btnVal === "Follow" || btnVal === "Seguir" || btnVal === "Suivre")
+                    key = "follow";
+                else
+                    key = "unfollow";
+            }
+        }
         element.textContent = translations[selectedLanguage][key];
 
         if (element.hasAttribute('placeholder'))

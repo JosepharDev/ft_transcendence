@@ -53,7 +53,13 @@ export async function profileFriend2(id, is_me)
             async function toggleFollow(userId, btn)
             {
                 let formData = new FormData();
-                formData.append('data', btn.textContent);
+                let btnVal = btn.textContent;
+                if (btnVal === "Follow" || btnVal === "Seguir" || btnVal === "Suivre")
+                    btnVal = "Follow";
+                else
+                    btnVal = "Unfollow";
+
+                formData.append('data', btnVal);
                 try
                 {
                     const response = await fetch(`/api/friends/${userId}/`, {
