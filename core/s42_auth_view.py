@@ -1,3 +1,4 @@
+import urllib.request
 from .serializer import UserSerializer
 from .jwt import generate_jwt
 from .models import User
@@ -42,6 +43,7 @@ def auth_42_api_callback(request):
         'redirect_uri': settings.REDIRECT_INTRA,
     }
 
+    token_response =  urllib.request.Request
     token_response = requests.post(token_url, data=token_data)
     if token_response.status_code != 200:
         return Response({'error': 'Failed to retrieve token'}, status=token_response.status_code)

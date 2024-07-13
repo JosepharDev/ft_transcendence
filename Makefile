@@ -11,6 +11,6 @@ delnet:
 	docker network rm $$(docker network ls -q) || true
 
 
-clean: delcontainers delimages delvol delnet 
+clean: delcontainers delvol delnet 
 
-fclean: delcontainers delvol delnet 
+fclean: delcontainers delvol delnet delimages
