@@ -7,13 +7,10 @@ from django.conf import settings
 from django.shortcuts import redirect
 import requests
 import urllib.parse
-from datetime import datetime, timedelta
 from .models import User
-import jwt
-from django.http import JsonResponse
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 import requests
 from rest_framework import status
 
@@ -42,21 +39,19 @@ def auth_42_api_callback(request):
         'code': code,
         'redirect_uri': settings.REDIRECT_INTRA,
     }
-
-    token_response =  urllib.request.Request
     token_response = requests.post(token_url, data=token_data)
     if token_response.status_code != 200:
-        return Response({'error': 'Failed to retrieve token'}, status=token_response.status_code)
+        return Response({'error': 'Failed to retrieve token'}, status=400)
     
     token_json = token_response.json()
     if 'access_token' not in token_json:
         return Response({'error': 'Invalid token response'}, status=status.HTTP_400_BAD_REQUEST)
+
     user_info_url = 'https://api.intra.42.fr/v2/me'
     headers = {'Authorization': f"Bearer {token_json['access_token']}"}
     user_info_response = requests.get(user_info_url, headers=headers)
-    
     if user_info_response.status_code != 200:
-        return Response({'error': 'Failed to retrieve user info'}, status=user_info_response.status_code)
+        return Response({'error': 'Failed to retrieve user info'}, status=400)
 
     user_info = user_info_response.json()
 
@@ -70,12 +65,14 @@ def auth_42_api_callback(request):
     avatar_link = user_info.get('image', {}).get('link', '')
     if avatar_link:
         avatar_response = requests.get(avatar_link)
-        if avatar_response.status_code == 200:
+        if avatar_response.status_code != 200:
+            return Response({'error': 'Failed to retrieve user avatar'}, status=400)
+        else:
             avatar_content = ContentFile(avatar_response.content, name="avatar.JPG")
             user_data['avatar'] = avatar_content
     try:
         u = User.objects.get(remote_id=user_info['id'])
-        response = HttpResponseRedirect('/api/spa/')
+        response = HttpResponseRedirect('/')
         if u.is_2fa == True:
             response.set_cookie(key='jwt', value=generate_jwt(u, False))
         else:
@@ -92,7 +89,7 @@ def auth_42_api_callback(request):
             user = UserSerializer(data=user_data)
             if user.is_valid(raise_exception=True):
                 user = user.save()
-                r = HttpResponseRedirect('/api/spa/')
+                r = HttpResponseRedirect('/')
                 if user.is_2fa == True:
                     r.set_cookie(key='jwt', value=generate_jwt(user, False))
                 else:
@@ -102,13 +99,9 @@ def auth_42_api_callback(request):
             user = UserSerializer(data=user_data)
             if user.is_valid(raise_exception=True):
                 user = user.save()
-                r = HttpResponseRedirect('/api/spa/')
+                r = HttpResponseRedirect('/')
                 if user.is_2fa == True:
                     r.set_cookie(key='jwt', value=generate_jwt(user, False))
                 else:
                     r.set_cookie(key='jwt', value=generate_jwt(user, True))
                 return r
-
-    # r = HttpResponseRedirect('/api/spa/')
-    # r.set_cookie(key="jwt", value=jwt_token, httponly=True, secure=True)
-    # return r

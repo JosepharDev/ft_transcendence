@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from .models import User
-from .models import HistoryMatch
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
-import base64, secrets, pyotp
-import sys
+import pyotp
 extra_kwargs = {
             'id': {'read_only': True},
             'loses': {'read_only': True},
@@ -15,8 +13,8 @@ extra_kwargs = {
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
-        extra_kwargs
+        fields = ['avatar', 'username', 'lang', 'loses', 'wins', 'id', 'tournament_wins']
+        extra_kwargs = {'password': {'write_only': True}, 'otp_secret':{'write_only':True}}
     def create(self, validated_data):
         remote = validated_data.pop('remote', None)
         if remote == False:
@@ -61,14 +59,6 @@ class UserSerializer(serializers.ModelSerializer):
     #     return value
     # check password in serializer create function if remote pass it if user hashe it 
     # check if you can validate username if already exist and in case of remote change it here and send him message
-
-
-
-class HistoryMatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HistoryMatch
-        fields = ['history_id', 'match', 'player1', 'player2', 'player1_count', 'player2_count']
-
 
     # def validate(self, data):
     #     if not self.instance and 'password' not in data:

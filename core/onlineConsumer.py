@@ -15,7 +15,7 @@ import jwt
 from django.core.serializers import serialize
 from django.db.models import Q
 import jwt, datetime
-from .models import User, Match, HistoryMatch
+from .models import User, Match
 from django.conf import settings
 
 

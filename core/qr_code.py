@@ -25,20 +25,7 @@ class twofa(APIView):
     @method_decorator(check_auth1)
     def get(self, request):
         user = User.objects.get(id=request.user_id)
-        # k = base64.b32encode(user.otp_secret).decode('utf-8')
         otp_url = f"otpauth://totp/localhost:{user.username}?secret={user.otp_secret}&issuer=localhost"
-        # qr = qrcode.QRCode(
-        #                     version=1,
-        #                     error_correction=qrcode.constants.ERROR_CORRECT_L,
-        #                     box_size=10,
-        #                     border=4,
-        #                     )
-        # qr.add_data(otp_url)
-        # qr.make(fit=True)
-        # buffer = BytesIO()
-        # img = qr.make_image(fill='black', back_color='white')
-        # img.save(buffer, format='PNG')
-        # buffer.seek(0)
         img = qrcode.make(otp_url)
         buffer =  BytesIO()
         img.save(buffer, format='PNG')
@@ -71,9 +58,15 @@ class twofa_process(twofa):
     @method_decorator(check_auth1)
     def post(self, request):
         user = User.objects.get(id=request.user_id)
-        if request.POST['qrcode']== 'enable':
-            return self.get(request)
-        elif request.POST["qrcode"] == 'disable':
+        qrcode = request.POST.get("qrcode")
+        if not qrcode:
+            return Response({"message": "qrcode parameter required"}, status=400)
+        if qrcode == 'enable':
+            if user.is_2fa == True:
+                return Response({"message": "two factor authentication already activated"})
+            else:
+                return self.get(request)
+        elif qrcode == 'disable':
             if user.is_2fa == False:
                 return Response({'message': "already desactivated"}, status=200)
             elif user.is_2fa == True:
@@ -84,4 +77,4 @@ class twofa_process(twofa):
                 response.set_cookie(key='jwt', value=token_code, httponly=True, samesite='Lax', secure=True)
                 return response
         else:
-            return Response({"message": "bad request"}, status=400)
+            return Response({"message": "invalid value"}, status=400)

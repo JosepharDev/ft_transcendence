@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator,  MinLengthValidator
+from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
 def validate_input(value):
@@ -62,18 +62,6 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.player1.username} vs {self.player2.username} - {self.match_date}"
-        # return f"{self.player1.nickname} vs {self.player2.nickname} - {self.match_date}"
-
-class HistoryMatch(models.Model):
-    history_id = models.AutoField(primary_key=True)
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='history_player1')
-    player2 = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='history_player2')
-    player1_count = models.IntegerField(default=0) # deleteable may be
-    player2_count = models.IntegerField(default=0) # deleteable may be
-
-    def __str__(self):
-        return f"{self.player1.nickname} - {self.match}"
 
 class Friend(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')

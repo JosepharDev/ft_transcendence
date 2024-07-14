@@ -26,7 +26,7 @@ OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -161,5 +161,3 @@ print(BASE_DIR)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-APPEND_SLASH = False

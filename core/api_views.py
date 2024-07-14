@@ -1,24 +1,14 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from .serializer import UserSerializer
 from rest_framework import status
-from django.contrib.auth.decorators import login_required
-from .models import User, Match, HistoryMatch, Friend
-from django.shortcuts import render, redirect
+from .models import User, Match, Friend
 from .jwt import generate_jwt
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.db.models import Q
 from .utils import check_auth, check_auth1
 from django.utils.decorators import method_decorator
-
-#return 401
-signInTwoFa = {"message": "2fa"}
-signInFailed = {"message": "unauthorized"}
-userNotfound = {"message": "notfound"}
-
-#return 200
-signInSucess = {"message": "success"}
-
 
 class SignUp(APIView):
     def post(self, request):
@@ -46,12 +36,6 @@ class SignUp(APIView):
 
 
 class SignIn(APIView):
-    @method_decorator(check_auth)
-    def get(self, request):
-        user = User.objects.get(id=request.user_id)
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request):
         if 'username' in request.POST and 'password' in request.POST:
             username = request.POST['username']
@@ -80,21 +64,19 @@ class Logout(APIView):
     def get(self, request):
         user = User.objects.get(id=request.user_id)
         response = Response({"message": "success"})
-        response.delete_cookie('jwt')
-        # response.set_cookie('jwt', '', max_age=-1, samesite='Lax', secure=True)
+        response.set_cookie('jwt', '', max_age=-1, samesite='Lax', secure=True)
         return response
 
 class SearchUsers(APIView):
     @method_decorator(check_auth)
     def get(self, request):
+        if "q" not in request.query_params:
+            return HttpResponseBadRequest("required query parameter")
         query = request.query_params.get('q', None)
-        if not query:
-            return HttpResponseBadRequest("bad Request")
-        elif query:
+        if query:
             users = User.objects.filter(username__icontains=query)
         else:
             users = User.objects.all()
-
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -107,7 +89,6 @@ class UpdateUser(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Language(APIView):
@@ -130,7 +111,6 @@ class Language(APIView):
                 return Response({"message": "You Should Set A Valid Language"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"message": "You Should Set A Language"}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class AuthUser(APIView):
@@ -170,7 +150,6 @@ class UserData(APIView):
                 'date': match.match_date.date(),
 
             }
-            print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)
 
         userRequestedData['matches'] = allUserRequestedMatches
@@ -183,20 +162,8 @@ class UserData(APIView):
                 'id':friend.to_user.id,
                 'avatar' : friend.to_user.avatar.url
             })
-
         userRequestedData['friends'] = userFriends
-
         return Response(userRequestedData)
-
-class HistoMatch(APIView):
-    @method_decorator(check_auth)
-    def get(self, request, id):
-        user = User.objects.get(id=request.user_id)
-        # user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
-        matches = Match.objects.filter(Q(player1=id) | Q(player2=id))
-        print(matches)
-        # his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
-        return Response({'message': 'ok'})
 
 class IsTwoEnabled(APIView):
     @method_decorator(check_auth)
@@ -207,7 +174,7 @@ class IsTwoEnabled(APIView):
 
 class UserFriends(APIView):
     @method_decorator(check_auth)
-    def get(self, request):
+    def get(self, request, id=None):
         user = User.objects.get(id=request.user_id)
         friends = Friend.objects.filter(from_user=user)
         userFriends = []
@@ -216,71 +183,36 @@ class UserFriends(APIView):
                 'id':friend.to_user.id,
                 'avatar' : friend.to_user.avatar.url
             })
-
-
         userFriends.append({'username' : user.username,
             'id': user.id,
             'avatar' : user.avatar.url
                 })
-        
         return Response(userFriends)
 
     @method_decorator(check_auth)
-    def post(self, request, id):
+    def post(self, request, id=None):
+        if id is None:
+            return Response({"message": "id required in POST method"}, status=400)
         user = User.objects.get(id=request.user_id)
         if (user.id == id):
-            return Response({"message": "not allowed"}, status=401)#follow yourserlf ?
-        
-        try:
-            user_obj = User.objects.get(pk=user.id)
-        except User.DoesNotExist:
-            return Response({"message": "notfound"}, status=404)
-
+            return Response({"message": "not allowed"}, status=401)
         try:
             friend = User.objects.get(pk=id)
         except User.DoesNotExist:
             return Response({"message": "notfound"}, status=404)
 
         is_friend = Friend.objects.filter(from_user=user, to_user=friend).exists()
-
-        print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-        print(request.POST['data'] == "Unfollow")
-        print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-
+        if "data" not in request.POST:
+            return Response({"message": "expected data at POST method"})
         if (is_friend and request.POST['data'] == "Unfollow"):
-            friendship = Friend.objects.get(from_user=user_obj, to_user=friend)
+            friendship = Friend.objects.get(from_user=user, to_user=friend)
             friendship.delete()
             return Response({"message": "Friend removed successfully"}, status=201)
-        elif (not is_friend and request.POST['data'] == "Follow" and user_obj.id != friend.id):
-            Friend.objects.create(from_user=user_obj, to_user=friend)
+        elif (not is_friend and request.POST['data'] == "Follow" and user.id != friend.id):
+            Friend.objects.create(from_user=user, to_user=friend)
             return Response({"message": "Friend added successfully"}, status=201)
 
         return Response({"message": "Nothing happened"}, status=200)
-
-
-
-# import jwt
-# from django.http import JsonResponse
-# from django.utils.deprecation import MiddlewareMixin
-
-# class JWTMiddleware(MiddlewareMixin):
-#     def process_request(self, request):
-#         token = request.COOKIES.get('jwt_token')
-        
-    
-# class UsersList(APIView):
-#     @method_decorator(check_auth)
-#     def get(self, request): 
-#         users = User.objects.all()
-#         serializer = UserSerializer(users, many=True)
-#         return Response(serializer.data)
-
-# class UserHistory(APIView):
-#     @method_decorator(check_auth)
-#     def get(self, request, id):    
-#         user_history_matches = HistoryMatch.objects.filter(Q(player1=id) | Q(player2=id))
-#         his_serializer = HistoryMatchSerializer(user_history_matches, many=True)
-#         return Response(his_serializer.data)
 
 class ProfileData(APIView):
     @method_decorator(check_auth)
@@ -305,7 +237,6 @@ class ProfileData(APIView):
                 'plr2img': match.player2.avatar.url,
                 'date': match.match_date.date(),
             }
-            print(f'---------->{match.match_date}')
             allUserRequestedMatches.append(newMatch)
 
         userRequestedData['matches'] = allUserRequestedMatches
@@ -322,4 +253,3 @@ class ProfileData(APIView):
         userRequestedData['friends'] = userFriends
 
         return Response(userRequestedData)
-

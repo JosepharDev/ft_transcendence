@@ -27,8 +27,8 @@ from django.contrib.auth.admin import UserAdmin
 #     ordering = ["username"]
 #     filter_horizontal = []
 
-admin.site.register(models.User) # , UAdmin
-admin.site.register(models.Match)
-admin.site.register(models.HistoryMatch)
-admin.site.register(models.Friend)
+# admin.site.register(models.User) # , UAdmin
+# admin.site.register(models.Match)
+# admin.site.register(models.HistoryMatch)
+# admin.site.register(models.Friend)
 
