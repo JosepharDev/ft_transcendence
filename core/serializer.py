@@ -3,17 +3,10 @@ from .models import User
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
 import pyotp
-extra_kwargs = {
-            'id': {'read_only': True},
-            'loses': {'read_only': True},
-            'wins': {'read_only': True} ,
-            'remote_id': {'read_only': True},
-            'password': {'write_only': True}}
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['avatar', 'username', 'lang', 'loses', 'wins', 'id', 'tournament_wins']
+        fields = '__all__'
         extra_kwargs = {'password': {'write_only': True}, 'otp_secret':{'write_only':True}}
     def create(self, validated_data):
         remote = validated_data.pop('remote', None)
@@ -38,7 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
                 instance.username = username
         if nickname:
             user = User.objects.filter(nickname=nickname).first()
-            print(user)
             if user and user.id != instance.id:
                 return Response({"message": "Nickname already exist"})
             else:
