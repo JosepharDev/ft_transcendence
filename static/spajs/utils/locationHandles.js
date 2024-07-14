@@ -15,6 +15,7 @@ import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
 import { signup } from "../views/signup.js"
 import { getLanguage } from "../views/getLanguage.js"
+import { translations } from "./localization.js"
 
 
 export async function urlLocationHandler()
@@ -72,12 +73,23 @@ export async function urlLocationHandler()
     if (location === '/signin')
     {
         console.log("YOO");
-        signin();
-        return ;
+        console.log(dataGlobal.selectedLanguage)
+        let ff = await checkAuthentication();
+        if (ff !== 'authenticated')
+        {
+            signin();
+            return ;
+        }
     }
     else if (location === '/twofa')
     {
-        twofaView();
+        let ff = await checkAuthentication();
+        if (ff !== 'authenticated')
+        {
+            twofaView();
+            // signin();
+            // return ;
+        }
         return ;
     }
 

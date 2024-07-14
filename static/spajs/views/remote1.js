@@ -1,5 +1,6 @@
 import {dataGlobal} from "./globalData.js";
 import { pushUrl } from "../utils/urlRoute.js";
+import { translations } from "../utils/localization.js";
 
 
 export async function remoteGame1()
@@ -9,7 +10,9 @@ export async function remoteGame1()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="700" height="350"></canvas>
-    <button id="leavebtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="search">Leave</button>
+    <p id="scoreWin" data-localize="scoreWin">${translations[dataGlobal.selectedLanguage]['scoreWin']}</p>
+
+    <button id="leavebtn" type="submit" class="btn-search btn btn-primary btn-block" data-localize="leave">${translations[dataGlobal.selectedLanguage]['leave']}</button>
 
     </div>`;
 
@@ -39,13 +42,15 @@ export async function remoteGame1()
 
         if (data.message.action === 'NA')
         {
-            drawText("ALREADY IN LOBBY", canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+            let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
+            drawText(temp, canvas.width / 2 - 70, canvas.height / 2, "#FFF"); 
             console.log('ayoo');
         }
         else if (data.message.action == 'iam' )
         {
             iamuser = data.message.iam;
-            drawText("WAITING...", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            let temp = translations[dataGlobal.selectedLanguage]['waiting'];
+            drawText(temp, canvas.width / 2 - 60, canvas.height / 2, "#FFF"); 
             
         }
         else if (data.message.action === 'finish')
@@ -53,8 +58,10 @@ export async function remoteGame1()
 
             ctx.fillStyle = "rgba(0,0,34,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
+            let temp = translations[dataGlobal.selectedLanguage]['istheWinner'];
+
             drawText(data.message.winner, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-            drawText("WON", canvas.width / 2 - 25, canvas.height / 2 - 30, "#FFF"); 
+            drawText(temp, canvas.width / 2 - 30, canvas.height / 2 + 30, "#FFF"); 
         }
         else if (data.message.action === 'data')
         {

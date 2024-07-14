@@ -1,3 +1,4 @@
+import { translations } from "../utils/localization.js";
 import { dataGlobal } from "./globalData.js";
 
 
@@ -12,14 +13,14 @@ export function localPingPong()
         <div class="signin" id="gameSet">
           <div class="form-container">
               <div class="form-header">
-                  <h2>Players</h2>
+                  <h2 data-localize="players" >${translations[dataGlobal.selectedLanguage]['players']}</h2>
               </div>
                   <form id="signinForm">
                   <div class="form-group">
-                      <input type="text" class="form-control" id="username" placeholder="Player 1 name" autocomplete="username">
+                      <input type="text" class="form-control" id="username" data-localize="player1name" placeholder="${translations[dataGlobal.selectedLanguage]['player1name']}" autocomplete="username">
                   </div>
                   <div class="form-group">
-                      <input  type="text" class="form-control" id="password" placeholder="Player 2 name" autocomplete="username2">
+                      <input  type="text" class="form-control" id="password" data-localize="player2name" placeholder="${translations[dataGlobal.selectedLanguage]['player2name']}" autocomplete="username2">
                   </div>
                   <button id="signinBtn" type="submit" class="btn btn-primary btn-block">Start</button>
                   </form>

@@ -34,6 +34,7 @@ export const translations = {
         usernameSearch : "Enter a username",
         uploadAvatar : "upload avatar",
 
+        profileSettings : "Profile settings",
         username : "Username",
         enterUsername : "Enter new username",
         tournamentNickname : "Tournament nickname",
@@ -43,6 +44,19 @@ export const translations = {
         disable2fa : "Disable 2FA",
         enterOtp : "Enter OTP code",
         submitOtp : "Submit 2FA Code",
+
+
+        istheWinner : "is the winner",
+        aretheWinners: "are the winners",
+        players: "Players",
+        player1name: "Player1 name",
+        player2name: "Player2 name",
+        left: "left",
+        right: "right",
+        scoreWin:  "First player to score 7 wins.",
+        leave: "Leave",
+        alreadyPlaying: "Already Playing/Lobby",
+        waiting: "waiting for players..."
     },
     es: {
         tournament: "Torneo",
@@ -74,6 +88,8 @@ export const translations = {
         usersSearch: "Buscar usuarios",
         search: "buscar",
         usernameSearch: "introducir un nombre de usuario...",
+        
+        profileSettings : "Configuración del perfil",
         uploadAvatar: "subir avatar",
         username: "Nombre de usuario",
         enterUsername: "Introducir nuevo nombre de usuario",
@@ -84,6 +100,19 @@ export const translations = {
         disable2fa: "Desactivar 2FA",
         enterOtp: "Introducir código OTP",
         submitOtp: "Enviar código 2FA",
+
+        istheWinner :  "es el ganador" ,
+        aretheWinners: "son los ganadores",
+        players: "Jugadores",
+        player1name: "Nombre del Jugador 1",
+        player2name: "Nombre del Jugador 2",
+        left: "izquierda",
+        right: "derecha",
+        scoreWin: "El primer jugador en anotar 7 gana.",
+        leave: "Salir",
+        alreadyPlaying: "Ya jugando / Sala",
+        waiting:  "Esperando a los jugadores...",
+
     },
     fr: {
         tournament: "Tournoi",
@@ -115,6 +144,8 @@ export const translations = {
         usersSearch: "Recherche d'utilisateurs",
         search: "rechercher",
         usernameSearch: "saisir un nom d'utilisateur...",
+        
+        profileSettings : "Paramètres du profil",
         uploadAvatar: "télécharger un avatar",
         username: "Nom d'utilisateur",
         enterUsername: "Saisir un nouveau nom d'utilisateur",
@@ -125,6 +156,18 @@ export const translations = {
         disable2fa: "Désactiver 2FA",
         enterOtp: "Saisir le code OTP",
         submitOtp: "Soumettre le code 2FA",
+
+        istheWinner : "est le gagnant" ,
+        aretheWinners : "sont les gagnants",
+        players: "Joueurs",
+        player1name: "Nom du Joueur 1",
+        player2name: "Nom du Joueur 2",
+        left: "gauche",
+        right: "droite",
+        scoreWin: "Le premier joueur à marquer 7 gagne.",
+        leave : "Quitter",
+        alreadyPlaying: "Déjà en jeu / Lobby",
+        waiting: "En attendant des joueurs...",
     }
 };
 
