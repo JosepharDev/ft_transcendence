@@ -247,6 +247,42 @@
     justify-content: center;
     color: rgb(210, 216, 221);
 }
+
+.row .bobo .local {
+    background-image: url(/static/css/bkgd_local.jpeg);
+}
+
+.row .bobo .online1 {
+    background-image: url(/static/css/bkgd_online1.jpeg);
+}
+
+.row .bobo .online2 {
+    background-image: url(/static/css/bkgd_online2.jpeg);
+}
+
+.row .bobo .tournament {
+    background-image: url(/static/css/bkgd_tournament.jpeg);
+}
+
+.row .bobo .local,
+.row .bobo .online1,
+.row .bobo .online2,
+.row .bobo .tournament {
+    background-size: cover;
+    background-position: center;
+    height: 300px;
+    /* border: none; */
+    border-radius: 26px;
+}
+
+.row .bobo a {
+    background-color: #5c5cf4;
+}
+
+.row .bobo a:hover {
+    background-color: blue;
+}
+
 .col-lg-4{
 
     border-radius: 2px;
@@ -784,6 +820,20 @@ body
     font-family: sans-serif;
     font-weight: 700;
     font-style: normal;
+
+    /* background-size: cover; */
+    /* background: url(images/bg.jpg)  */
+    /* background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(2,54,91,1) 37%, rgba(2,82,120,1) 52%, rgba(0,212,255,1) 88%, rgba(0,181,223,1) 100%, rgba(0,212,255,1) 100%); */
+    /* height: 100vh; */
+    background: url('/static/css/p.png');
+    /* background-image: url('images/background.png'); */
+    background-size: cover; /* Ensures the background image covers the entire screen */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-position: center center; /* Centers the background image */
+    background-attachment: fixed; /* Keeps the background image fixed when scrolling */
+    height: 100%; /* Ensures the body takes up the full viewport height */
+    margin: 0; /* Removes default margin */
+    font-family: 'Orbitron', sans-serif;
 }
 
 #home, #logout
