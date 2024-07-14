@@ -17,19 +17,19 @@ export async function remoteTournament()
                 <!-- First Round -->
                 <div class="round">
                     <div class="matchup us1">....</div>
-                    <div class="connector"></div>
-                    <div class="matchup us3">....</div>
+                    <div class="connector">Vs</div>
+                    <div class="matchup us2">....</div>
                 </div>
                 <div class="round">
-                    <div class="matchup us2">....</div>
-                    <div class="connector">vs</div>
+                    <div class="matchup us3">....</div>
+                    <div class="connector">Vs</div>
                     <div class="matchup us4">....</div>
                 </div>
                 <!-- Semi-Finals -->
                 <div class="round">
                     <div class="horizontal-connector"></div>
                     <div class="matchup winner rone ">....</div>
-                    <div class="connector"></div>
+                    <div class="connector">Vs</div>
                     <div class="matchup winner rtwo ">....</div>
                     <div class="horizontal-connector"></div>
                 </div>

@@ -1,6 +1,6 @@
 import {pushUrl} from "./../utils/urlRoute.js"
 import { translations } from "../utils/localization.js";
-import { dataGlobal } from "./globalData.js";
+import { dataGlobal, logout } from "./globalData.js";
 
 
 
@@ -62,7 +62,10 @@ async function searchElementsEvent(e)
                 if (messageStatus === "2fa")
                     pushUrl('/twofa');
                 else
+                {
+                    logout();
                     pushUrl('/signin');
+                }
                 return 
             }
             throw new Error('Error: /api/search/');

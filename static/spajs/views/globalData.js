@@ -42,3 +42,15 @@ export function removeEvents(data)
     });
     data.deleteEvent = [];
 }
+
+export function logout()
+{
+    if (!dataGlobal.socketOnline !== -1)
+    {
+        dataGlobal.socketOnline.close()
+        dataGlobal.socketOnline = -1;
+    }
+    dataGlobal.sentOnline = false
+    dataGlobal.selectedLanguage = "en"
+    dataGlobal.gotData = false
+}

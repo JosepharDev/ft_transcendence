@@ -1,6 +1,6 @@
 import { pushUrl } from "../utils/urlRoute.js";
 import { translations } from "../utils/localization.js";
-import { dataGlobal } from "./globalData.js";
+import { dataGlobal, logout } from "./globalData.js";
 
 
 
@@ -33,7 +33,10 @@ export async function profileFriend2(id, is_me)
                 if (messageStatus === "2fa")
                     pushUrl('/twofa');
                 else
+                {
+                    logout();
                     pushUrl('/signin');
+                }
                 return 
             }
             throw new Error('Error: /api/userid/');
@@ -76,7 +79,10 @@ export async function profileFriend2(id, is_me)
                             if (messageStatus === "2fa")
                                 pushUrl('/twofa');
                             else
+                            {
+                                logout();
                                 pushUrl('/signin');
+                            }
                             return 
                         }
                         throw new Error('Error: /api/friends/');
@@ -107,7 +113,6 @@ export async function profileFriend2(id, is_me)
     }
     catch (err)
     {
-        alert('Something went wrong!');
         pushUrl('/');
     }
 }

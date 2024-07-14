@@ -1,6 +1,6 @@
 import {searchView } from "./../views/search.js"
 import {homeView } from "./../views/home.js"
-import {localPong} from "./../views/localGame.js"
+import {localPingPong, localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
 import {remoteGame1} from "./../views/remote1.js"
@@ -92,7 +92,7 @@ export async function urlLocationHandler()
     else if (path === "/search")
         searchView()
     else if (path === "/localgame")
-        localPong(1,  {game:"justTwo", vs1: "player1", vs2: "player2"}); 
+        localPingPong()
     else if (path === "/remote4")
         remoteGame4();
     else if (path === "/s")
