@@ -15,7 +15,7 @@ import jwt
 from django.core.serializers import serialize
 from django.db.models import Q
 import jwt, datetime
-from .models import User, Match, HistoryMatch
+from .models import User, Match
 from django.conf import settings
 import random
 import string
@@ -420,36 +420,17 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                         break
 
 
+                    kk = await gameState(self.room_room)
 
-                    if  rooms[self.room_room].isKeyPdPressed_1:
-                        await rooms[self.room_room].paddle_1.update(rooms[self.room_room].whichKeyPressed_1)
-                    if  rooms[self.room_room].isKeyPdPressed_2:
-                        await rooms[self.room_room].paddle_2.update(rooms[self.room_room].whichKeyPressed_2)
-                    if  rooms[self.room_room].isKeyPdPressed_3:
-                        await rooms[self.room_room].paddle_3.update(rooms[self.room_room].whichKeyPressed_3)
-                    if  rooms[self.room_room].isKeyPdPressed_4:
-                        await rooms[self.room_room].paddle_4.update(rooms[self.room_room].whichKeyPressed_4)
-
-                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_1, canvasHeight__)
-                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_2, canvasHeight__)
-                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_3, canvasHeight__)
-                    await paddleCollisionWithEdges(rooms[self.room_room].paddle_4, canvasHeight__)
-
-                    await ballCollisionWithEdges(rooms[self.room_room].ball, canvasHeight__)
-
-                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_1)
-                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_2)
-                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_3)
-                    await ballPaddleCollision(rooms[self.room_room].ball, rooms[self.room_room].paddle_4)
-
-
-                    await increaseScore(rooms[self.room_room].ball, rooms[self.room_room].paddle_1, rooms[self.room_room].paddle_4, canvasWidth__, canvasHeight__)
-
-                    await rooms[self.room_room].ball.update()
 
                     await self.channel_layer.group_send(
                         self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
                     )
+
+
+                    if (kk):
+                        await asyncio.sleep(1)
+
                     await asyncio.sleep(0.016)
 
             # except:
@@ -488,14 +469,14 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
 
     
-async def paddleCollisionWithEdges(paddle, canvasHeight):
+def paddleCollisionWithEdges(paddle, canvasHeight):
     if paddle.pos['y'] < 0:
         paddle.pos['y'] = 0
     if paddle.pos['y'] + paddle.height > canvasHeight:
         paddle.pos['y'] = canvasHeight - paddle.height
 
 
-async def ballCollisionWithEdges(ball, canvasHeight):
+def ballCollisionWithEdges(ball, canvasHeight):
     if ball.pos['y'] + ball.radius >= canvasHeight :
         ball.velocity['y'] = abs (ball.velocity['y']) * (-1)
     elif ball.pos['y'] - ball.radius <= 0 :
@@ -505,7 +486,7 @@ async def ballCollisionWithEdges(ball, canvasHeight):
 
 
 
-async def ballPaddleCollision(ball, paddle):
+def ballPaddleCollision(ball, paddle):
 
     dx = abs(ball.pos['x'] - paddle.getCenter()['x'])
     dy = abs(ball.pos['y'] - paddle.getCenter()['y'])
@@ -525,7 +506,7 @@ async def ballPaddleCollision(ball, paddle):
 
         ball.velocity['x'] = (abs(ball.velocity['x']) + 0.06) * j
 
-async def respawnBall(ball, canvasWidth, canvasHeight):
+def respawnBall(ball, canvasWidth, canvasHeight):
     if (ball.velocity['x'] > 0):
         ball.pos['x'] = canvasWidth - 150
         ball.pos['y'] = random.uniform(100, canvasHeight - 100)
@@ -544,13 +525,16 @@ async def respawnBall(ball, canvasWidth, canvasHeight):
 
 
 
-async def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
+def increaseScore(ball, paddle_1, paddle_2, canvasWidth, canvasHeight):
     if ball.pos['x'] <= -ball.radius:
         paddle_2.score += 1
-        await respawnBall(ball, canvasWidth, canvasHeight)
+        respawnBall(ball, canvasWidth, canvasHeight)
+        return True
     if ball.pos['x'] >= canvasWidth + ball.radius:
         paddle_1.score += 1
-        await respawnBall(ball, canvasWidth, canvasHeight)
+        respawnBall(ball, canvasWidth, canvasHeight)
+        return True
+    return False
 
 
 class Paddle:
@@ -562,7 +546,7 @@ class Paddle:
         self.height = height
         self.score = 0
         self.id = id
-    async def update (self ,key):
+    def update (self ,key):
         if (key == 38):
             self.pos['y'] -= self.velocity['y']
         if (key == 40):
@@ -596,7 +580,7 @@ class Ball():
         self.velocity = velocity
         self.radius = radius
 
-    async def update(self):
+    def update(self):
         self.pos['x'] += self.velocity['x']
         self.pos['y'] += self.velocity['y']
 
@@ -687,3 +671,38 @@ class roomData:
         return message
 
 
+
+
+
+
+
+
+
+async def gameState(roomName):
+
+    if  rooms[roomName].isKeyPdPressed_1:
+        rooms[roomName].paddle_1.update(rooms[roomName].whichKeyPressed_1)
+    if  rooms[roomName].isKeyPdPressed_2:
+        rooms[roomName].paddle_2.update(rooms[roomName].whichKeyPressed_2)
+    if  rooms[roomName].isKeyPdPressed_3:
+        rooms[roomName].paddle_3.update(rooms[roomName].whichKeyPressed_3)
+    if  rooms[roomName].isKeyPdPressed_4:
+        rooms[roomName].paddle_4.update(rooms[roomName].whichKeyPressed_4)
+
+    paddleCollisionWithEdges(rooms[roomName].paddle_1, canvasHeight__)
+    paddleCollisionWithEdges(rooms[roomName].paddle_2, canvasHeight__)
+    paddleCollisionWithEdges(rooms[roomName].paddle_3, canvasHeight__)
+    paddleCollisionWithEdges(rooms[roomName].paddle_4, canvasHeight__)
+
+    ballCollisionWithEdges(rooms[roomName].ball, canvasHeight__)
+
+    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_1)
+    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_2)
+    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_3)
+    ballPaddleCollision(rooms[roomName].ball, rooms[roomName].paddle_4)
+
+
+    kk = increaseScore(rooms[roomName].ball, rooms[roomName].paddle_1, rooms[roomName].paddle_4, canvasWidth__, canvasHeight__)
+
+    rooms[roomName].ball.update()
+    return kk

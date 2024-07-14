@@ -15,7 +15,7 @@ import jwt
 from django.core.serializers import serialize
 from django.db.models import Q
 import jwt, datetime
-from .models import User, Match, HistoryMatch
+from .models import User, Match
 from django.conf import settings
 
 
@@ -75,7 +75,7 @@ class OnlineConsumer(AsyncWebsocketConsumer):
             pass
 
     async def disconnect(self, close_code):
-        if (self.justDisconnect)
+        if (self.justDisconnect):
             return
         await self.update_user_status(self.scope['user'].id, "offline")
         print('decrease online ==============<>')
