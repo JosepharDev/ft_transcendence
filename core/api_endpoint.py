@@ -23,6 +23,7 @@ urlpatterns = [
     path('auth/', AuthUser.as_view(), name="auth"),
 
     path("update/language/", Language.as_view(), name="language"),
+    
     path('update/', UpdateUser.as_view(), name="update"),
     
     path('profile/', ProfileData.as_view(), name='ooo'),
