@@ -23,6 +23,10 @@ import string
 canvasWidth__ = 800
 canvasHeight__ = 450
 
+background_tasks = set()
+
+
+
 def vec2(x, y):
     return {'x': x, 'y': y}
 
@@ -374,8 +378,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     async def start_game(self, event):
         # Start the game loop
         message = event['message']
-        
-        
+        global background_tasks
         if rooms[self.room_room].start == False:
             return
         else:
@@ -385,6 +388,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         # await asyncio.sleep(2)
         async def gameLoop():
             # try:
+
+            while rooms[self.room_room].round in [-1, 0, 1, 2]:
                 await asyncio.sleep(4)
                 if rooms[self.room_room].round == -1:
                     rooms[self.room_room].round = 0
@@ -519,13 +524,13 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     rooms[self.room_room].ball = Ball(vec2(20,20), vec2(10,10), 10)
                     rooms[self.room_room].isKeyPdPressed_1 = False
                     rooms[self.room_room].isKeyPdPressed_2 = False
-                    await gameLoop()
+                    # await gameLoop()
             # except:
             #     pass
 
-        asyncio.create_task(gameLoop())
-
-
+        task = asyncio.create_task(gameLoop())
+        background_tasks.add(task)
+        task.add_done_callback(background_tasks.discard)
 
 
     @database_sync_to_async
