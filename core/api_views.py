@@ -27,10 +27,9 @@ class SignUp(APIView):
                     user.set_password(password)
                     user.save()
                     response = Response({"message": "success"}, status=200)
-                    response.set_cookie(key='jwt', value=generate_jwt(user, True), httponly=True)
                     return response
                 else:
-                    return Response({"message": "Invalid Input"}, status=401)
+                    return Response({"message": "Username: alphabet character\nPassword: min length 8 characters"}, status=401)
         else:
             return Response({"message": "Please Provide Both username and password"}, status=401)
 

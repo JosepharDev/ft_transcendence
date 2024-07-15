@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.core.exceptions import ValidationError
 
 def validate_input(value):
@@ -26,7 +26,7 @@ class User(AbstractUser):
     id = models.AutoField(unique=True, primary_key=True, blank=False)
     remote_id = models.IntegerField(blank=True, null=True)
     username = models.CharField(max_length=100, unique=True, blank=False, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
-    password = models.CharField(max_length=100, blank=True)
+    password = models.CharField(max_length=100, blank=True, validators=[MinLengthValidator(8)])
     nickname = models.CharField(max_length=100, blank=True, validators=[RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')])
     is_2fa = models.BooleanField(default=False)
     remote = models.BooleanField(default=False)
@@ -36,7 +36,6 @@ class User(AbstractUser):
     profile_status = models.CharField(max_length=20, choices=Status.choices, default=Status.OFFLINE)
     game_status = models.CharField(max_length=20, choices=GameStatus.choices, default=GameStatus.NO_GAME)
     status_count = models.IntegerField(default=0)
-    # avatar = models.ImageField(upload_to="profile_images", default="blank-profile-picture.png")
     avatar = models.ImageField(upload_to="profile_images", default="default.jpg")
     lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
     game_type = models.CharField(max_length=1, default="N")

@@ -11,15 +11,6 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from .utils import check_auth, check_auth1
-#return 401
-signInTwoFa = {"message": "2fa"}
-signInFailed = {"message": "unauthorized"}
-userNotfound = {"message": "notfound"}
-
-#return 200
-signInSucess = {"message": "success"}
-
-
 
 class twofa(APIView):
     @method_decorator(check_auth1)
