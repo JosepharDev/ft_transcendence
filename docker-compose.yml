@@ -2,52 +2,47 @@ version: '3.8'
 
 services:
   db:
-    # build: /home/josephardev/Desktop/ft_transcendence/docker/postgres/
     image: postgres
     container_name: db_container
     restart: 'always'
     networks:
       - net
     env_file: "env.env"
-    # environment:
-    #   - POSTGRES_DB=db
-    #   - POSTGRES_USER=yoyahya
-    #   - POSTGRES_PASSWORD=yoyahya
     volumes:
-      - db:/var/lib/postgresql/data/
+      - ./database:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
-  web:
-    build: docker/django
-    # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
-    # command: daphne -e ssl:443:privateKey=private_daphne.pem:certKey=public_daphne.pem tests.asgi:application
-    # command: daphne -b 0.0.0.0 -p 443 tests.asgi:application
-    # restart: 'always'
-    image: django_image
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  backend:
+    build: Backend/docker
+    image: backend_image
     container_name: djangocontainer
     volumes:
-      - vol:/usr/src/
+      - ./Backend:/usr/src/app
+      - ./media:/usr/src/app/media
     restart: 'always'
     networks:
       - net
     env_file: "env.env"
-    # environment:
-      # - DJANGO_SETTINGS_MODULE=tests.settings
     depends_on:
-      - db
-    # ports:
-    #   - 8001:8001
+      db:
+        condition: service_healthy
   server:
-    build: docker/nginx/
-    image: nginx_image
+    build: Frontend/docker/
+    image: frontend_image
     container_name: nginx_container
     ports:
       - 443:443
     restart: 'always'
     volumes:
-    - vol:/var/www/html/
+    - ./Frontend:/var/www/html
+    - ./media:/var/www/html/media
     depends_on:
-      - web
+      - backend
     networks:
       - net
 
@@ -56,16 +51,16 @@ networks:
     net:
       driver: bridge
 
-volumes:
-  vol:
-    driver: local
-    driver_opts:
-      type: none
-      device: .
-      o: bind
-  db:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./database
-      o: bind
+# volumes:
+#   vol:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: .
+#       o: bind
+  # db:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: ./database
+  #     o: bind
