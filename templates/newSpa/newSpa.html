@@ -248,32 +248,8 @@
     color: rgb(210, 216, 221);
 }
 
-.row .bobo .local {
-    background-image: url(/static/css/imgs/local.jpeg);
-}
 
-.row .bobo .online1 {
-    background-image: url(/static/css/imgs/online.jpeg);
-}
 
-.row .bobo .online2 {
-    background-image: url(/static/css/imgs/4player.jpeg);
-}
-
-.row .bobo .tournament {
-    background-image: url(/static/css/imgs/tournament.jpeg);
-}
-
-.row .bobo .local,
-.row .bobo .online1,
-.row .bobo .online2,
-.row .bobo .tournament {
-    background-size: cover;
-    background-position: center;
-    height: 300px;
-    /* border: none; */
-    border-radius: 26px;
-}
 
 .row .bobo a {
     background-color: #5c5cf4;
@@ -309,23 +285,16 @@
     border: 0.1px solid #339ce2 ;
     /* width: 400px; */
 
+    background-image: url('/static/css/imgs/4player.jpeg');
+    background-size: cover; /* Ensures the background image covers the entire screen */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-position: center center; /* Centers the background image */
+    background-attachment: fixed; /* Keeps the background image fixed when scrolling */
+    height: 100%; 
+
 }
 
-.bg-lightcoral {
-    background-color: rgba(0, 0, 0, 0.3);
-}
 
-.bg-lightpink {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.bg-lightyellow {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.bg-lightgrey {
-    background-color: rgba(0, 0, 0, 0.3);
-}
 
 .navbar .container-fluid {
     flex-wrap: nowrap;

@@ -125,8 +125,8 @@ for (let i = 0; i < numBalls; i++) {
 
 
     let lang = await getLanguage();
-    if (lang != "ERR")
-        dataGlobal.selectedLanguage = lang;
+    if (lang.message === "success")
+        dataGlobal.selectedLanguage = lang.language;
     urlLocationHandler();
 }
 
