@@ -56,7 +56,7 @@ export async function remoteGame1()
         else if (data.message.action === 'finish')
         {          
 
-            ctx.fillStyle = "rgba(0,0,34,1)"
+            ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
             let temp = translations[dataGlobal.selectedLanguage]['istheWinner'];
 

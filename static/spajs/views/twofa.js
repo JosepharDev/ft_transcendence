@@ -43,11 +43,9 @@ export async function twofaView()
             {
                 pushUrl('/signin');
             }
-            console.log('y89998o');
         }
         catch (err)
         {
-            console.log('y88o');
         }
     });
 }
@@ -56,36 +54,37 @@ export async function twofaView()
 async function submitOTPButtonEvent(e)
 {
     e.preventDefault();
-    const code = document.querySelector('.otpcode').value;
-    let formData = new FormData();
-    formData.append('code', code);
-
-    const request = new Request(
-        '/api/signin/twofa/',
-        {
-            method: 'POST',
-            body: formData,
-        }
-    );
-
-
     try
     {
+        const code = document.querySelector('.otpcode').value;
+        let formData = new FormData();
+        formData.append('code', code);
+
+        const request = new Request(
+            '/api/signin/twofa/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+
+
         let res = await fetch(request);
         if (!res.ok)
         {
             console.log("resd not ok");
         }
+
         let js = await res.json();
         console.log("res ok");
         console.log(js);
+
         if (js.message === "success")
         {
-            document.querySelector(".hideme").classList.remove("hideme");
+            document.querySelector("#navi").classList.remove("hideme");
 
-            console.log("reaaaas ok");
             sendOnline();
-            console.log("reaaagsdgsdgdsas ok");
+
             pushUrl('/');
         }
         else

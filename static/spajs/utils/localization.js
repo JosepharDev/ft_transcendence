@@ -52,7 +52,7 @@ export const translations = {
         player1name: "Player1 name",
         player2name: "Player2 name",
         left: "left",
-        right: "right",
+        right: "right : : up , <span>&#8595;</span>",
         scoreWin:  "First player to score 7 wins.",
         leave: "Leave",
         alreadyPlaying: "Already Playing/Lobby",

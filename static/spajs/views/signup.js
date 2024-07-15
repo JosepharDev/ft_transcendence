@@ -71,6 +71,8 @@ async function submitSigninEvent(e)
                 document.getElementById('error-msg').textContent = js.message;
                 return ;
             }
+            document.getElementById('error-msg').textContent = 'Error! Try again';
+            return ;
         }
 
         let js = await res.json();

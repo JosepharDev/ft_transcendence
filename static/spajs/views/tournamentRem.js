@@ -46,13 +46,6 @@ export async function remoteTournament()
     `;
 
 
-    // app.innerHTML = '\
-    // <div id="game-container">\
-    // <div id="game-info">\
-    // </div>\
-    // <canvas id="pongCanvas" width="800" height="450"></canvas>\
-    // </div>';
-
     const canvas = document.getElementById('pongCanvas');
     const canvasContainer = document.getElementById('game-container');
     

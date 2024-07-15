@@ -33,7 +33,7 @@ export async function settingView()
                 }
                 return 
             }
-            throw new Error('Error: /api/friends/');
+            throw new Error('Error: /api/settings/');
         }
 
 
@@ -106,49 +106,54 @@ async function profileFormSettingsEvent(e)
     const username = document.getElementById('username').value;
     const nickname = document.getElementById('nickname').value;
     const profileImage = document.getElementById('profile-image').files[0];
-    
-    const formData = new FormData();
-    if (username.length > 0)
-        formData.append('username', username);    
-    
-    if (nickname.length > 0)
-            formData.append('nickname', nickname);
-    
-    if (profileImage)
-        formData.append('avatar', profileImage);
-
-    const request = new Request(
-        '/api/update/',
-        {
-            method: 'PATCH',
-            body: formData,
-        }
-    );
-
-    let res = await fetch(request);
-
-    if (!res.ok)
+    try
     {
-        if (res.status === 401)
-        {
-            let messageStatus = await res.json();
-            if (messageStatus === "2fa")
-                pushUrl('/twofa');
-            else
+        const formData = new FormData();
+        if (username.length > 0)
+            formData.append('username', username);    
+        
+        if (nickname.length > 0)
+                formData.append('nickname', nickname);
+        
+        if (profileImage)
+            formData.append('avatar', profileImage);
+    
+        const request = new Request(
+            '/api/update/',
             {
-                logout();
-                pushUrl('/signin');
+                method: 'PATCH',
+                body: formData,
             }
-            return 
-        }
-        // alert ("not updated");
-        isupdated.textContent = 'Not valid input';
+        );
+    
+        let res = await fetch(request);
 
+        if (!res.ok)
+        {
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                {
+                    logout();
+                    pushUrl('/signin');
+                }
+                return 
+            }
+            isupdated.textContent = 'Not valid input';
+            isupdated.style.color = 'red';
+        }
+        else
+        {
+            isupdated.textContent = 'updated succesfully';
+            isupdated.style.color = '#508D4E';
+        }
     }
-    else
+    catch (err)
     {
-        isupdated.textContent = 'updated succesfully';
-        isupdated.style.color = '#508D4E';
+        pushUrl('/');
     }
 }
 
@@ -212,14 +217,24 @@ async function twofaButtonEvent(e)
         }
         else
         {
-            // let js = await response.json();
-            // console.log(js.message)
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus === "2fa")
+                    pushUrl('/twofa');
+                else
+                {
+                    logout();
+                    pushUrl('/signin');
+                }
+                return 
+            }
             console.log("nothing update");
         }
     }
     catch (err)
     {
-
+        pushUrl('/');
     }
 }
 
@@ -243,11 +258,6 @@ async function submit2faButtonEvent(e)
     try
     {
         let res = await fetch(request);
-        if (!res.ok)
-        {
-            console.log("resd not ok");
-        }
-        
         let js = await res.json();
 
         if (js.message === "success")

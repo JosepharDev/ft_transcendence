@@ -1,16 +1,18 @@
 import {dataGlobal} from "./globalData.js";
 import { pushUrl } from "../utils/urlRoute.js";
+import { translations } from "../utils/localization.js";
 
 
 export async function remoteGame4()
 {
     let app = document.getElementById("app");
-    app.innerHTML = '\
-    <div id="game-container">\
-    <div class="player-info">\
-    </div>\
-    <canvas id="pongCanvas" width="800" height="450"></canvas>\
-    </div>';
+    app.innerHTML = `
+    <div id="game-container">
+    <div class="player-info">
+    </div>
+    <canvas id="pongCanvas" width="800" height="450"></canvas>
+    <p id="scoreWin" data-localize="scoreWin">${translations[dataGlobal.selectedLanguage]['scoreWin']}</p>
+    </div>`;
 
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
@@ -29,26 +31,22 @@ export async function remoteGame4()
 
     dataGlobal.socketDisconnect.push(chatSocket);
 
-    let iamuser = 0;
+
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
 
-        // if (data.message.action == 'ALREADY' )
-        // {
-        //     // redirect to home;
-        // } 
         if (data.message.action == 'iam' )
         {
-            iamuser = data.message.iam;
-            drawText("WAITING...", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-            
+            let wt = translations[dataGlobal.selectedLanguage]['waiting'];
+            drawText(wt, canvas.width / 2 - 70, canvas.height / 2, "#FFF");           
         }
         else if (data.message.action === 'finish')
-        {          
-            // alert (`${data.message.winner} WON`);
-            drawText(data.message.winner, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-            drawText("WON", canvas.width / 2 - 25, canvas.height / 2 - 30, "#FFF"); 
-            // pushUrl('/');
+        {
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            drawText(data.message.winner, canvas.width / 2 - 40, canvas.height / 2, "#FFF"); 
+            let wt = translations[dataGlobal.selectedLanguage]['aretheWinners'];
+            drawText(wt, canvas.width / 2 - 40, canvas.height / 2 - 30, "#FFF"); 
         }
         else if (data.message.action === 'data')
         {
@@ -105,7 +103,6 @@ export async function remoteGame4()
             </div>
         `
 
-            // `<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>`;
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
             drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
@@ -128,7 +125,6 @@ export async function remoteGame4()
                 <p id="player2-name">${data.message.user4}</p>
             </div>
         `
-
         }
 
 
@@ -139,11 +135,10 @@ export async function remoteGame4()
     function onKeyDownEvent(e)
     {
         if (e.keyCode != 38 && e.keyCode != 40)  
-        return;
+            return;
 
         let msg = {
             'action': 'P',
-            'user' : iamuser,
             'code': e.keyCode,
         }
         if (chatSocket.readyState === WebSocket.OPEN)
@@ -151,13 +146,11 @@ export async function remoteGame4()
     }
     function onKeyUpEvent(e)
     {
-        console.log("testtttt");
         if (e.keyCode != 38 && e.keyCode != 40)  
-        return;
+            return;
 
         let msg = {
             'action': 'U',
-            'user' : iamuser,
             'code': e.keyCode,
         }
         if (chatSocket.readyState === WebSocket.OPEN)

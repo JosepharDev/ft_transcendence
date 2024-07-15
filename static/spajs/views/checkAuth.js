@@ -12,8 +12,10 @@ export async function checkAuthentication()
     );
     
     let answer = await AJAX_(request);
+
     console.log('message');
     console.log(answer.message);
+
     if (answer.message === "authenticated")
     {
         if (!dataGlobal.sentOnline)
@@ -25,10 +27,8 @@ export async function checkAuthentication()
     
     if (answer.message === "2fa")
         return '2fa'
-        //pushUrl('/twofa');
     else
         return 'signin'
-    //    pushUrl('/signin');
 }
 
 
@@ -37,7 +37,6 @@ export async function AJAX_(req)
     try
     {
         let res = await fetch(req);
-        console.log(`status code ${res.status}`);
         let js = await res.json();
         return js;
     }

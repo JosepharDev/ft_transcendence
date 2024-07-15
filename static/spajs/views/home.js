@@ -29,9 +29,6 @@ function homeHtml()
     return (`
     <div class="container mt-5">
 
-
-
-
     <div class="row">
 
         <div class="col-lg-4 col-md-6 col-sm-6 mb-4 bobo">

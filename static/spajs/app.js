@@ -59,35 +59,9 @@ document.getElementById("set").addEventListener('click', async (e)=>{
 })
 
 
-// tuto();
-console.log(url);
-// homeView();
-
 async function ini()
 {
-
-// Some random colors
-const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
-
-const numBalls = 70;
-const balls = [];
-
-for (let i = 0; i < numBalls; i++) {
-  let ball = document.createElement("div");
-  ball.classList.add("ball");
-  ball.style.background = colors[Math.floor(Math.random() * colors.length)];
-  ball.style.left = `${Math.floor(Math.random() * 90)}vw`;
-  ball.style.top = `${Math.floor(Math.random() * 90)}vh`;
-  ball.style.transform = `scale(${Math.random()})`;
-  ball.style.width = `${Math.random()}em`;
-  ball.style.height = ball.style.width;
-  
-  balls.push(ball);
-  document.body.append(ball);
-}
-
-
-    try
+    try // {//s}
     {
         if (!history.state) {
             const initialHref = window.location.pathname;
@@ -97,7 +71,6 @@ for (let i = 0; i < numBalls; i++) {
     }
     catch (err)
     {
-        
     }
 
     window.onpopstate = urlLocationHandler;
@@ -121,14 +94,16 @@ for (let i = 0; i < numBalls; i++) {
             signin()
         return ;
     }
-    document.querySelector(".hideme").classList.remove("hideme");
-
 
     let lang = await getLanguage();
     if (lang.message === "success")
         dataGlobal.selectedLanguage = lang.language;
+
     urlLocationHandler();
 }
+
+
+
 
 document.addEventListener("DOMContentLoaded", (event) => {
     console.log("DOM fully loaded and parsed");

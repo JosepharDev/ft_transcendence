@@ -4,18 +4,15 @@ import {localPingPong, localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
 import {remoteGame1} from "./../views/remote1.js"
-// import {tournamentView} from "./../views/tournament.js"
 import { dataGlobal, removeEvents, closSockets } from "../views/globalData.js"
 import { signin } from "../views/signin.js";
 import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
-// import {friendsView} from "../views/friends.js"
-import { pushUrl } from "./urlRoute.js"
 import { remoteGame4 } from "../views/fourvsfour.js"
 import { remoteTournament } from "../views/tournamentRem.js"
 import { signup } from "../views/signup.js"
 import { getLanguage } from "../views/getLanguage.js"
-import { translations } from "./localization.js"
+
 
 
 export async function urlLocationHandler()
@@ -25,7 +22,6 @@ export async function urlLocationHandler()
     closSockets(dataGlobal);
     removeEvents(dataGlobal);
 
-    
     
     const location = window.location.pathname;
     let path = window.location.pathname;
@@ -55,9 +51,7 @@ export async function urlLocationHandler()
             let dataUser = await getLanguage();
             if (dataUser.message === 'success')
             {
-                console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa');
                 document.getElementById('avatarProfile').src = dataUser.avatar;
-                console.log(dataUser.avatar);
                 document.getElementById("language-selector").value = dataUser.language;
                 dataGlobal.selectedLanguage = dataUser.language;
                 dataGlobal.gotData = true;
@@ -72,14 +66,15 @@ export async function urlLocationHandler()
 
     if (location === '/signin')
     {
-        console.log("YOO");
-        console.log(dataGlobal.selectedLanguage)
         let ff = await checkAuthentication();
         if (ff !== 'authenticated')
         {
             signin();
             return ;
         }
+        const nav = document.querySelector("#navi");
+        if (nav.classList.contains('hideme'))
+            nav.classList.remove("hideme");
     }
     else if (location === '/twofa')
     {
@@ -87,10 +82,11 @@ export async function urlLocationHandler()
         if (ff !== 'authenticated')
         {
             twofaView();
-            // signin();
-            // return ;
+            return ;
         }
-        return ;
+        const nav = document.querySelector("#navi");
+        if (nav.classList.contains('hideme'))
+            nav.classList.remove("hideme");
     }
 
 

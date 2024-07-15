@@ -41,14 +41,9 @@ export function localPingPong()
 
 export async function localPong(isVsBot, objConf)
 {
-
-
-  let timeId = -1;
-
   
   let app = document.getElementById("app");
 
-  // return ;
   app.innerHTML = `<div id="game-container">
     <div class="player-info">
         <div class="player">
@@ -59,20 +54,14 @@ export async function localPong(isVsBot, objConf)
         </div>
     </div>
     <canvas id="pongCanvas" width="600" height="400"></canvas>
-    <p>left : w and s</p>
-    <p>right : up and <span>&#8595;</span></p>
+    <p data-localize="left">${translations[dataGlobal.selectedLanguage]['right']}</p>
+    <p data-localize="right">${translations[dataGlobal.selectedLanguage]['right']}</p>
 </div>`;
 
 
     const canvas = document.getElementById('pongCanvas');
     const ctx = canvas.getContext('2d');
     
-    if (objConf.game === 'tournament'){
-
-        document.getElementById('playervsplayer').textContent = `${objConf.vs1} vs ${objConf.vs2}`;
-        // document.getElementById('player22').textContent = objConf.vs2;
-        
-    }
     canvas.width = 700;// window.innerWidth;
     canvas.height = 350;//window.innerHeight;
     let flag = isVsBot;
@@ -123,8 +112,6 @@ export async function localPong(isVsBot, objConf)
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
       };
-
-
     }
 
     function Paddle(pos , velocity, width, height, jj, username)
@@ -195,20 +182,6 @@ export async function localPong(isVsBot, objConf)
         ball.velocity.y = -Math.abs(ball.velocity.y);
       }
 
-      // if (ball.pos.y + ball.radius >= canvas.height || ball.pos.y - ball.radius <= 0 )
-      // {
-      //   ball.velocity.y *= -1;
-      //   console.log('*******************')
-      //   console.log(`ball vely ${ball.velocity.y}`);
-      //   console.log(`ball posx ${ball.pos.x}`);
-      //   console.log(`ball posy ${ball.pos.y}`);
-      //   console.log('*******************')
-      // }
-
-
-
-      // if()
-
     }
 
 
@@ -226,10 +199,8 @@ export async function localPong(isVsBot, objConf)
           ball.pos.x = paddle.pos.x - paddle.width - 3;//ball.radius; // if ball gets stuck
           
         let deltay = ball.pos.y - (paddle.pos.y + paddle.height/2);
-        ball.velocity.y = deltay * 0.30
-        ;
-        // if (ball.velocity.y <= ball.radius)
-        // console.log(`in ${ball.velocity.y}`);
+        ball.velocity.y = deltay * 0.30;
+
         ball.velocity.x *= -1;
 
 
@@ -241,8 +212,6 @@ export async function localPong(isVsBot, objConf)
         ball.velocity.x = (Math.abs(ball.velocity.x) + 0.06) * j
 
       }
-      // console.log(`x ${ball.velocity.x}`)
-      // console.log(`out ${ball.velocity.y}`);
 
     }
 
@@ -303,13 +272,11 @@ export async function localPong(isVsBot, objConf)
       if (ball.pos.x <= -ball.radius)
       {
         paddle_2.score += 1;
-        // document.getElementById("player2").innerHTML = paddle_2.score;
         respawnBall(ball)
       }
       if (ball.pos.x >= canvas.width + ball.radius)
       {
         paddle_1.score += 1;
-        // document.getElementById("player1").innerHTML = paddle_1.score;
         respawnBall(ball)
       }
     }
@@ -331,6 +298,7 @@ export async function localPong(isVsBot, objConf)
     const paddle2 = new Paddle(vec2(canvas.width - 13, 20), vec2(10,10), 13, 90, 2, objConf.vs2);
     
     flag = isVsBot;
+
     function gameUpdate()
     {
       ball.update();
@@ -340,6 +308,7 @@ export async function localPong(isVsBot, objConf)
         player2ai(ball, paddle2);
       else
        paddle2.update();
+  
       paddleCollisionWithEdges(paddle2);
 
       ballCollisionWithEdges(ball);
@@ -367,13 +336,12 @@ export async function localPong(isVsBot, objConf)
     function gameLoop()
     {
 
-      // ctx.clearRect(0, 0 , canvas.width, canvas.height);
       ctx.fillStyle = "rgba(0,0,0,1)"
       ctx.fillRect(0,0,canvas.width, canvas.height);
-    //   window.requestAnimationFrame(gameLoop);
+
         gameUpdate();
         gameDraw();
-        if (paddle2.score >= 5 || paddle1.score >= 5)
+        if (paddle2.score >= 7 || paddle1.score >= 7)
         {
             let obj = objConf;
             clearInterval(dataGlobal.idInterval);
@@ -382,74 +350,21 @@ export async function localPong(isVsBot, objConf)
             {
               ctx.fillStyle = "rgba(0,0,0,1)"
               ctx.fillRect(0,0,canvas.width, canvas.height);
-              drawText("Winner", canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
-                if (paddle2.score >= 5 )
-                {
-                  drawText(paddle2.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-
-                }
-                    // alert (`winner ${paddle2.username}`);
-                else
-                  drawText(paddle1.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
-
-                    // alert (`winner ${paddle1.username}`);
-                return;
-            }
-            else
-            {
-                if (paddle2.score >= 5 && obj.partGame === 0)
-                    obj.win1 = paddle2.username;
-                else if (paddle1.score >= 5 && obj.partGame === 0)
-                    obj.win1 = paddle1.username;
-
-                if (paddle2.score >= 5 && obj.partGame === 1)
-                    obj.win2 = paddle2.username;
-                else if (paddle1.score >= 5 && obj.partGame === 1)
-                    obj.win2 = paddle1.username;
-                if (obj.partGame === 0)
-                    obj.partGame = 1;
-                else if (obj.partGame === 1)
-                    obj.partGame = 2;
-                else if (obj.partGame === 2)
-                {
-                    if (paddle2.score >= 5 )
-                        alert (`winner ${paddle2.username}`);
-                    else
-                        alert (`winner ${paddle1.username}`);
-                    return ;
-                }
-
-                if (obj.partGame === 1)
-                {
-                    obj.vs1 = obj.player3;
-                    obj.vs2 = obj.player4;
-
-                    document.getElementById("app").innerHTML = '<button id ="jstbtn">nextmatch</button>';
-                    document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
-                        e.preventDefault();
-                        localPong(1, obj); 
-                    })
-
-                }
-                else
-                {
-                    obj.vs1 = obj.win1;
-                    obj.vs2 = obj.win2;
-                    document.getElementById("app").innerHTML = '<button id ="jstbtn">final</button>';
-                    document.getElementById("jstbtn").addEventListener('click'  , (e)=>{
-                        e.preventDefault();
-                        localPong(1, obj); 
-                    })                        // localPong(1, obj);
-                }
+              if (paddle2.score >= 7 )
+                drawText(paddle2.username, canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
+              else
+                drawText(paddle1.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+              
+              drawText(translations[dataGlobal.selectedLanguage]['istheWinner'], canvas.width / 2 - 30, canvas.height / 2, "#FFF");  
+              return;
             }
         }
     
-}
+    }
 
     dataGlobal.idTimeOut = setTimeout (()=>
     {
       dataGlobal.idInterval = setInterval(gameLoop, 20)
-
     }, 2000)
 
 }
