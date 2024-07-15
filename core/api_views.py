@@ -18,7 +18,7 @@ class SignUp(APIView):
             if not username or not password:
                 return Response({"message": "Please Provide Both username and password"}, status=401)
             if User.objects.filter(username=username).exists():
-                return Response({"message": "there is already user with this name"}, status=401)
+                return Response({"message": "There is already user with this name"}, status=401)
             else:
                 data = {"username": username, "password": password, "remote": False, "nickname":username}
                 user = UserSerializer(data=data)
