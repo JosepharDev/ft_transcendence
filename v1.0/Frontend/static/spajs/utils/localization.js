@@ -29,7 +29,7 @@ export const translations = {
         matchHistory: "Match History",
         followng: "Following",
         usersSearch : "Users Search",
-        notFound : "No users found",
+        notFound : "No Results Found",
         search : "search",
         usernameSearch : "Enter a username",
         uploadAvatar : "upload avatar",
@@ -88,7 +88,9 @@ export const translations = {
         usersSearch: "Buscar usuarios",
         search: "buscar",
         usernameSearch: "introducir un nombre de usuario...",
+        notFound : "No se encontraron resultados",
         
+
         profileSettings : "Configuración del perfil",
         uploadAvatar: "subir avatar",
         username: "Nombre de usuario",
@@ -144,7 +146,8 @@ export const translations = {
         usersSearch: "Recherche d'utilisateurs",
         search: "rechercher",
         usernameSearch: "saisir un nom d'utilisateur...",
-        
+        notFound : "Aucun résultat trouvé",
+
         profileSettings : "Paramètres du profil",
         uploadAvatar: "télécharger un avatar",
         username: "Nom d'utilisateur",

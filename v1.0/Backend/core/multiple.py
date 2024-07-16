@@ -53,7 +53,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             user = User.objects.get(pk=user_id)
             return user.game_status
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -62,7 +61,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             user = User.objects.get(pk=user_id)
             return user.current_room
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -76,7 +74,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 user.game_type = '4' #4 players
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -86,7 +83,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             user.current_room = rm
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
 
@@ -176,14 +172,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                             self.user_group_name,
                             {"type": "send.message", "message": {'action': 'NA'}} )
 
-            #later send users data
-            # await self.channel_layer.group_send(
-            #         self.room_room,
-            #         {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['username'], 'user2':
-            #                                             self.scope['user'].username}}
-            #     )
-
-
             return
         elif (stats == 'waiting'):
             self.justDisconnect = True
@@ -192,7 +180,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                         {"type": "send.message", "message": {'action': 'NA'}} )
             return
 
-#----------------------------------
+
         print("=======================================================================================")
         print(self.scope['user'].username)
         print("=======================================================================================")
@@ -310,11 +298,13 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
 
     async def receive(self, text_data):
-        # try:
+        try:
             message = json.loads(text_data)
-            print ("receievevvevevve")
-            print (message)
-            print (self.iam_playing)
+            
+            # print ("receievevvevevve")
+            # print (message)
+            # print (self.iam_playing)
+
             if (message['action'] == 'P' and self.iam_playing):
                 if (rooms[self.room_room].paddle_1.id == self.scope['user'].id): 
                     rooms[self.room_room].isKeyPdPressed_1 = True
@@ -352,8 +342,8 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 elif (rooms[self.room_room].paddle_4.id == self.scope['user'].id):
                     rooms[self.room_room].isKeyPdPressed_4 = False
                     rooms[self.room_room].whichKeyPressed_4 = message['code']
-        # except:
-        #     pass 
+        except:
+            pass 
 
     async def send_message(self, event):
         message = event["message"]
@@ -431,7 +421,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                     if (kk):
                         await asyncio.sleep(1)
 
-                    await asyncio.sleep(0.016)
+                    await asyncio.sleep(0.0166666)
 
             # except:
             #     pass

@@ -1,6 +1,6 @@
 import {dataGlobal} from "./globalData.js";
 import { pushUrl } from "../utils/urlRoute.js";
-
+import { translations } from "../utils/localization.js";
 
 export async function remoteTournament()
 {
@@ -9,6 +9,7 @@ export async function remoteTournament()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="800" height="450"></canvas>
+    <p id="scoreWin" data-localize="scoreWin">${translations[dataGlobal.selectedLanguage]['scoreWin']}</p>
     </div>    
         
         <div class="bracket-wrapper hideme">

@@ -54,3 +54,4 @@ export function logout()
     dataGlobal.selectedLanguage = "en"
     dataGlobal.gotData = false
 }
+

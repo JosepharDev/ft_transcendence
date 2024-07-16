@@ -54,7 +54,7 @@ export async function localPong(isVsBot, objConf)
         </div>
     </div>
     <canvas id="pongCanvas" width="600" height="400"></canvas>
-    <p data-localize="left">${translations[dataGlobal.selectedLanguage]['right']}</p>
+    <p data-localize="left">${translations[dataGlobal.selectedLanguage]['right']}</p><span>fasdfasf<span>
     <p data-localize="right">${translations[dataGlobal.selectedLanguage]['right']}</p>
 </div>`;
 
@@ -353,7 +353,7 @@ export async function localPong(isVsBot, objConf)
               if (paddle2.score >= 7 )
                 drawText(paddle2.username, canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
               else
-                drawText(paddle1.username, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+                drawText(paddle1.username, canvas.width / 2 - 20, canvas.height / 2 - 30, "#FFF"); 
               
               drawText(translations[dataGlobal.selectedLanguage]['istheWinner'], canvas.width / 2 - 30, canvas.height / 2, "#FFF");  
               return;

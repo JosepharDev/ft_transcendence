@@ -70,7 +70,7 @@ function settingsHtml(isEnable, datalocalise)
 {
     return (`
     <div class="container settings-container">
-        <h2 class="settings-title">Profile Settings</h2>
+        <h2 class="settings-title" data-localize="profileSettings">${translations[dataGlobal.selectedLanguage]['profileSettings']}</h2>
         <form id="profile-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label id="upload-label" for="profile-image" data-localize="uploadAvatar">${translations[dataGlobal.selectedLanguage]['uploadAvatar']}</label>
@@ -153,8 +153,6 @@ async function profileFormSettingsEvent(e)
                 isupdated.textContent = 'updated succesfully';
                 isupdated.style.color = '#508D4E';
                 document.getElementById('avatarProfile').src = messageStatus.avatar;
-
-
             }
             else
             {

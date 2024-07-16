@@ -44,9 +44,9 @@ export async function remoteGame4()
         {
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
-            drawText(data.message.winner, canvas.width / 2 - 40, canvas.height / 2, "#FFF"); 
+            drawText(data.message.winner, canvas.width / 2 - 40, canvas.height / 2 - 30, "#FFF"); 
             let wt = translations[dataGlobal.selectedLanguage]['aretheWinners'];
-            drawText(wt, canvas.width / 2 - 40, canvas.height / 2 - 30, "#FFF"); 
+            drawText(wt, canvas.width / 2 - 40, canvas.height / 2, "#FFF"); 
         }
         else if (data.message.action === 'data')
         {
