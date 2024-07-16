@@ -221,7 +221,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
         userData = {
                         'id'       : self.scope['user'].id,
-                        'username' : self.scope['user'].username,
+                        'username' : self.scope['user'].nickname,
                         'avatar'   : self.scope['user'].avatar.url,
                     }
         queue.append(userData)
