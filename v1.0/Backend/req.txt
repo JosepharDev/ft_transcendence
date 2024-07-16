@@ -1,0 +1,12 @@
+django
+requests
+qrcode
+djangorestframework
+django-otp
+channels
+daphne
+pyotp
+Pillow
+pyjwt
+psycopg2-binary
+pyopenssl

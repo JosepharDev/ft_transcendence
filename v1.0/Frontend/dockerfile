@@ -1,0 +1,13 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt install -y nginx iputils-ping vim curl openssl
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/nginx.pem -out /etc/ssl/certs/nginx.pem  -subj "/CN=pingpong"
+# RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
+# COPY ./static /var/www/html/
+# COPY ./newSpa.html /var/www/html/
+COPY ./ /var/www/html
+COPY ./default.jpg /var/www/html/media/
+WORKDIR /var/www/html
+
+CMD ["nginx", "-g", "daemon off;"]
