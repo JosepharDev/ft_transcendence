@@ -9,6 +9,9 @@ from django.http import HttpResponseBadRequest
 from django.db.models import Q
 from .utils import check_auth, check_auth1
 from django.utils.decorators import method_decorator
+from rest_framework.serializers import ValidationError
+from django.core.files.base import ContentFile
+
 
 class SignUp(APIView):
     def post(self, request):
@@ -85,10 +88,16 @@ class UpdateUser(APIView):
     def patch(self, request):
         user = User.objects.get(id=request.user_id)
         serializer = UserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "success", "avatar": user.avatar.url, "language" : user.lang}, status=200)
-        return Response({"message": "invalid input"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+        except ValidationError as e:
+            if isinstance(e.detail, list):
+                return Response({"message": e.detail[0]}, status=200)
+            if isinstance(e.detail, dict):
+                return Response({"message": next(iter(e.detail.values()))[0]}, status=200)
+        return Response({"message": "success", "avatar": user.avatar.url, "language" : user.lang}, status=200)
+
 
 class Language(APIView):
     @method_decorator(check_auth)

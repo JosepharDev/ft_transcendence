@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User
 from rest_framework.response import Response
 from django.core.files.base import ContentFile
+from rest_framework.serializers import ValidationError
 import pyotp
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,17 +25,17 @@ class UserSerializer(serializers.ModelSerializer):
         nickname = validated_data.get('nickname')
         avatar = validated_data.get('avatar')
         if not username and not nickname and not avatar:
-            return Response({"message": "Not Updated"})
+            raise ValidationError("Not Updated", code=200)
         if username:
             user = User.objects.filter(username=username).first()
             if user and user.id != instance.id:
-                return Response({"message": "Username already exist"})
+                raise ValidationError("Username already exist", code=200)
             else:
                 instance.username = username
         if nickname:
             user = User.objects.filter(nickname=nickname).first()
             if user and user.id != instance.id:
-                return Response({"message": "Nickname already exist"})
+                raise ValidationError("Nickname already exist", code=200)
             else:
                 instance.nickname = nickname
         if avatar:
