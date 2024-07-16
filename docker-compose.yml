@@ -16,7 +16,7 @@ services:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
       interval: 10s
       timeout: 3s
-      retries: 3
+      retries: 10
   backend:
     build: Backend/docker
     image: backend_image
@@ -39,8 +39,8 @@ services:
       - 443:443
     restart: 'always'
     volumes:
-    - ./Frontend:/var/www/html
-    - ./media:/var/www/html/media
+    - ./Frontend:/var/www/html/Frontend
+    - ./media:/var/www/html/Frontend/media
     depends_on:
       - backend
     networks:

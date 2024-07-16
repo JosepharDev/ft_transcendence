@@ -23,8 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
         username = validated_data.get('username')
         nickname = validated_data.get('nickname')
         avatar = validated_data.get('avatar')
-        # if not username and not nickname and not avatar:
-        #     return Response({"message": "Not Updated"})
+        if not username and not nickname and not avatar:
+            return Response({"message": "Not Updated"})
         if username:
             user = User.objects.filter(username=username).first()
             if user and user.id != instance.id:

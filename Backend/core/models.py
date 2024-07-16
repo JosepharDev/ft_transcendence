@@ -36,7 +36,7 @@ class User(AbstractUser):
     profile_status = models.CharField(max_length=20, choices=Status.choices, default=Status.OFFLINE)
     game_status = models.CharField(max_length=20, choices=GameStatus.choices, default=GameStatus.NO_GAME)
     status_count = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to="profile_images", default="default.jpg")
+    avatar = models.ImageField(default="default.jpg")
     lang = models.CharField(max_length=20, choices=language.choices, default=language.eng)
     game_type = models.CharField(max_length=1, default="N")
     current_room = models.CharField(max_length=30, blank=True)
