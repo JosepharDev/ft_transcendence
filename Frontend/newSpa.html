@@ -231,7 +231,7 @@
 
     /**********************************************************************/
 
-    body {
+body {
     background-color: #f8f9fa;
 }
 
@@ -269,10 +269,9 @@
 .row .bobo .online2,
 .row .bobo .tournament {
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     height: 300px;
-    /* border: none; */
-    border-radius: 26px;
+    border-radius: 30px;
 }
 
 .row .bobo a {
@@ -1166,6 +1165,7 @@ input[type="file"]
 
 }
 
+
 #updateProfile, #searchBtn
 {
     border-radius: 30px;
@@ -1176,11 +1176,18 @@ input[type="file"]
 
 
 #fortySignin:active, #signinBtn:active, #toggle-2fa-btn:active, #searchBtn:active,
-#updateProfile:active
+#updateProfile:active, #localbtn:active, #onlinebtn:active, #onlineFourbtn:active, #tournamentbtn:active
 {
     transform: scale(0.9);
 }
 
+
+#localbtn, #onlinebtn, #onlineFourbtn, #tournamentbtn
+{
+    border: 0px solid green;
+    color: white;
+    box-shadow: none;
+}
 
 #signinBtn, #fortySignin, #toggle-2fa-btn, #followBtnUser
 {
