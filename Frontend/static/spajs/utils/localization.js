@@ -56,7 +56,8 @@ export const translations = {
         scoreWin:  "First player to score 7 wins.",
         leave: "Leave",
         alreadyPlaying: "Already Playing/Lobby",
-        waiting: "waiting for players..."
+        waiting: "waiting for players...",
+        ready : "Ready",
     },
     es: {
         tournament: "Torneo",
@@ -114,7 +115,7 @@ export const translations = {
         leave: "Salir",
         alreadyPlaying: "Ya jugando / Sala",
         waiting:  "Esperando a los jugadores...",
-
+        ready: "Listo",
     },
     fr: {
         tournament: "Tournoi",
@@ -171,6 +172,8 @@ export const translations = {
         leave : "Quitter",
         alreadyPlaying: "Déjà en jeu / Lobby",
         waiting: "En attendant des joueurs...",
+        ready: "Prêt",
+
     }
 };
 

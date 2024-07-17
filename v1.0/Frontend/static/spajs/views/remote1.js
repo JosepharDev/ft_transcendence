@@ -99,7 +99,8 @@ export async function remoteGame1()
 
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
-            drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            const r = translations[dataGlobal.selectedLanguage]['ready'];
+            drawText(r, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
         else if (data.message.action === 'reconnect')
             {

@@ -35,10 +35,16 @@ export async function remoteGame4()
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
 
-        if (data.message.action == 'iam' )
+        if (data.message.action === 'NA')
+        {
+            let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
+            drawText(temp, canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+            console.log('ayoo');
+        }
+        else if (data.message.action == 'iam' )
         {
             let wt = translations[dataGlobal.selectedLanguage]['waiting'];
-            drawText(wt, canvas.width / 2 - 70, canvas.height / 2, "#FFF");           
+            drawText(wt, canvas.width / 2 - 100, canvas.height / 2, "#FFF");           
         }
         else if (data.message.action === 'finish')
         {
@@ -105,7 +111,8 @@ export async function remoteGame4()
 
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
-            drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            const r = translations[dataGlobal.selectedLanguage]['ready'];
+            drawText(r, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
         else if (data.message.action === 'reconnect')
         {

@@ -30,7 +30,7 @@ export async function profileFriend2(id, is_me)
             if (response.status === 401)
             {
                 let messageStatus = await response.json();
-                if (messageStatus === "2fa")
+                if (messageStatus.message === "2fa")
                     pushUrl('/twofa');
                 else
                 {
@@ -76,7 +76,7 @@ export async function profileFriend2(id, is_me)
                         if (response.status === 401)
                         {
                             let messageStatus = await response.json();
-                            if (messageStatus === "2fa")
+                            if (messageStatus.message === "2fa")
                                 pushUrl('/twofa');
                             else
                             {

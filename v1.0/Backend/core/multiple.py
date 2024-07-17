@@ -22,6 +22,7 @@ import string
 
 canvasWidth__ = 800
 canvasHeight__ = 450
+background_tasks = set()
 
 def vec2(x, y):
     return {'x': x, 'y': y}
@@ -36,12 +37,30 @@ rooms = {}
 curr_room = ""
 
 
+# async def decode_jwt(token):
+#     try:
+#         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+#         user_id = payload['user_id']
+#         return await database_sync_to_async (User.objects.get)(pk=user_id)
+#     except (jwt.DecodeError, User.DoesNotExist):
+#         return None
+
+
 async def decode_jwt(token):
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['user_id']
-        return await database_sync_to_async (User.objects.get)(pk=user_id)
-    except (jwt.DecodeError, User.DoesNotExist):
+        token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id = token['user_id']
+        if token['2fa'] == True:
+            if token['code'] == False:
+                return None
+        try:
+            user = await database_sync_to_async (User.objects.get)(pk=user_id)
+            return user
+        except User.DoesNotExist:
+            return None
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
         return None
 
 
@@ -369,8 +388,8 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
     async def start_game(self, event):
         # Start the game loop
+        global background_tasks
         message = event['message']
-        
         
         if rooms[self.room_room].start == False:
             return
@@ -426,8 +445,9 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             # except:
             #     pass
 
-        asyncio.create_task(gameLoop())
-
+        task = asyncio.create_task(gameLoop())
+        background_tasks.add(task)
+        task.add_done_callback(background_tasks.discard)
 
 
 

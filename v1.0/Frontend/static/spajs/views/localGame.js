@@ -54,8 +54,8 @@ export async function localPong(isVsBot, objConf)
         </div>
     </div>
     <canvas id="pongCanvas" width="600" height="400"></canvas>
-    <p data-localize="left">${translations[dataGlobal.selectedLanguage]['right']}</p><span>fasdfasf<span>
-    <p data-localize="right">${translations[dataGlobal.selectedLanguage]['right']}</p>
+    <p>W , S   |   <span>&#8593;</span> , <span>&#8595;</span></p>
+
 </div>`;
 
 

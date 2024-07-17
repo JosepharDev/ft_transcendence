@@ -75,18 +75,19 @@ export async function remoteTournament()
 
         if (data.message.action === 'NA')
         {
-            drawText("ALREADY IN LOBBY", canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+            let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
+            drawText(temp, canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
             console.log('ayoo');
         }
         else if (data.message.action == 'iam' )
         {
             iamuser = data.message.iam;
-            drawText("WAITING...", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            let temp = translations[dataGlobal.selectedLanguage]['waiting'];
+            drawText(temp, canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
             
         }
         else if (data.message.action === 'finish')
         {          
-            alert (`${data.message.winner} WON`);
             pushUrl('/');
         }
         else if (data.message.action === 'data')
@@ -129,7 +130,8 @@ export async function remoteTournament()
             // `<h2 id="remoteUsers">${data.message.user1} vs ${data.message.user2}</h2>`;
             ctx.fillStyle = "rgba(0,0,0,1)"
             ctx.fillRect(0,0,canvas.width, canvas.height);
-            drawText("READY", canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+            const r = translations[dataGlobal.selectedLanguage]['ready'];
+            drawText(r, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
         }
         else if (data.message.action === 'allusers')
         {

@@ -24,7 +24,7 @@ export async function settingView()
             if (res.status === 401)
             {
                 let messageStatus = await res.json();
-                if (messageStatus === "2fa")
+                if (messageStatus.message === "2fa")
                     pushUrl('/twofa');
                 else
                 {
@@ -133,7 +133,7 @@ async function profileFormSettingsEvent(e)
             if (res.status === 401)
             {
                 let messageStatus = await res.json();
-                if (messageStatus === "2fa")
+                if (messageStatus.message === "2fa")
                     pushUrl('/twofa');
                 else
                 {
@@ -230,7 +230,7 @@ async function twofaButtonEvent(e)
             if (res.status === 401)
             {
                 let messageStatus = await res.json();
-                if (messageStatus === "2fa")
+                if (messageStatus.message === "2fa")
                     pushUrl('/twofa');
                 else
                 {
