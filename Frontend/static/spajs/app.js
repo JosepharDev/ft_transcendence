@@ -1,4 +1,4 @@
-import {dataGlobal, url} from './views/globalData.js'
+import {dataGlobal, logout, url} from './views/globalData.js'
 import {homeView} from './views/home.js'
 import {urlLocationHandler} from './utils/locationHandles.js'
 import {urlRoute} from './utils/urlRoute.js'
@@ -25,11 +25,7 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
         if (js.message === "success")
         {
             document.querySelector("#navi").classList.add("hideme");
-            dataGlobal.socketOnline.close();
-            dataGlobal.socketOnline.close();
-            dataGlobal.sentOnline = false;
-            dataGlobal.selectedLanguage = "en",
-            dataGlobal.gotData = false
+            logout();
             pushUrl('/signin');
         }
     }

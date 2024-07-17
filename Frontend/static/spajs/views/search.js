@@ -63,8 +63,11 @@ async function searchElementsEvent(e)
                     pushUrl('/twofa');
                 else
                 {
+                    console.log("WEEEEEEEEEEEE###################");
+                    console.log("WEEEEEEEEEEEE####@@@@@@@@@@@@@@@@@@@@@###############");
                     logout();
                     pushUrl('/signin');
+
                 }
                 return 
             }

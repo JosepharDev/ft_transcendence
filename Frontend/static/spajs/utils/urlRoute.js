@@ -10,11 +10,12 @@ export function urlRoute (event)
 
 export function pushUrl (href)
 {
+    console.log(`morioaaaaaaa`);
     try
     {
+        console.log(`-> ${href}   ${window.location.pathname}`);
         if (href === window.location.pathname)
             return ;
-        console.log(`-> ${href}   ${window.location.pathname}`)
 
 
         if (history.state && history.state.href === href) {

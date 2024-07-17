@@ -45,13 +45,18 @@ export function removeEvents(data)
 
 export function logout()
 {
-    if (!dataGlobal.socketOnline !== -1)
+    console.log('error is here');
+    if (dataGlobal.socketOnline !== -1)
     {
+        console.log('error is here1');
+        console.log(dataGlobal.socketOnline);
         dataGlobal.socketOnline.close()
+        console.log('error is here2');
         dataGlobal.socketOnline = -1;
     }
     dataGlobal.sentOnline = false
     dataGlobal.selectedLanguage = "en"
     dataGlobal.gotData = false
+    console.log('not here');
 }
 

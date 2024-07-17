@@ -69,6 +69,7 @@ export async function urlLocationHandler()
         let ff = await checkAuthentication();
         if (ff !== 'authenticated')
         {
+            console.log("(ff !== 'authenticated')");
             signin();
             return ;
         }

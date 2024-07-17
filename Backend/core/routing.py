@@ -4,6 +4,7 @@ from . import pc2
 from . import onlineConsumer
 from . import multiple
 from . import tournament
+from . import defaultConsumer
 
 
 websocket_urlpatterns = [
@@ -11,4 +12,5 @@ websocket_urlpatterns = [
     re_path(r"ws/onlineUser/(?P<room_name>\w+)/$", onlineConsumer.OnlineConsumer.as_asgi()),
     re_path(r"ws/multiple/(?P<room_name>\w+)/$", multiple.multipleConsumeTest.as_asgi()),
     re_path(r"ws/tournament/(?P<room_name>\w+)/$", tournament.TournamentConsumer.as_asgi()),
+     re_path(r"^ws/.*$", defaultConsumer.DefaultConsumer.as_asgi()),  # Catch-all route
 ]
