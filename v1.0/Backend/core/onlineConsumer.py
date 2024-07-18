@@ -67,7 +67,7 @@ class OnlineConsumer(AsyncWebsocketConsumer):
 
         self.justDisconnect = False
         await self.update_user_status(self.scope['user'].id, "online")
-        print('increase online ==============<>')
+
 
 
     @database_sync_to_async
@@ -83,18 +83,17 @@ class OnlineConsumer(AsyncWebsocketConsumer):
                 if user.status_count == 0:
                     user.profile_status = status
             user.save()
-            print("cccccccccccccccccccccccccccccccccccccccccccddddddddddddccccccc")
-            print(user.profile_status)
+
+
 
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             pass
 
     async def disconnect(self, close_code):
         if (self.justDisconnect):
             return
         await self.update_user_status(self.scope['user'].id, "offline")
-        print('decrease online ==============<>')
+
 
 
 

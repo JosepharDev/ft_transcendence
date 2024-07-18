@@ -4,10 +4,7 @@ import { dataGlobal } from './globalData.js';
 import { translations } from '../utils/localization.js';
 
 
-
-
-
-export async function  homeView()
+export function  homeView()
 {
     let app = document.getElementById('app');
     app.innerHTML = homeHtml();

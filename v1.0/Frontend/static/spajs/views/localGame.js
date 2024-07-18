@@ -39,7 +39,7 @@ export function localPingPong()
 }
 
 
-export async function localPong(isVsBot, objConf)
+export function localPong(isVsBot, objConf)
 {
   
   let app = document.getElementById("app");

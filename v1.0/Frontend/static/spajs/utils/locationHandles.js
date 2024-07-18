@@ -97,7 +97,7 @@ export async function urlLocationHandler()
         localPingPong()
     else if (path === "/remote4")
         remoteGame4();
-    else if (path === "/s")
+    else if (path === "/profile")
         profileFriend2(0, true);
     else if (path === "/settings")
         settingView();

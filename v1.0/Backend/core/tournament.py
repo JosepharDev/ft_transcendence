@@ -157,7 +157,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             if self.scope['user'].game_type == 'T':
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
-                print(f"=============>{self.room_room}")
+
                 
                 plr1Username = ''
                 plr2Username = ''
@@ -332,9 +332,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             message = json.loads(text_data)
-            print ("receievevvevevve")
-            print (message)
-            print (self.iam_playing)
+
             if (message['action'] == 'P' and self.iam_playing):
                 if (rooms[self.room_room].paddle_1.id == self.scope['user'].id): 
                     rooms[self.room_room].isKeyPdPressed_1 = True

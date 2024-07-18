@@ -47,7 +47,7 @@ export async function settingView()
             enableOrDisable = 'disable2fa';
         }
             
-        console.log("AYPPPPPPPPPPPPPPPP")
+
         app.innerHTML = settingsHtml(isEnable, enableOrDisable);
         
         let profileFormSettings =  document.getElementById('profile-form');
@@ -143,7 +143,7 @@ async function profileFormSettingsEvent(e)
                 return 
             }
             isupdated.textContent = 'Not valid input';
-            isupdated.style.color = 'red';
+            isupdated.style.color = '#dc3545';
         }
         else
         {
@@ -151,13 +151,13 @@ async function profileFormSettingsEvent(e)
             if (messageStatus.message === "success")
             {
                 isupdated.textContent = 'updated succesfully';
-                isupdated.style.color = '#508D4E';
+                isupdated.style.color = '#5dbea3';
                 document.getElementById('avatarProfile').src = messageStatus.avatar;
             }
             else
             {
                 isupdated.textContent = messageStatus.message;
-                isupdated.style.color = 'red';
+                isupdated.style.color = '#dc3545';
             }
         }
     }
@@ -195,7 +195,7 @@ async function twofaButtonEvent(e)
             body: formData,
         });
     
-        console.log("i did fetch");
+
         
         if (response.ok)
         {
@@ -239,7 +239,7 @@ async function twofaButtonEvent(e)
                 }
                 return 
             }
-            console.log("nothing update");
+
         }
     }
     catch (err)

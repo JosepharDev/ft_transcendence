@@ -150,7 +150,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             if self.scope['user'].game_type == 'P':
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
-                print(f"=============>{self.room_room}")
+
 
                 data_ = {
                     'action': 'reconnect',
@@ -187,10 +187,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
 
 
-
-        print("=======================================================================================")
-        print(self.scope['user'].username)
-        print("=======================================================================================")
 
         userData = {
                         'username' : self.scope['user'].username,
@@ -266,7 +262,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         try:
             if self.justDisconnect:
-                print ("GAGAGAGGGGGG")
                 return
 
             if (self.iam_playing == False):
@@ -286,7 +281,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         except:
             pass
-        print (f"quite room {self.room_room}")
+
 
 
 

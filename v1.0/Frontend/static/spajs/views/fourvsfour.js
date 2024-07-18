@@ -11,7 +11,7 @@ export async function remoteGame4()
     <div class="player-info">
     </div>
     <canvas id="pongCanvas" width="800" height="450"></canvas>
-    <p id="scoreWin" data-localize="scoreWin">${translations[dataGlobal.selectedLanguage]['scoreWin']}</p>
+    <p id="scoreWin" data-localize="score2Win">${translations[dataGlobal.selectedLanguage]['score2Win']}</p>
     </div>`;
 
     const canvas = document.getElementById('pongCanvas');
@@ -39,7 +39,6 @@ export async function remoteGame4()
         {
             let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
             drawText(temp, canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
-            console.log('ayoo');
         }
         else if (data.message.action == 'iam' )
         {

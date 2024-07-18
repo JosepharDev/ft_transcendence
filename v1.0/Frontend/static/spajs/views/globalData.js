@@ -45,7 +45,7 @@ export function removeEvents(data)
 
 export function logout()
 {
-    console.log('error is here');
+
     try
     {
         if (dataGlobal.socketOnline !== -1)
@@ -59,6 +59,6 @@ export function logout()
     dataGlobal.sentOnline = false
     dataGlobal.selectedLanguage = "en"
     dataGlobal.gotData = false
-    console.log('not here');
+
 }
 

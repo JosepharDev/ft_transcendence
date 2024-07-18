@@ -6,7 +6,6 @@ import { dataGlobal, logout } from "./globalData.js";
 
 export function searchView ()
 {
-    console.log("lolo")
     let app = document.getElementById("app");
     app.innerHTML = searchHtml();
 
@@ -63,8 +62,6 @@ async function searchElementsEvent(e)
                     pushUrl('/twofa');
                 else
                 {
-                    console.log("WEEEEEEEEEEEE###################");
-                    console.log("WEEEEEEEEEEEE####@@@@@@@@@@@@@@@@@@@@@###############");
                     logout();
                     pushUrl('/signin');
 
@@ -94,7 +91,6 @@ async function searchElementsEvent(e)
                 resultsContainer.appendChild(userItem);
                 document.getElementById(`userlink${user.id}`).addEventListener('click', (event) => {
                     event.preventDefault();
-                    console.log(`/userid/${user.id}`)
                     pushUrl(`/userid/${user.id}`);
                 });
             });

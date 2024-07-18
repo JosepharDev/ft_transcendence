@@ -87,13 +87,9 @@ async function submitSigninEvent(e)
                 }
             }
         }
-            
-            
-        console.log('ffffffffffffffffff');
-        let js = await res.json();
-        console.log(js.message);
 
-    
+        let js = await res.json();
+  
     
         error_msg.textContent = '';
         if (js.message === "success")
@@ -101,7 +97,7 @@ async function submitSigninEvent(e)
             document.querySelector("#navi").classList.remove("hideme");
             sendOnline();
 
-            console.log(js.avatar);
+
 
 
             pushUrl('/home');

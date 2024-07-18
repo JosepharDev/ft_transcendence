@@ -44,7 +44,6 @@ export async function remoteGame1()
         {
             let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
             drawText(temp, canvas.width / 2 - 70, canvas.height / 2, "#FFF"); 
-            console.log('ayoo');
         }
         else if (data.message.action == 'iam' )
         {

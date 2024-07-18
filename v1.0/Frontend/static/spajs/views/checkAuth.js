@@ -1,4 +1,3 @@
-import { pushUrl } from "../utils/urlRoute.js";
 import { dataGlobal } from "./globalData.js";
 import { sendOnline } from "./online.js";
 
@@ -12,9 +11,6 @@ export async function checkAuthentication()
     );
     
     let answer = await AJAX_(request);
-
-    console.log('message');
-    console.log(answer.message);
 
     if (answer.message === "authenticated")
     {

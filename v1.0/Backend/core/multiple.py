@@ -154,9 +154,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             if self.scope['user'].game_type == '4':
                 self.iam_playing = True
                 self.room_room = await self.getCurrentRoom(self.scope['user'].id)
-                print(f"=============>{self.room_room}")
-
-
 
 
                 data_ = {
@@ -199,10 +196,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                         {"type": "send.message", "message": {'action': 'NA'}} )
             return
 
-
-        print("=======================================================================================")
-        print(self.scope['user'].username)
-        print("=======================================================================================")
 
 
         userData = {
@@ -312,7 +305,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
         # except:
         #     pass
-        print (f"quite room {self.room_room}")
+
 
 
 

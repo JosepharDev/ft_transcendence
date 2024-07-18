@@ -29,7 +29,6 @@ export async function twofaView()
     document.getElementById('signinForm').addEventListener('submit', submitOTPButtonEvent);
     document.getElementById('logoutbtn').addEventListener('click', async () =>
     {
-        console.log('yo');
         try
         {
             const request = new Request(
