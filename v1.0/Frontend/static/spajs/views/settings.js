@@ -268,26 +268,47 @@ async function submit2faButtonEvent(e)
     try
     {
         let res = await fetch(request);
-        let js = await res.json();
-
-        if (js.message === "success")
+        
+        if (res.ok)
         {
-            const image = document.getElementById('2fa-image');
-            const input = document.getElementById('twofa-code');
-            const button = document.getElementById('toggle-2fa-btn');
-            const submitButton = document.getElementById('submit-2fa-btn');
-
-
-            button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
-            button.setAttribute('data-localize', 'disable2fa');
-            image.style.display = 'none';
-            input.style.display = 'none';
-            submitButton.style.display = 'none';
-            isoptok.textContent = "";
+            let js = await res.json();
+            if (js.message === "success")
+            {
+                const image = document.getElementById('2fa-image');
+                const input = document.getElementById('twofa-code');
+                const button = document.getElementById('toggle-2fa-btn');
+                const submitButton = document.getElementById('submit-2fa-btn');
+    
+                button.textContent = translations[dataGlobal.selectedLanguage]['disable2fa'];
+                button.setAttribute('data-localize', 'disable2fa');
+                image.style.display = 'none';
+                input.style.display = 'none';
+                submitButton.style.display = 'none';
+                isoptok.textContent = "";
+            }
+            else
+            {
+                isoptok.textContent = js.message;
+            }
         }
         else
         {
-            isoptok.textContent = "Wrong Code";
+            if (res.status === 401)
+            {
+                let messageStatus = await res.json();
+                if (messageStatus.message === "2fa")
+                    pushUrl('/twofa');
+                else
+                {
+                    logout();
+                    pushUrl('/signin');
+                }
+                return 
+            }
+            else
+            {
+                isoptok.textContent = "Wrong Code";
+            }
         }
     }
     catch (err)

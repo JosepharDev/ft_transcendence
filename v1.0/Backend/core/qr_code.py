@@ -29,7 +29,7 @@ class twofa(APIView):
         if "code" in request.POST:
             code = request.POST['code']
             if not code:
-                return Response({"message": "code messing"}, status=401)
+                return Response({"message": "Code messing"}, status=200)
             else:
                 tp = pyotp.TOTP(user.otp_secret)
                 if tp.now() == code:
@@ -40,7 +40,7 @@ class twofa(APIView):
                     response.set_cookie(key='jwt', value=token, httponly=True, samesite='Lax', secure=True)
                     return response
                 else:
-                    return Response({"message": "invalid code"}, status=401)
+                    return Response({"message": "Invalid code"}, status=200)
                 
         else:
             return Response({"message": "Code Not Found"}, status=400)
