@@ -74,7 +74,7 @@ function settingsHtml(isEnable, datalocalise)
         <form id="profile-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label id="upload-label" for="profile-image" data-localize="uploadAvatar">${translations[dataGlobal.selectedLanguage]['uploadAvatar']}</label>
-                <input type="file" class="form-control-file" id="profile-image">
+                <input type="file" class="form-control-file" id="profile-image" accept="image/*">
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" id="username" data-localize="enterUsername" placeholder="${translations[dataGlobal.selectedLanguage]['enterUsername']}">
