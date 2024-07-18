@@ -49,5 +49,5 @@ networks:
     net:
       driver: bridge
 volumes:
-  - media
-  - db
+  media:
+  db:
