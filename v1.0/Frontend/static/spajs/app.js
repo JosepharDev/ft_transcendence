@@ -27,11 +27,14 @@ document.getElementById("logout").addEventListener('click', async (e)=>{
             document.querySelector("#navi").classList.add("hideme");
             logout();
             pushUrl('/signin');
+            return ;
         }
     }
     catch (err)
     {
     }
+
+    logout();
     pushUrl('/signin');
 })
 
@@ -71,29 +74,6 @@ async function ini()
 
     window.onpopstate = urlLocationHandler;
     window.route = urlRoute;
-
-    const authStatus = await checkAuthentication();
-    console.log(authStatus);
-    if (authStatus === "2fa") {
-        if (window.location.pathname !== '/twofa')
-            pushUrl('/twofa');
-        else
-            twofaView();
-        return;
-    }
-    else if (authStatus === 'signin')
-    {
-        console.log('authStatus');
-        if (window.location.pathname !== '/signin')
-            pushUrl('/signin');
-        else
-            signin()
-        return ;
-    }
-
-    let lang = await getLanguage();
-    if (lang.message === "success")
-        dataGlobal.selectedLanguage = lang.language;
 
     urlLocationHandler();
 }

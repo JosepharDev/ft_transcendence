@@ -4,7 +4,7 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 
 
-class DefaultConsumer(WebsocketConsumer):  # Add this class
+class DefaultConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
         # self.send(text_data=json.dumps({

@@ -4,7 +4,7 @@ import {localPingPong, localPong} from "./../views/localGame.js"
 import {settingView} from "./../views/settings.js"
 import {profileFriend2} from "./../views/profile2.js"
 import {remoteGame1} from "./../views/remote1.js"
-import { dataGlobal, removeEvents, closSockets } from "../views/globalData.js"
+import { dataGlobal, removeEvents, closSockets, logout } from "../views/globalData.js"
 import { signin } from "../views/signin.js";
 import { twofaView } from "../views/twofa.js";
 import { checkAuthentication } from "../views/checkAuth.js"
@@ -44,8 +44,9 @@ export async function urlLocationHandler()
     const parsedUrl =  (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '')
     
     
-    if ( location !== '/signin' && location !== '/twofa')
-    {
+    const authStatus = await checkAuthentication();
+    if (authStatus === "authenticated")
+    {   
         if (!dataGlobal.gotData)
         {
             let dataUser = await getLanguage();
@@ -57,41 +58,28 @@ export async function urlLocationHandler()
                 dataGlobal.gotData = true;
             }
         }
-        const nav = document.querySelector("#navi");
-        if (location !== '/signup' && nav.classList.contains('hideme'))
-            nav.classList.remove("hideme");
 
-    }
+        if (!dataGlobal.sentOnline)
+            sendOnline();
 
+        if (location === '/signin' || location === "/twofa" || location === "/signup")
+            path = '/'; 
 
-    if (location === '/signin')
-    {
-        let ff = await checkAuthentication();
-        if (ff !== 'authenticated')
-        {
-            console.log("(ff !== 'authenticated')");
-            signin();
-            return ;
-        }
-        const nav = document.querySelector("#navi");
+        const nav = document.getElementById("navi");
         if (nav.classList.contains('hideme'))
             nav.classList.remove("hideme");
     }
-    else if (location === '/twofa')
+    else
     {
-        let ff = await checkAuthentication();
-        if (ff !== 'authenticated')
-        {
-            twofaView();
-            return ;
-        }
-        const nav = document.querySelector("#navi");
-        if (nav.classList.contains('hideme'))
-            nav.classList.remove("hideme");
+        logout();
+        const nav = document.getElementById("navi");
+        if (!nav.classList.contains('hideme'))
+            nav.classList.add("hideme");
+
+        if (location !== '/signin' && location !== "/twofa" && location !== "/signup")
+            path = '/signin';
+        // if (location === '/signup')
     }
-
-
-    console.log("locationHandler");
 
 
     if (parsedUrl === "/userid/:id")
@@ -112,6 +100,10 @@ export async function urlLocationHandler()
         remoteTournament();
     else if (path === "/signup")
         signup()
+    else if (path === "/signin")
+        signin()
+    else if (path === "/twofa")
+        twofaView()
     else
         homeView();
 }

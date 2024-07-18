@@ -36,7 +36,7 @@ services:
     image: frontend_image
     container_name: nginx_container
     ports:
-      - 443:443
+      - 8000:443
     restart: 'always'
     volumes:
     # - ./Frontend:/var/www/html/Frontend
