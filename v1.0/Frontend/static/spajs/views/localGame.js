@@ -54,7 +54,7 @@ export async function localPong(isVsBot, objConf)
         </div>
     </div>
     <canvas id="pongCanvas" width="600" height="400"></canvas>
-    <p>W , S   |   <span>&#8593;</span> , <span>&#8595;</span></p>
+    <p id="hint" >W , S   |   <span>&#8593;</span> , <span>&#8595;</span></p>
 
 </div>`;
 
@@ -295,7 +295,7 @@ export async function localPong(isVsBot, objConf)
     
     const ball = new Ball (vec2(20,20), vec2(13, 13), 10);
     const paddle1 = new Paddle(vec2(0,70), vec2(10,10), 13, 90, 1, objConf.vs1);
-    const paddle2 = new Paddle(vec2(canvas.width - 13, 20), vec2(10,10), 13, 90, 2, objConf.vs2);
+    const paddle2 = new Paddle(vec2(canvas.width - 13, 100), vec2(10,10), 13, 90, 2, objConf.vs2);
     
     flag = isVsBot;
 
@@ -362,6 +362,7 @@ export async function localPong(isVsBot, objConf)
     
     }
 
+    drawText(translations[dataGlobal.selectedLanguage]['ready'], canvas.width / 2 - 30, canvas.height / 2, "#FFF");  
     dataGlobal.idTimeOut = setTimeout (()=>
     {
       dataGlobal.idInterval = setInterval(gameLoop, 20)

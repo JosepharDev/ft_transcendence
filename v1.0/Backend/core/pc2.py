@@ -69,7 +69,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             user = User.objects.get(pk=user_id)
             return user.game_status
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -78,7 +77,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             user = User.objects.get(pk=user_id)
             return user.current_room
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -92,7 +90,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                 user.game_type = 'P' #1vs1pong
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -102,7 +99,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             user.current_room = rm
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
 
@@ -180,13 +176,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                             self.user_group_name,
                             {"type": "send.message", "message": {'action': 'NA'}} )
 
-            #later send users data
-            # await self.channel_layer.group_send(
-            #         self.room_room,
-            #         {"type": "send.message", "message": {'action': 'users', 'user1': queue[0]['username'], 'user2':
-            #                                             self.scope['user'].username}}
-            #     )
-
 
             return
         elif (stats == 'waiting'):
@@ -231,8 +220,8 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     }
                 )
 
-            paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1,  queue[0]['id'])
-            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  self.scope['user'].id)
+            paddle_1 = Paddle(vec2(0,100), vec2(10,10), 10 , 90, 1,  queue[0]['id'])
+            paddle_2 = Paddle(vec2(canvasWidth__ - 10, 100), vec2(10, 10), 10 ,90, 2,  self.scope['user'].id)
             ball = Ball(vec2(20,20), vec2(9,9), 10)
 
             rooms[self.room_room] = roomData(paddle_1, paddle_2, ball, queue[0], queue[1])
@@ -304,9 +293,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         try:
             message = json.loads(text_data)
-            print ("receievevvevevve")
-            print (message)
-            print (self.iam_playing)
+
             if (message['action'] == 'P' and self.iam_playing):
                 if (rooms[self.room_room].paddle_1.id == self.scope['user'].id):
                     rooms[self.room_room].isKeyPdPressed_1 = True
@@ -341,7 +328,6 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             self.iam_playing = True
             await self.update_userStatus(self.scope['user'].id, 'in_game')
             
-            # return #added this 05/30  11:15
 
         await self.send(text_data=json.dumps({"message": message}))
 
@@ -369,7 +355,7 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
         await asyncio.sleep(2)
         async def gameLoop():
-            # try:
+            try:
                 while True:
 
                     if (self.room_room not in rooms):
@@ -401,7 +387,9 @@ class PongConsumerTest(AsyncWebsocketConsumer):
                     if (kk):
                         await asyncio.sleep(1)
                     await asyncio.sleep(0.016666)
-            # except:
+            except:
+                await self.finishMatch(self.room_room)
+
             #     pass #add no_game
 
         asyncio.create_task(gameLoop())
@@ -411,27 +399,31 @@ class PongConsumerTest(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def finishMatch(self, roomName):
-        u1 = User.objects.get(pk=rooms[roomName].user1_id)
-        u2 = User.objects.get(pk=rooms[roomName].user2_id)
+        try:
 
-        u1.game_status = "no_game"
-        u2.game_status = "no_game"
+            u1 = User.objects.get(pk=rooms[roomName].user1_id)
+            u2 = User.objects.get(pk=rooms[roomName].user2_id)
 
-        if rooms[roomName].paddle_1.score > rooms[roomName].paddle_2.score:
-            u1.wins += 1
-            u2.loses += 1
-        else:
-            u2.wins += 1
-            u1.loses += 1
+            u1.game_status = "no_game"
+            u2.game_status = "no_game"
 
-        u1.save()
-        u2.save()
+            if rooms[roomName].paddle_1.score > rooms[roomName].paddle_2.score:
+                u1.wins += 1
+                u2.loses += 1
+            else:
+                u2.wins += 1
+                u1.loses += 1
 
-        match_ = Match(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[roomName].paddle_1.score,
-                            plr2_count=rooms[roomName].paddle_2.score)
+            u1.save()
+            u2.save()
 
-        match_.save()
-        del rooms[roomName]
+            match_ = Match(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[roomName].paddle_1.score,
+                                plr2_count=rooms[roomName].paddle_2.score)
+
+            match_.save()
+            del rooms[roomName]
+        except:
+            pass
 
 
     

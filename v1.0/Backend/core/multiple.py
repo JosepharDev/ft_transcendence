@@ -370,8 +370,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
         if message['action'] == "play":
             self.iam_playing = True
             await self.update_userStatus(self.scope['user'].id, 'in_game')
-            
-            # return #added this 05/30  11:15
+
 
         await self.send(text_data=json.dumps({"message": message}))
 
@@ -399,7 +398,7 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
         # await asyncio.sleep(2)
         async def gameLoop():
-            # try:
+            try:
                 await asyncio.sleep(4)
 
                 while True:
@@ -442,8 +441,8 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
                     await asyncio.sleep(0.0166666)
 
-            # except:
-            #     pass
+            except:
+                await self.finishMatch(self.room_room)
 
         task = asyncio.create_task(gameLoop())
         background_tasks.add(task)
@@ -453,30 +452,28 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def finishMatch(self, roomName):
+        try:
+            u1 = User.objects.get(pk=rooms[roomName].user1_id)
+            u2 = User.objects.get(pk=rooms[roomName].user2_id)
+            u3 = User.objects.get(pk=rooms[roomName].user3_id)
+            u4 = User.objects.get(pk=rooms[roomName].user4_id)
 
-        u1 = User.objects.get(pk=rooms[roomName].user1_id)
-        u2 = User.objects.get(pk=rooms[roomName].user2_id)
-        u3 = User.objects.get(pk=rooms[roomName].user3_id)
-        u4 = User.objects.get(pk=rooms[roomName].user4_id)
+
+            u1.game_status = "no_game"
+            u2.game_status = "no_game"
+            u3.game_status = "no_game"
+            u4.game_status = "no_game"
+
+            
+            u1.save()
+            u2.save()
+            u3.save()
+            u4.save()
 
 
-        u1.game_status = "no_game"
-        u2.game_status = "no_game"
-        u3.game_status = "no_game"
-        u4.game_status = "no_game"
-
-        
-        u1.save()
-        u2.save()
-        u3.save()
-        u4.save()
-
-        # match_ = Match(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[roomName].paddle_1.score,
-                            # plr2_count=rooms[roomName].paddle_2.score)
-
-        # match_.save()
-        del rooms[roomName]
-
+            del rooms[roomName]
+        except:
+            pass
 
     
 def paddleCollisionWithEdges(paddle, canvasHeight):

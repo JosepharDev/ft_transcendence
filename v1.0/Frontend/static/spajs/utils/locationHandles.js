@@ -78,7 +78,12 @@ export async function urlLocationHandler()
 
         if (location !== '/signin' && location !== "/twofa" && location !== "/signup")
             path = '/signin';
-        // if (location === '/signup')
+        if (location === "/twofa" && (authStatus !== '2fa'))
+                path = '/signin';
+        if (authStatus === "2fa")
+            path = "/twofa";
+
+
     }
 
 

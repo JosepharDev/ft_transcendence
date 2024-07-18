@@ -4,7 +4,9 @@ import { pushUrl } from "../utils/urlRoute.js";
 
 export async function twofaView()
 {
-    document.querySelector("#navi").classList.add("hideme");
+    const nav = document.getElementById("navi")
+    if (!nav.classList.contains('hideme'))
+        nav.classList.add("hideme");
 
     let app = document.getElementById("app");
     app.innerHTML = `
@@ -15,10 +17,9 @@ export async function twofaView()
             </div>
             <form id="signinForm">
                 <div class="form-group">
-                    <label for="username">otp</label>
                     <input type="text" class="form-control otpcode" id="username"  placeholder="Enter otp code">
                 </div>
-                <button id="mybtn" type="submit" class="btn btn-primary btn-block">Submit</button>
+                <button id="mybtntwofa" type="submit" class="btn btn-primary btn-block">Submit</button>
                 <button id="logoutbtn" type="button" class="btn btn-primary btn-block">Logout</button>
             </form>
             <p id="error-msg"><p>
@@ -68,28 +69,28 @@ async function submitOTPButtonEvent(e)
             }
         );
 
-
         let res = await fetch(request);
         if (!res.ok)
         {
-            console.log("resd not ok");
-        }
-
-        let js = await res.json();
-        console.log("res ok");
-        console.log(js);
-
-        if (js.message === "success")
-        {
-            document.querySelector("#navi").classList.remove("hideme");
-
-            sendOnline();
-
-            pushUrl('/');
+            document.getElementById('error-msg').textContent = 'Invalid OTP Code';
         }
         else
         {
-            document.getElementById('error-msg').textContent = 'Invalid OTP Code';
+            let js = await res.json();
+    
+            if (js.message === "success")
+            {
+                const navi = document.getElementById("navi");
+                if (navi.classList.contains('hideme'))
+                    navi.classList.remove("hideme");
+                sendOnline();
+                pushUrl('/');
+            }
+            else
+            {
+                document.getElementById('error-msg').textContent = js.message;
+            }
+
         }
     }
     catch (err)

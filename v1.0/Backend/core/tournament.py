@@ -83,7 +83,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             user = User.objects.get(pk=user_id)
             return user.current_room
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -97,7 +96,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 user.game_type = 'T' #TOURNAMENT
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
     @database_sync_to_async
@@ -107,7 +105,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             user.current_room = rm
             user.save()
         except User.DoesNotExist:
-            # Handle the case where the user does not exist
             return "ERR"
 
 
@@ -230,12 +227,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                         {"type": "send.message", "message": {'action': 'NA'}} )
             return
 
-
-        print("=======================================================================================")
-        print(self.scope['user'].username)
-        print("=======================================================================================")
-
-
         userData = {
                         'id'       : self.scope['user'].id,
                         'username' : self.scope['user'].nickname,
@@ -313,35 +304,33 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         global queue
 
-        # try:
-        if self.justDisconnect:
-            return
+        try:
+            if self.justDisconnect:
+                return
 
-        if (self.iam_playing == False):
-            await self.update_userStatus(self.scope['user'].id, 'no_game')
+            if (self.iam_playing == False):
+                await self.update_userStatus(self.scope['user'].id, 'no_game')
 
-            for pl in queue:
-                if pl["id"] == self.scope['user'].id:
-                    queue.remove(pl)
-                    break
+                for pl in queue:
+                    if pl["id"] == self.scope['user'].id:
+                        queue.remove(pl)
+                        break
 
 
-        await self.channel_layer.group_discard(
-            self.user_group_name, self.channel_name
-        )
+            await self.channel_layer.group_discard(
+                self.user_group_name, self.channel_name
+            )
 
-        await self.channel_layer.group_discard(
-            self.room_room, self.channel_name
-        )
+            await self.channel_layer.group_discard(
+                self.room_room, self.channel_name
+            )
 
-        # except:
-        #     pass
-        print (f"quite room {self.room_room}")
-
+        except:
+            pass
 
 
     async def receive(self, text_data):
-        # try:
+        try:
             message = json.loads(text_data)
             print ("receievevvevevve")
             print (message)
@@ -364,8 +353,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     rooms[self.room_room].isKeyPdPressed_2 = False
                     rooms[self.room_room].whichKeyPressed_2 = message['code']
             
-        # except:
-        #     pass 
+        except:
+            pass 
 
     async def send_message(self, event):
         try:
@@ -374,8 +363,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             if message['action'] == "play":
                 self.iam_playing = True
                 await self.update_userStatus(self.scope['user'].id, 'in_game')
-                
-                # return #added this 05/30  11:15
+
 
             await self.send(text_data=json.dumps({"message": message}))
         except:
@@ -404,146 +392,148 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
         # await asyncio.sleep(2)
         async def gameLoop():
-            # try:
+            try:
 
-            while rooms[self.room_room].round in [-1, 0, 1, 2]:
-                await asyncio.sleep(4)
-                if rooms[self.room_room].round == -1:
-                    rooms[self.room_room].round = 0
+                while rooms[self.room_room].round in [-1, 0, 1, 2]:
+                    await asyncio.sleep(4)
+                    if rooms[self.room_room].round == -1:
+                        rooms[self.room_room].round = 0
 
-                if rooms[self.room_room].round == 0:
-                    rooms[self.room_room].paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match1_1)
-                    rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].match1_2)
-                    rooms[self.room_room].ball = Ball(vec2(20,20), vec2(12,12), 10)
+                    if rooms[self.room_room].round == 0:
+                        rooms[self.room_room].paddle_1 = Paddle(vec2(0,100), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match1_1)
+                        rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 100), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].match1_2)
+                        rooms[self.room_room].ball = Ball(vec2(20,20), vec2(12,12), 10)
 
-                    data_ = {
+                        data_ = {
+                                    'action': 'users', 
+                                    'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1],
+                                    'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
+                                    'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match1_1],
+                                    'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match1_2],
+                                }
+                        
+                        await self.channel_layer.group_send(
+                            self.room_room,
+                                {"type": "send.message", "message": data_} )
+
+                        pass
+
+                    elif rooms[self.room_room].round == 1:
+                        rooms[self.room_room].paddle_1 = Paddle(vec2(0,100), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match2_1)
+                        rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 100), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].match2_2)
+                        
+                        data_ = {
+                                    'action': 'users', 
+                                    'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
+                                    'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
+                                    'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match2_1],
+                                    'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match2_2],
+                                }   
+
+                        await self.channel_layer.group_send(
+                            self.room_room,
+                                {"type": "send.message", "message": data_} )
+
+
+                    elif rooms[self.room_room].round == 2:
+                        rooms[self.room_room].paddle_1 = Paddle(vec2(0,100), vec2(10,10), 10 , 90, 1, rooms[self.room_room].win1)
+                        rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 100), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].win2)
+                        
+                        data_ = {
                                 'action': 'users', 
-                                'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1],
-                                'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
-                                'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match1_1],
-                                'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match1_2],
-                            }
-                    
-                    await self.channel_layer.group_send(
-                        self.room_room,
-                            {"type": "send.message", "message": data_} )
-
-                    pass
-
-                elif rooms[self.room_room].round == 1:
-                    rooms[self.room_room].paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1, rooms[self.room_room].match2_1)
-                    rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].match2_2)
-                    
-                    data_ = {
-                                'action': 'users', 
-                                'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
-                                'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
-                                'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match2_1],
-                                'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].match2_2],
+                                'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].win1],
+                                'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].win2],
+                                'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].win1],
+                                'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].win2],
                             }   
 
-                    await self.channel_layer.group_send(
-                        self.room_room,
-                            {"type": "send.message", "message": data_} )
+                        await self.channel_layer.group_send(
+                            self.room_room,
+                                {"type": "send.message", "message": data_} )
 
-
-                elif rooms[self.room_room].round == 2:
-                    rooms[self.room_room].paddle_1 = Paddle(vec2(0,70), vec2(10,10), 10 , 90, 1, rooms[self.room_room].win1)
-                    rooms[self.room_room].paddle_2 = Paddle(vec2(canvasWidth__ - 10, 20), vec2(10, 10), 10 ,90, 2,  rooms[self.room_room].win2)
+                    await asyncio.sleep(4)
+                    rooms[self.room_room].is_playing = True
                     
-                    data_ = {
-                            'action': 'users', 
-                            'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].win1],
-                            'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].win2],
-                            'avatar1' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].win1],
-                            'avatar2' : rooms[self.room_room].mapiAvatar[rooms[self.room_room].win2],
-                        }   
+                    while True:
 
-                    await self.channel_layer.group_send(
-                        self.room_room,
-                            {"type": "send.message", "message": data_} )
+                        if (self.room_room not in rooms):
+                            rooms[self.room_room].is_playing = False
+                            break
+                        
+                        if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_2.score >= 7:
+                            if rooms[self.room_room].paddle_1.score >= 7:
+                                winn = rooms[self.room_room].paddle_1.id
+                            else:
+                                winn = rooms[self.room_room].paddle_2.id
 
-                await asyncio.sleep(4)
-                rooms[self.room_room].is_playing = True
-                
-                while True:
+                            if rooms[self.room_room].round == 0:
+                                rooms[self.room_room].win1 = winn
+                                typeMatch = 'round1'
+                            elif rooms[self.room_room].round == 1:
+                                rooms[self.room_room].win2 = winn
+                                typeMatch = 'round2'
+                            else:
+                                typeMatch = 'final'
+
+
+                            win1 = '...'
+                            if rooms[self.room_room].win1 != -1:
+                                win1 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win1]
+                            
+                            win2 = '...'
+                            if rooms[self.room_room].win2 != -1:
+                                win2 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win2]
+                            
+
+                            dta = {
+                                "action": typeMatch,
+                                'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1], #change to nickname
+                                'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
+                                'user3': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
+                                'user4': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
+                                'win1' : win1,
+                                'win2' : win2,
+                                "winner" : rooms[self.room_room].mapiUsername[winn]
+                            }
+                            await self.channel_layer.group_send(
+                                    self.room_room, {"type": "send.message", "message": dta}
+                                )
+
+                            rooms[self.room_room].is_playing = False
+                            if typeMatch == 'final':
+                                await self.finishMatch(self.room_room)
+                            
+                            break
+
+
+
+                        kk = await gameState(self.room_room)
+
+
+                        await self.channel_layer.group_send(
+                            self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
+                        )
+
+                        if (kk):
+                            await asyncio.sleep(1)
+
+                        await asyncio.sleep(0.016)
 
                     if (self.room_room not in rooms):
-                        rooms[self.room_room].is_playing = False
-                        break
-                    
-                    if rooms[self.room_room].paddle_1.score >= 7 or rooms[self.room_room].paddle_2.score >= 7:
-                        if rooms[self.room_room].paddle_1.score >= 7:
-                            winn = rooms[self.room_room].paddle_1.id
-                        else:
-                            winn = rooms[self.room_room].paddle_2.id
-
-                        if rooms[self.room_room].round == 0:
-                            rooms[self.room_room].win1 = winn
-                            typeMatch = 'round1'
-                        elif rooms[self.room_room].round == 1:
-                            rooms[self.room_room].win2 = winn
-                            typeMatch = 'round2'
-                        else:
-                            typeMatch = 'final'
-
-
-                        win1 = '...'
-                        if rooms[self.room_room].win1 != -1:
-                            win1 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win1]
-                        
-                        win2 = '...'
-                        if rooms[self.room_room].win2 != -1:
-                            win2 = rooms[self.room_room].mapiUsername[rooms[self.room_room].win2]
-                        
-
-                        dta = {
-                            "action": typeMatch,
-                            'user1': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_1], #change to nickname
-                            'user2': rooms[self.room_room].mapiUsername[rooms[self.room_room].match1_2],
-                            'user3': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_1],
-                            'user4': rooms[self.room_room].mapiUsername[rooms[self.room_room].match2_2],
-                            'win1' : win1,
-                            'win2' : win2,
-                            "winner" : rooms[self.room_room].mapiUsername[winn]
-                        }
-                        await self.channel_layer.group_send(
-                                self.room_room, {"type": "send.message", "message": dta}
-                            )
-
-                        rooms[self.room_room].is_playing = False
-                        if typeMatch == 'final':
-                            await self.finishMatch(self.room_room)
-                        
-                        break
-
-
-
-                    kk = await gameState(self.room_room)
-
-
-                    await self.channel_layer.group_send(
-                        self.room_room, {"type": "send.message", "message": rooms[self.room_room].json()}
-                    )
-
-                    if (kk):
-                        await asyncio.sleep(1)
-
-                    await asyncio.sleep(0.016)
-
-                if (self.room_room not in rooms):
-                    return
-                rooms[self.room_room].round += 1
-                if rooms[self.room_room].round == 1 or rooms[self.room_room].round == 2:
-                    # await asyncio.sleep(4)
-                    rooms[self.room_room].paddle_1.score = 0
-                    rooms[self.room_room].paddle_2.score = 0
-                    rooms[self.room_room].ball = Ball(vec2(20,20), vec2(10,10), 10)
-                    rooms[self.room_room].isKeyPdPressed_1 = False
-                    rooms[self.room_room].isKeyPdPressed_2 = False
-                    # await gameLoop()
-            # except:
+                        return
+                    rooms[self.room_room].round += 1
+                    if rooms[self.room_room].round == 1 or rooms[self.room_room].round == 2:
+                        # await asyncio.sleep(4)
+                        rooms[self.room_room].paddle_1.score = 0
+                        rooms[self.room_room].paddle_2.score = 0
+                        rooms[self.room_room].ball = Ball(vec2(20,20), vec2(10,10), 10)
+                        rooms[self.room_room].isKeyPdPressed_1 = False
+                        rooms[self.room_room].isKeyPdPressed_2 = False
+                        # await gameLoop()
+            except:
+                await self.finishMatch(self.room_room)
             #     pass
+
 
         task = asyncio.create_task(gameLoop())
         background_tasks.add(task)
@@ -552,43 +542,41 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def finishMatch(self, roomName):
+        try:
+            if rooms[self.room_room].paddle_1.score >= 7:
+                winn = rooms[self.room_room].paddle_1.id
+            else:
+                winn = rooms[self.room_room].paddle_2.id
 
-        if rooms[self.room_room].paddle_1.score >= 7:
-            winn = rooms[self.room_room].paddle_1.id
-        else:
-            winn = rooms[self.room_room].paddle_2.id
-
-        u1 = User.objects.get(pk=rooms[roomName].user1_id)
-        u2 = User.objects.get(pk=rooms[roomName].user2_id)
-        u3 = User.objects.get(pk=rooms[roomName].user3_id)
-        u4 = User.objects.get(pk=rooms[roomName].user4_id)
+            u1 = User.objects.get(pk=rooms[roomName].user1_id)
+            u2 = User.objects.get(pk=rooms[roomName].user2_id)
+            u3 = User.objects.get(pk=rooms[roomName].user3_id)
+            u4 = User.objects.get(pk=rooms[roomName].user4_id)
 
 
-        if winn == rooms[roomName].user1_id:
-            u1.tournament_wins += 1
-        elif winn == rooms[roomName].user2_id:
-            u2.tournament_wins += 1
-        elif winn == rooms[roomName].user3_id:
-            u3.tournament_wins += 1
-        else:
-            u4.tournament_wins += 1
+            if winn == rooms[roomName].user1_id:
+                u1.tournament_wins += 1
+            elif winn == rooms[roomName].user2_id:
+                u2.tournament_wins += 1
+            elif winn == rooms[roomName].user3_id:
+                u3.tournament_wins += 1
+            else:
+                u4.tournament_wins += 1
 
-        u1.game_status = "no_game"
-        u2.game_status = "no_game"
-        u3.game_status = "no_game"
-        u4.game_status = "no_game"
+            u1.game_status = "no_game"
+            u2.game_status = "no_game"
+            u3.game_status = "no_game"
+            u4.game_status = "no_game"
 
-        
-        u1.save()
-        u2.save()
-        u3.save()
-        u4.save()
+            
+            u1.save()
+            u2.save()
+            u3.save()
+            u4.save()
 
-        # match_ = Match(player1=u1, player2=u2, winner=u1, loser=u2, plr1_count=rooms[roomName].paddle_1.score,
-                            # plr2_count=rooms[roomName].paddle_2.score)
-
-        # match_.save()
-        del rooms[roomName]
+            del rooms[roomName]
+        except:
+            pass
 
 
     
