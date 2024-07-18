@@ -8,7 +8,6 @@ def generate_jwt(user, code):
         "username": user.username,
         "2fa": user.is_2fa,
         "code": code,
-        # "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(seconds=60)
-        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=1)
+        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=10)
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')

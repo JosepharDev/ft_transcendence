@@ -22,7 +22,6 @@ services:
     image: backend_image
     container_name: djangocontainer
     volumes:
-      # - ./Backend:/usr/src/app
       - media:/usr/src/media/
     restart: 'always'
     networks:
@@ -39,7 +38,6 @@ services:
       - 8000:443
     restart: 'always'
     volumes:
-    # - ./Frontend:/var/www/html/Frontend
     - media:/var/www/html/media/
     depends_on:
       - backend
@@ -51,19 +49,5 @@ networks:
     net:
       driver: bridge
 volumes:
-  media: {}
-  db: {}
-
-# volumes:
-#   vol:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: .
-#       o: bind
-  # db:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: ./database
-  #     o: bind
+  - media
+  - db

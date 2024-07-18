@@ -1,23 +1,11 @@
-
 import json
 import random
-
-from channels.generic.websocket import WebsocketConsumer
-
 from channels.generic.websocket import AsyncWebsocketConsumer
-
-from asgiref.sync import async_to_sync
 import asyncio
 from channels.db import database_sync_to_async
-from .jwt import generate_jwt
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, HttpResponseBadRequest
 import jwt
-from django.core.serializers import serialize
-from django.db.models import Q
-import jwt, datetime
 from .models import User, Match
 from django.conf import settings
-import random
 import string
 
 canvasWidth__ = 700
@@ -36,13 +24,6 @@ rooms = {}
 curr_room = ""
 
 
-# async def decode_jwt(token):
-#     try:
-#         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-#         user_id = payload['user_id']
-#         return await database_sync_to_async (User.objects.get)(pk=user_id)
-#     except (jwt.DecodeError, User.DoesNotExist):
-#         return None
 async def decode_jwt(token):
     try:
         token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])

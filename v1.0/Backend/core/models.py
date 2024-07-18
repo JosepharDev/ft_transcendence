@@ -3,10 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinLengthValidator
 from django.core.exceptions import ValidationError
 
-def validate_input(value):
-    if value.strip() == '':
-        raise ValidationError("You must provide more than just whitespace.")
-
 class User(AbstractUser):
     class GameStatus(models.TextChoices):
         IN_GAME = "in game", "In Game"

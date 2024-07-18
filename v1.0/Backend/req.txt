@@ -2,7 +2,6 @@ django
 requests
 qrcode
 djangorestframework
-django-otp
 channels
 daphne
 pyotp

@@ -1,9 +1,8 @@
-# from django.urls
-from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from django.conf import settings
 from .models import User
 import jwt
+
 def check_auth(func):
     def wrapper(request, *args, **kwargs):
         token = request.COOKIES.get('jwt')

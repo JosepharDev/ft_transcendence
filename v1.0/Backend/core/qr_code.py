@@ -1,8 +1,6 @@
 from .jwt import generate_jwt
-import jwt
 import qrcode
 import pyotp
-import base64
 from io import BytesIO
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,7 +8,7 @@ from .models import User
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
-from .utils import check_auth, check_auth1
+from .utils import check_auth1
 
 class twofa(APIView):
     @method_decorator(check_auth1)
