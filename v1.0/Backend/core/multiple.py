@@ -258,9 +258,6 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 self.user_group_name,
                 {"type": "send.message", "message": {'action': 'iam', 'iam': 1}}
             )
-{
-    usrname
-}
 
     async def disconnect(self, close_code):
         global queue
