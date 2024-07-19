@@ -258,34 +258,36 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                 self.user_group_name,
                 {"type": "send.message", "message": {'action': 'iam', 'iam': 1}}
             )
-
+{
+    usrname
+}
 
     async def disconnect(self, close_code):
         global queue
 
-        # try:
-        if self.justDisconnect:
-            return
+        try:
+            if self.justDisconnect:
+                return
 
-        if (self.iam_playing == False):
-            await self.update_userStatus(self.scope['user'].id, 'no_game')
+            if (self.iam_playing == False):
+                await self.update_userStatus(self.scope['user'].id, 'no_game')
 
-            for pl in queue:
-                if pl["id"] == self.scope['user'].id:
-                    queue.remove(pl)
-                    break
+                for pl in queue:
+                    if pl["id"] == self.scope['user'].id:
+                        queue.remove(pl)
+                        break
 
 
-        await self.channel_layer.group_discard(
-            self.user_group_name, self.channel_name
-        )
+            await self.channel_layer.group_discard(
+                self.user_group_name, self.channel_name
+            )
 
-        await self.channel_layer.group_discard(
-            self.room_room, self.channel_name
-        )
+            await self.channel_layer.group_discard(
+                self.room_room, self.channel_name
+            )
 
-        # except:
-        #     pass
+        except:
+            pass
 
 
 
@@ -339,14 +341,17 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
             pass 
 
     async def send_message(self, event):
-        message = event["message"]
+        try:
+            message = event["message"]
 
-        if message['action'] == "play":
-            self.iam_playing = True
-            await self.update_userStatus(self.scope['user'].id, 'in_game')
+            if message['action'] == "play":
+                self.iam_playing = True
+                await self.update_userStatus(self.scope['user'].id, 'in_game')
 
 
-        await self.send(text_data=json.dumps({"message": message}))
+            await self.send(text_data=json.dumps({"message": message}))
+        except:
+            pass
 
 
 
@@ -384,11 +389,11 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
                         if rooms[self.room_room].paddle_1.score >= 7:
                             id1 = rooms[self.room_room].paddle_1.id
                             id2 = rooms[self.room_room].paddle_2.id
-                            winn = f'{rooms[self.room_room].mapiUsername[id1]} and {rooms[self.room_room].mapiUsername[id2]}'
+                            winn = f'{rooms[self.room_room].mapiUsername[id1]} , {rooms[self.room_room].mapiUsername[id2]}'
                         elif rooms[self.room_room].paddle_4.score >= 7:
                             id1 = rooms[self.room_room].paddle_3.id
                             id2 = rooms[self.room_room].paddle_4.id
-                            winn = f'{rooms[self.room_room].mapiUsername[id1]} and {rooms[self.room_room].mapiUsername[id2]}'
+                            winn = f'{rooms[self.room_room].mapiUsername[id1]} , {rooms[self.room_room].mapiUsername[id2]}'
                             
                         dta = {
                             "action": 'finish',

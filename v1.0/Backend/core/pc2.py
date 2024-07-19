@@ -296,15 +296,17 @@ class PongConsumerTest(AsyncWebsocketConsumer):
             pass 
 
     async def send_message(self, event):
-        message = event["message"]
+        try:
+            message = event["message"]
 
-        if message['action'] == "play":
-            self.iam_playing = True
-            await self.update_userStatus(self.scope['user'].id, 'in_game')
-            
+            if message['action'] == "play":
+                self.iam_playing = True
+                await self.update_userStatus(self.scope['user'].id, 'in_game')
+                
 
-        await self.send(text_data=json.dumps({"message": message}))
-
+            await self.send(text_data=json.dumps({"message": message}))
+        except:
+            pass
 
 
     @database_sync_to_async
