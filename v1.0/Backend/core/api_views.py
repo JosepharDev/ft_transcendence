@@ -72,7 +72,7 @@ class SearchUsers(APIView):
     @method_decorator(check_auth)
     def get(self, request):
         if "q" not in request.query_params:
-            return HttpResponseBadRequest("required query parameter")
+            return Response({"messaage": "Query Parameter Required"}, status=400)
         query = request.query_params.get('q', None)
         if query:
             users = User.objects.filter(username__icontains=query)
