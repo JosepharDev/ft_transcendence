@@ -101,14 +101,12 @@ class multipleConsumeTest(AsyncWebsocketConsumer):
 
         token = self.scope['cookies'].get('jwt')
         if not token:
-            print({"message": "unauthorized"})
             return
         try:
             self.scope['user'] =  await decode_jwt(token)
             if (not self.scope['user']):
                 return
         except jwt.ExpiredSignatureError:
-            print({"message": "Expired Signature"})
             return
 
 

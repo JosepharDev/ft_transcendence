@@ -98,9 +98,11 @@ async function submitSigninEvent(e)
             sendOnline();
 
 
-
-
-            pushUrl('/home');
+            console.log(window.location.pathname);
+            if (window.location.pathname !== "/home")
+                pushUrl('/home');
+            else
+                pushUrl('/');
         }
 
     }

@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ["SECRET_KEY"]
-OTP_SECRET_KEY = b'1%c/5Cr~-PEy2Q&+_.p+jJSi/;|W+|'
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -159,8 +159,7 @@ AUTH_USER_MODEL = 'core.User'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# MEDIA_URL = os.path.join(BASE_DIR, '/media/') # serve
-# MEDIA_ROOT = os.path.join(BASE_DIR, '/media') # save | it save it and create dir  in not exist
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

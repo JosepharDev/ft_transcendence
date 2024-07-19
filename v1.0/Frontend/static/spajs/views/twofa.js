@@ -41,7 +41,10 @@ export async function twofaView()
             let js = await res.json();
             if (js.message === "success")
             {
-                pushUrl('/signin');
+                if (window.location.pathname !== "/signin")
+                    pushUrl('/signin');
+                else
+                    pushUrl('/signinn');
             }
         }
         catch (err)
@@ -83,7 +86,10 @@ async function submitOTPButtonEvent(e)
                 if (navi.classList.contains('hideme'))
                     navi.classList.remove("hideme");
                 sendOnline();
-                pushUrl('/');
+                if (window.location.pathname !== "/")
+                    pushUrl('/');
+                else
+                    pushUrl('/home');
             }
             else
             {

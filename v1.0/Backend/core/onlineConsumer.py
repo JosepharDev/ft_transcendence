@@ -33,7 +33,6 @@ class OnlineConsumer(AsyncWebsocketConsumer):
 
         token = self.scope['cookies'].get('jwt')
         if not token:
-            print({"message": "unauthorized"})
             return
     
         try:
@@ -41,7 +40,6 @@ class OnlineConsumer(AsyncWebsocketConsumer):
             if (not self.scope['user']):
                 return; 
         except jwt.ExpiredSignatureError:
-            print({"message": "Expired Signature"})
             return
 
         self.justDisconnect = False

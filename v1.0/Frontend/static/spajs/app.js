@@ -39,7 +39,11 @@ async function ini()
             {
                 document.querySelector("#navi").classList.add("hideme");
                 logout();
-                pushUrl('/signin');
+
+                if (window.location.pathname !== "/signin")
+                    pushUrl('/signin');
+                else
+                    pushUrl('/signinr');
                 return ;
             }
         }
@@ -48,7 +52,10 @@ async function ini()
         }
     
         logout();
-        pushUrl('/signin');
+        if (window.location.pathname !== "/signin")
+            pushUrl('/signin');
+        else
+            pushUrl('/signinr');
     })
     
     document.getElementById("home").addEventListener('click', async (e)=>{

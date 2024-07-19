@@ -1,9 +1,0 @@
-/api/signin GET
-    - responde with password and otp_secret should not return it in json
-
-name in urlpattern
-
-/api/user/id/ GET
-    - return all information even secret ones
-/api/friends/ POST
-    UserFriends.post() missing 1 required positional argument: 'id'
