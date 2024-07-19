@@ -1,0 +1,214 @@
+import {dataGlobal} from "./globalData.js";
+import { pushUrl } from "../utils/urlRoute.js";
+import { translations } from "../utils/localization.js";
+
+
+export async function remoteGame4()
+{
+    let app = document.getElementById("app");
+    app.innerHTML = `
+    <div id="game-container">
+    <div class="player-info">
+    </div>
+    <canvas id="pongCanvas" width="800" height="450"></canvas>
+    <p id="scoreWin" data-localize="score2Win">${translations[dataGlobal.selectedLanguage]['score2Win']}</p>
+    </div>`;
+
+    const canvas = document.getElementById('pongCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 450;
+
+
+
+    const chatSocket = new WebSocket(
+        'wss://'
+        + window.location.host
+        + '/ws/multiple/'
+        + '3'
+        + '/'
+        );
+
+    dataGlobal.socketDisconnect.push(chatSocket);
+
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        if (data.message.action === 'NA')
+        {
+            let temp = translations[dataGlobal.selectedLanguage]['alreadyPlaying'];
+            drawText(temp, canvas.width / 2 - 100, canvas.height / 2, "#FFF"); 
+        }
+        else if (data.message.action == 'iam' )
+        {
+            let wt = translations[dataGlobal.selectedLanguage]['waiting'];
+            drawText(wt, canvas.width / 2 - 100, canvas.height / 2, "#FFF");           
+        }
+        else if (data.message.action === 'finish')
+        {
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            drawText(data.message.winner, canvas.width / 2 - 40, canvas.height / 2 - 30, "#FFF"); 
+            let wt = translations[dataGlobal.selectedLanguage]['aretheWinners'];
+            drawText(wt, canvas.width / 2 - 40, canvas.height / 2, "#FFF"); 
+        }
+        else if (data.message.action === 'data')
+        {
+            remoteGameLoop();
+            drawBall(data.message.ball.pos.x, data.message.ball.pos.y, data.message.ball.radius);
+            drawPaddle(
+                data.message.paddle_1.pos.x,
+                data.message.paddle_1.pos.y,
+                data.message.paddle_1.width,
+                data.message.paddle_1.height
+            );
+            drawPaddle(
+                data.message.paddle_2.pos.x,
+                data.message.paddle_2.pos.y,
+                data.message.paddle_2.width,
+                data.message.paddle_2.height
+            );
+
+
+            drawPaddle(
+                data.message.paddle_3.pos.x,
+                data.message.paddle_3.pos.y,
+                data.message.paddle_3.width,
+                data.message.paddle_3.height
+              );
+              drawPaddle(
+                data.message.paddle_4.pos.x,
+                data.message.paddle_4.pos.y,
+                data.message.paddle_4.width,
+                data.message.paddle_4.height
+              );
+
+
+            drawSceneGame();
+            drawText(data.message.paddle_1.score, canvas.width / 4, 50, "#FFF"); // Draw team1 score
+            drawText(data.message.paddle_4.score, 3 * canvas.width / 4, 50, "#FFF"); 
+        }
+        else if (data.message.action === 'users')
+        {
+            document.querySelector(".player-info").innerHTML =
+            `<div class="player">
+                    <img src="${data.message.avatar1}" alt="Player 1">
+                    <p id="player1-name">${data.message.user1}</p>
+                    
+                    <img src="${data.message.avatar2}" alt="Player 1">
+                    <p id="player1-name">${data.message.user2}</p>
+            </div>
+            <div class="player">
+                <img src="${data.message.avatar3}" alt="Player 2">
+                <p id="player2-name">${data.message.user3}</p>
+
+                <img src="${data.message.avatar4}" alt="Player 2">
+                <p id="player2-name">${data.message.user4}</p>
+            </div>
+        `
+
+            ctx.fillStyle = "rgba(0,0,0,1)"
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            const r = translations[dataGlobal.selectedLanguage]['ready'];
+            drawText(r, canvas.width / 2 - 20, canvas.height / 2, "#FFF"); 
+        }
+        else if (data.message.action === 'reconnect')
+        {
+            document.querySelector(".player-info").innerHTML =
+            `<div class="player">
+                    <img src="${data.message.avatar1}" alt="Player 1">
+                    <p id="player1-name">${data.message.user1}</p>
+                    
+                    <img src="${data.message.avatar2}" alt="Player 1">
+                    <p id="player1-name">${data.message.user2}</p>
+            </div>
+            <div class="player">
+                <img src="${data.message.avatar3}" alt="Player 2">
+                <p id="player2-name">${data.message.user3}</p>
+
+                <img src="${data.message.avatar4}" alt="Player 2">
+                <p id="player2-name">${data.message.user4}</p>
+            </div>
+        `
+        }
+
+
+    }
+
+
+
+    function onKeyDownEvent(e)
+    {
+        if (e.keyCode != 38 && e.keyCode != 40)  
+            return;
+
+        let msg = {
+            'action': 'P',
+            'code': e.keyCode,
+        }
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
+    }
+    function onKeyUpEvent(e)
+    {
+        if (e.keyCode != 38 && e.keyCode != 40)  
+            return;
+
+        let msg = {
+            'action': 'U',
+            'code': e.keyCode,
+        }
+        if (chatSocket.readyState === WebSocket.OPEN)
+            chatSocket.send(JSON.stringify(msg));
+    }
+
+    window.addEventListener("keydown", onKeyDownEvent)
+    window.addEventListener("keyup", onKeyUpEvent)
+    
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keydown', 'fun': onKeyDownEvent });
+    dataGlobal.deleteEvent.push ({'elem' : window, 'evnt': 'keyup', 'fun': onKeyUpEvent });
+
+
+    function drawText(text, x, y, color) {
+        ctx.fillStyle = color;
+        ctx.font = "20px Arial";
+        ctx.fillText(text, x, y);
+    }
+    
+    
+    function drawBall(x, y, radius)
+    {
+      ctx.fillStyle = "#FFF";
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    function remoteGameLoop()
+    {
+      ctx.fillStyle = "rgba(0, 0, 0, 1)"
+      ctx.fillRect(0,0,canvas.width, canvas.height);
+    }
+    
+    
+    function drawPaddle(x, y, width, height)
+    {
+      ctx.fillStyle  = "#FFF";
+      ctx.beginPath();
+    
+      ctx.fillRect(x, y, width, height);
+    }
+    
+    
+    function drawSceneGame()
+    {
+      ctx.strokeStyle = "#FFF";
+
+      ctx.beginPath();
+      ctx.lineWidth = 3;
+      ctx.moveTo(canvas.width/2, 0);
+      ctx.lineTo(canvas.width/2, canvas.height );
+      ctx.stroke();
+    }
+}
