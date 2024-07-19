@@ -98,7 +98,6 @@ async function submitSigninEvent(e)
             sendOnline();
 
 
-            console.log(window.location.pathname);
             if (window.location.pathname !== "/home")
                 pushUrl('/home');
             else

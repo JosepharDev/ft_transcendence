@@ -18,7 +18,6 @@ import { sendOnline } from "../views/online.js"
 
 export async function urlLocationHandler()
 {
-    console.log('popstate');
     try
     {
 

@@ -75,7 +75,6 @@ export function localPong(isVsBot, objConf)
 
     function handleKeyDownLocal(e)
     {
-        console.log(e.keyCode);
         keyPressed[e.keyCode] = true;
     }
     function handleKeyUpLocal(e)
