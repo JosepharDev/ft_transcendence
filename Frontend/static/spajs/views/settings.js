@@ -102,12 +102,12 @@ function settingsHtml(isEnable, datalocalise)
 async function profileFormSettingsEvent(e)
 {
     e.preventDefault();
-    const isupdated = document.getElementById('error-msg-update');
-    const username = document.getElementById('username').value;
-    const nickname = document.getElementById('nickname').value;
-    const profileImage = document.getElementById('profile-image').files[0];
     try
     {
+        const isupdated = document.getElementById('error-msg-update');
+        const username = document.getElementById('username').value;
+        const nickname = document.getElementById('nickname').value;
+        const profileImage = document.getElementById('profile-image').files[0];
         const formData = new FormData();
         if (username.length > 0)
             formData.append('username', username);    
@@ -250,23 +250,23 @@ async function twofaButtonEvent(e)
 
 async function submit2faButtonEvent(e)
 {
-    const code = document.getElementById('twofa-code').value;
-    const isoptok = document.getElementById('error-msg-twofa');
-
-    e.preventDefault();
-    let formData = new FormData();
-    formData.append('code', code);
-
-    const request = new Request(
-        '/api/signin/twofa/',
-        {
-            method: 'POST',
-            body: formData,
-        }
-    );
-
+    
     try
     {
+        const code = document.getElementById('twofa-code').value;
+        const isoptok = document.getElementById('error-msg-twofa');
+    
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('code', code);
+    
+        const request = new Request(
+            '/api/signin/twofa/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
         let res = await fetch(request);
         
         if (res.ok)
@@ -313,6 +313,7 @@ async function submit2faButtonEvent(e)
     }
     catch (err)
     {
+        const isoptok = document.getElementById('error-msg-twofa');
         isoptok.textContent = "Wrong Code";
     }
 }

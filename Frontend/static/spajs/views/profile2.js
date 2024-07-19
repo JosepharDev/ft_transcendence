@@ -6,11 +6,11 @@ import { dataGlobal, logout } from "./globalData.js";
 
 export async function profileFriend2(id, is_me)
 {
-    let app = document.getElementById("app");
-    app.innerHTML = profileFriendHtml();
-
+    
     try
     {
+        let app = document.getElementById("app");
+        app.innerHTML = profileFriendHtml();
 
         let jj = `/api/userid/${id}/`;
         if (is_me)

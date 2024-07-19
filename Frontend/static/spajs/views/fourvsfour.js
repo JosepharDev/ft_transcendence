@@ -5,6 +5,8 @@ import { translations } from "../utils/localization.js";
 
 export async function remoteGame4()
 {
+try
+{
     let app = document.getElementById("app");
     app.innerHTML = `
     <div id="game-container">
@@ -211,4 +213,10 @@ export async function remoteGame4()
       ctx.lineTo(canvas.width/2, canvas.height );
       ctx.stroke();
     }
+}
+catch (err)
+{
+
+}
+
 }

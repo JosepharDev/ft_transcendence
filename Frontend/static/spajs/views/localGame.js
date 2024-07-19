@@ -5,6 +5,8 @@ import { dataGlobal } from "./globalData.js";
 
 export function localPingPong()
 {
+try
+{
     
   let app = document.getElementById("app");
 
@@ -35,11 +37,17 @@ export function localPingPong()
       return;
     localPong(1, {game:"justTwo", vs1: username, vs2: username2})
 })
+}
+catch (err)
+{
 
+}
 }
 
 
 export function localPong(isVsBot, objConf)
+{
+try
 {
   
   let app = document.getElementById("app");
@@ -367,4 +375,9 @@ export function localPong(isVsBot, objConf)
       dataGlobal.idInterval = setInterval(gameLoop, 20)
     }, 2000)
 
+}
+catch (err)
+{
+
+}
 }

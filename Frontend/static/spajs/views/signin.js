@@ -4,6 +4,9 @@ import { sendOnline } from "./online.js";
 
 export async function signin()
 {
+try
+{
+
     document.querySelector("#navi").classList.add("hideme");
     
     let app = document.getElementById("app");
@@ -41,6 +44,11 @@ export async function signin()
     })
     
 }
+catch(err)
+{
+    
+}
+}
 
 
 
@@ -48,24 +56,24 @@ async function submitSigninEvent(e)
 {
     e.preventDefault();
     
-    const error_msg = document.getElementById('error-msg');
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const formData = new FormData();
-
-    formData.append('username', username);
-    formData.append('password', password);
-
-    const request = new Request(
-        '/api/signin/',
-        {
-            method: 'POST',
-            body: formData,
-        }
-    );
-
+    
     try
     {
+        const error_msg = document.getElementById('error-msg');
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const formData = new FormData();
+    
+        formData.append('username', username);
+        formData.append('password', password);
+    
+        const request = new Request(
+            '/api/signin/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
 
         let res = await fetch(request);
     
@@ -107,6 +115,7 @@ async function submitSigninEvent(e)
     }
     catch (err)
     {
+        const error_msg = document.getElementById('error-msg');
         error_msg.textContent = 'Error! Try again';
     }
 }

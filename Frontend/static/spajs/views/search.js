@@ -6,14 +6,21 @@ import { dataGlobal, logout } from "./globalData.js";
 
 export function searchView ()
 {
-    let app = document.getElementById("app");
-    app.innerHTML = searchHtml();
-
-    let searchButton = document.getElementById("search-form");
-    let sear = document.getElementById("search-input");
+    try
+    {
+        let app = document.getElementById("app");
+        app.innerHTML = searchHtml();
     
-    sear.addEventListener('input', searchElementsEvent);
-    searchButton.addEventListener('submit', searchElementsEvent);
+        let searchButton = document.getElementById("search-form");
+        let sear = document.getElementById("search-input");
+        
+        sear.addEventListener('input', searchElementsEvent);
+        searchButton.addEventListener('submit', searchElementsEvent);
+    }
+    catch (err)
+    {
+
+    }
 }
 
 function searchHtml()
@@ -36,21 +43,21 @@ function searchHtml()
 async function searchElementsEvent(e)
 {
     e.preventDefault();
-    var form = document.getElementById('search-form');
-
-
-    var formData = new FormData(form);
-    const request = new Request(
-        '/api/search/?' + new URLSearchParams(formData).toString(),
-        {
-            method: 'GET',
-        }
-    );
-
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = '';
     try
     {
+        let form = document.getElementById('search-form');
+    
+    
+        let formData = new FormData(form);
+        const request = new Request(
+            '/api/search/?' + new URLSearchParams(formData).toString(),
+            {
+                method: 'GET',
+            }
+        );
+    
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = '';
         let res = await fetch(request);
 
         if (!res.ok)
@@ -101,6 +108,7 @@ async function searchElementsEvent(e)
     }
     catch (error)
     {
+        const resultsContainer = document.getElementById('search-results');
         resultsContainer.innerHTML = `<div class="not-found" data-localize="notfound">${translations[dataGlobal.selectedLanguage]['notFound']}</div>`;
         return ;
     }

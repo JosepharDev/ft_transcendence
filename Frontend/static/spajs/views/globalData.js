@@ -16,31 +16,45 @@ export let dataGlobal = {
 
 export function closSockets(data)
 {
-    if (data.idInterval != -1)
+    try
     {
-        clearInterval(data.idInterval);
-        data.idInterval = -1;
-    }
+        if (data.idInterval != -1)
+        {
+            clearInterval(data.idInterval);
+            data.idInterval = -1;
+        }
+        
+        if (data.idTimeOut != -1)
+        {
+            clearTimeout(data.idTimeOut);
+            data.idTimeOut = -1;
+        }
     
-    if (data.idTimeOut != -1)
-    {
-        clearTimeout(data.idTimeOut);
-        data.idTimeOut = -1;
+    
+        data.socketDisconnect.forEach(element => {
+            element.close();
+        });
+        data.socketDisconnect = [];
     }
-
-
-    data.socketDisconnect.forEach(element => {
-        element.close();
-    });
-    data.socketDisconnect = [];
+    catch (err)
+    {
+        data.socketDisconnect = [];
+    }
 }
 
 export function removeEvents(data)
 {
-    data.deleteEvent.forEach(element => {
-        element.elem.removeEventListener(element.evnt, element.fun);
-    });
-    data.deleteEvent = [];
+    try
+    {
+        data.deleteEvent.forEach(element => {
+            element.elem.removeEventListener(element.evnt, element.fun);
+        });
+        data.deleteEvent = [];
+    }
+    catch (err)
+    {
+        data.deleteEvent = [];
+    }
 }
 
 export function logout()

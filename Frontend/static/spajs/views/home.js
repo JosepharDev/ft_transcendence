@@ -6,17 +6,24 @@ import { translations } from '../utils/localization.js';
 
 export function  homeView()
 {
-    let app = document.getElementById('app');
-    app.innerHTML = homeHtml();
-    const matches = document.querySelectorAll(".btn-sm");
-    if (matches)
+    try
     {
-        matches.forEach(match =>{
-            match.addEventListener("click", (e) => {
-                e.preventDefault();
-                pushUrl(e.target.href);
-            })
-        })   
+        let app = document.getElementById('app');
+        app.innerHTML = homeHtml();
+        const matches = document.querySelectorAll(".btn-sm");
+        if (matches)
+        {
+            matches.forEach(match =>{
+                match.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    pushUrl(e.target.href);
+                })
+            })   
+        }
+    }
+    catch (err)
+    {
+        
     }
 }
 

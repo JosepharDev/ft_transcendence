@@ -3,28 +3,36 @@ import { sendOnline } from "./online.js";
 
 export async function checkAuthentication()
 {
-    const request = new Request(
-        '/api/auth/',
-        {
-            method: 'GET',
-        }
-    );
-    
-    let answer = await AJAX_(request);
-
-    if (answer.message === "authenticated")
+    try
     {
-        if (!dataGlobal.sentOnline)
-        {
-            sendOnline();
-        }
-        return 'authenticated';
-    }
+        const request = new Request(
+            '/api/auth/',
+            {
+                method: 'GET',
+            }
+        );
+        
+        let answer = await AJAX_(request);
     
-    if (answer.message === "2fa")
-        return '2fa'
-    else
+        if (answer.message === "authenticated")
+        {
+            if (!dataGlobal.sentOnline)
+            {
+                sendOnline();
+            }
+            return 'authenticated';
+        }
+        
+        if (answer.message === "2fa")
+            return '2fa'
+        else
+            return 'signin'
+    }
+    catch (err)
+    {
+        // console.log('checkauth')
         return 'signin'
+    }
 }
 
 
@@ -38,6 +46,7 @@ export async function AJAX_(req)
     }
     catch (error)
     {
+        // console.log('ajax')
         return {message: "ERROR"};
     }
 }

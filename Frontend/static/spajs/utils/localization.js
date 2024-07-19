@@ -182,55 +182,6 @@ export const translations = {
 
 
 
-document.getElementById("language-selector").addEventListener("change", async function() {
-    const selectedLanguage = this.value;
-    dataGlobal.selectedLanguage = selectedLanguage;
-
-
-    document.querySelectorAll("[data-localize]").forEach(element => {
-        let key = element.getAttribute("data-localize");
-        if (element.hasAttribute('id'))
-        {
-            if (element.id === "followBtnUser")
-            {
-                const btnVal = element.textContent;
-                if (btnVal === "Follow" || btnVal === "Seguir" || btnVal === "Suivre")
-                    key = "follow";
-                else
-                    key = "unfollow";
-            }
-        }
-        element.textContent = translations[selectedLanguage][key];
-
-        if (element.hasAttribute('placeholder'))
-        {
-            element.setAttribute('placeholder', translations[selectedLanguage][key]);
-        }
-    });
-
-    try
-    {
-        const formData = new FormData();
-        formData.append('language', selectedLanguage);    
-
-        const request = new Request(
-            '/api/update/language/',
-            {
-                method: 'POST',
-                body: formData,
-            }
-        );
-
-
-        let res = await fetch(request);
-    }
-    catch (err)
-    {
-
-    }
-
-});
-
 // Set default language to English
 // document.getElementById("language-selector").value = "en";
 // document.getElementById("language-selector").dispatchEvent(new Event("change"));

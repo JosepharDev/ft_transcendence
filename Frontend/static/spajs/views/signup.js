@@ -4,6 +4,8 @@ import { sendOnline } from "./online.js";
 
 export async function signup()
 {
+try
+{
     document.querySelector("#navi").classList.add("hideme");
     
     let app = document.getElementById("app");
@@ -37,6 +39,11 @@ export async function signup()
         pushUrl('/signin');
     })
 }
+catch (err)
+{
+
+}
+}
 
 
 
@@ -44,15 +51,15 @@ async function submitSigninEvent(e)
 {
     e.preventDefault();
     
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const formData = new FormData();
-
-    formData.append('username', username);
-    formData.append('password', password);
-
+    
     try
     {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const formData = new FormData();
+    
+        formData.append('username', username);
+        formData.append('password', password);
         const request = new Request(
             '/api/signup/',
             {

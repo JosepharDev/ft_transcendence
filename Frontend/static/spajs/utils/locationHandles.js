@@ -85,7 +85,7 @@ export async function urlLocationHandler()
             if (authStatus === "2fa")
                 path = "/twofa";
         }
-    
+        // console.log(path)
     
         if (path === '/remote')
             remoteGame1();
@@ -114,6 +114,7 @@ export async function urlLocationHandler()
     }
     catch (err)
     {
+        // console.log("catch here");
         signin();
     }
 }
