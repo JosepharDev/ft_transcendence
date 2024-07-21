@@ -2,63 +2,54 @@ services:
   - type: web
     name: db
     env: docker
-    image: postgres
-    containerName: db_container
-    restartPolicy: always
-    networks:
-      - net
-    envVarsFile: env.env
-    volumes:
-      - path: /var/lib/postgresql/data/
-        name: db
+    dockerfilePath: .
+    buildCommand: ""
+    startCommand: postgres
+    envVars:
+      - key: POSTGRES_USER
+        value: $${POSTGRES_USER}
+      - key: POSTGRES_DB
+        value: $${POSTGRES_DB}
+      - key: POSTGRES_PASSWORD
+        value: $${POSTGRES_PASSWORD}
+    plan: free
+    disk:
+      name: db
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 10
     ports:
       - port: 5432
-        targetPort: 5432
-    healthCheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
-      intervalSeconds: 10
-      timeoutSeconds: 3
-      retries: 10
 
   - type: web
     name: backend
     env: docker
     dockerfilePath: ./Backend/Dockerfile
-    image: backend_image
-    containerName: djangocontainer
-    restartPolicy: always
-    networks:
-      - net
-    envVarsFile: env.env
-    volumes:
-      - path: /usr/src/media/
-        name: media
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: ENV_FILE
+        value: env.env
+    plan: free
+    disk:
+      name: media
+      mountPath: /usr/src/media
+      sizeGB: 10
     dependsOn:
-      - serviceName: db
-        condition: service_healthy
+      - db
 
   - type: web
     name: server
     env: docker
     dockerfilePath: ./Frontend/Dockerfile
-    image: frontend_image
-    containerName: nginx_container
-    restartPolicy: always
+    buildCommand: ""
+    startCommand: ""
+    plan: free
     ports:
       - port: 8000
         targetPort: 443
-    volumes:
-      - path: /var/www/html/media/
-        name: media
+    disk:
+      name: media
+      mountPath: /var/www/html/media
+      sizeGB: 10
     dependsOn:
-      - serviceName: backend
-    networks:
-      - net
-
-networks:
-  - name: net
-    driver: bridge
-
-volumes:
-  - name: media
-  - name: db
+      - backend
