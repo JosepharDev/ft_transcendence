@@ -1,53 +1,64 @@
-version: '3.8'
-
 services:
-  db:
+  - type: web
+    name: db
+    env: docker
     image: postgres
-    container_name: db_container
-    restart: 'always'
+    containerName: db_container
+    restartPolicy: always
     networks:
       - net
-    env_file: "env.env"
+    envVarsFile: env.env
     volumes:
-      - db:/var/lib/postgresql/data/
+      - path: /var/lib/postgresql/data/
+        name: db
     ports:
-      - "5432:5432"
-    healthcheck:
+      - port: 5432
+        targetPort: 5432
+    healthCheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
-      interval: 10s
-      timeout: 3s
+      intervalSeconds: 10
+      timeoutSeconds: 3
       retries: 10
-  backend:
-    build: ./Backend/
-    image: backend_image
-    container_name: djangocontainer
-    volumes:
-      - media:/usr/src/media/
-    restart: 'always'
-    networks:
-      - net
-    env_file: "env.env"
-    depends_on:
-      db:
-        condition: service_healthy
-  server:
-    build: Frontend/
-    image: frontend_image
-    container_name: nginx_container
-    ports:
-      - 8000:443
-    restart: 'always'
-    volumes:
-    - media:/var/www/html/media/
-    depends_on:
-      - backend
-    networks:
-      - net
 
+  - type: web
+    name: backend
+    env: docker
+    dockerfilePath: ./Backend/Dockerfile
+    image: backend_image
+    containerName: djangocontainer
+    restartPolicy: always
+    networks:
+      - net
+    envVarsFile: env.env
+    volumes:
+      - path: /usr/src/media/
+        name: media
+    dependsOn:
+      - serviceName: db
+        condition: service_healthy
+
+  - type: web
+    name: server
+    env: docker
+    dockerfilePath: ./Frontend/Dockerfile
+    image: frontend_image
+    containerName: nginx_container
+    restartPolicy: always
+    ports:
+      - port: 8000
+        targetPort: 443
+    volumes:
+      - path: /var/www/html/media/
+        name: media
+    dependsOn:
+      - serviceName: backend
+    networks:
+      - net
 
 networks:
-    net:
-      driver: bridge
+  - name: net
+    driver: bridge
+
 volumes:
-  media:
-  db:
+  - name: media
+  - name: db
