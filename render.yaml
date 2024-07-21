@@ -32,9 +32,6 @@ services:
       name: media
       mountPath: /usr/src/media
       sizeGB: 10
-    dependsOn:
-      - db
-
   - type: web
     name: server
     env: docker
