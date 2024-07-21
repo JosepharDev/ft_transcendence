@@ -4,7 +4,6 @@ services:
     env: docker
     dockerfilePath: .
     buildCommand: ""
-    startCommand: postgres
     envVars:
       - key: POSTGRES_USER
         value: $${POSTGRES_USER}
@@ -12,7 +11,6 @@ services:
         value: $${POSTGRES_DB}
       - key: POSTGRES_PASSWORD
         value: $${POSTGRES_PASSWORD}
-    plan: free
     disk:
       name: db
       mountPath: /var/lib/postgresql/data
@@ -23,11 +21,9 @@ services:
     env: docker
     dockerfilePath: ./Backend/Dockerfile
     buildCommand: ""
-    startCommand: ""
     envVars:
       - key: ENV_FILE
         value: env.env
-    plan: free
     disk:
       name: media
       mountPath: /usr/src/media
@@ -37,8 +33,6 @@ services:
     env: docker
     dockerfilePath: ./Frontend/Dockerfile
     buildCommand: ""
-    startCommand: ""
-    plan: free
     disk:
       name: media
       mountPath: /var/www/html/media
