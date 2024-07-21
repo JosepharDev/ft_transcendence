@@ -17,8 +17,6 @@ services:
       name: db
       mountPath: /var/lib/postgresql/data
       sizeGB: 10
-    ports:
-      - port: 5432
 
   - type: web
     name: backend
@@ -44,12 +42,7 @@ services:
     buildCommand: ""
     startCommand: ""
     plan: free
-    ports:
-      - port: 8000
-        targetPort: 443
     disk:
       name: media
       mountPath: /var/www/html/media
       sizeGB: 10
-    dependsOn:
-      - backend
