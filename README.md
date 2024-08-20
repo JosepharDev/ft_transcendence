@@ -5,6 +5,7 @@
 * [Overview](#overview)
 * [Features](#features)
 * [Usage](#usage)
+* [Demo](#Demo)
 
 
 ## Overview
@@ -29,6 +30,17 @@ docker-compose up --build
 ```
 
  ```
- https://127.0.0.1
+ https://127.0.0.1:8000
  ```
 
+## Demo
+  #### Home
+  <img src="demo_files/home.png" alt="home">
+  
+  #### remote
+  <img src="demo_files/remote1.png" alt="remote demo">
+  
+  <img src="demo_files/remote.png" alt="remote demo">
+
+  #### Profile
+  <img src="demo_files/profile.png" alt="profile demo">
