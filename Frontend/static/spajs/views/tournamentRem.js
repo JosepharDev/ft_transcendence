@@ -4,8 +4,6 @@ import { translations } from "../utils/localization.js";
 
 export async function remoteTournament()
 {
-try
-{
     let app = document.getElementById("app");
     app.innerHTML = `<div id="game-container">
     <div class="player-info">
@@ -278,9 +276,4 @@ try
       ctx.lineTo(canvas.width/2, canvas.height );
       ctx.stroke();
     }
-}
-catch(err)
-{
-
-}
 }

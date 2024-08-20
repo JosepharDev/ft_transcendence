@@ -4,8 +4,6 @@ import { sendOnline } from "./online.js";
 
 export async function signup()
 {
-try
-{
     document.querySelector("#navi").classList.add("hideme");
     
     let app = document.getElementById("app");
@@ -38,11 +36,6 @@ try
         e.preventDefault();
         pushUrl('/signin');
     })
-}
-catch (err)
-{
-
-}
 }
 
 

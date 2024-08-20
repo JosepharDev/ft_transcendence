@@ -1,11 +1,8 @@
 import {dataGlobal} from "./globalData.js";
-import { pushUrl } from "../utils/urlRoute.js";
 import { translations } from "../utils/localization.js";
 
 
 export async function remoteGame4()
-{
-try
 {
     let app = document.getElementById("app");
     app.innerHTML = `
@@ -214,9 +211,5 @@ try
       ctx.stroke();
     }
 }
-catch (err)
-{
 
-}
 
-}

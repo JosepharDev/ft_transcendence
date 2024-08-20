@@ -4,10 +4,7 @@ import { dataGlobal } from "./globalData.js";
 
 
 export function localPingPong()
-{
-try
-{
-    
+{   
   let app = document.getElementById("app");
 
   app.innerHTML = `
@@ -29,25 +26,18 @@ try
           </div>
         </div>
   `
-  document.getElementById("signinBtn").addEventListener('click', async (e)=>{
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const username2 = document.getElementById('password').value;
-    if (!username.length || !username2.length || username === username2)
-      return;
-    localPong(1, {game:"justTwo", vs1: username, vs2: username2})
-})
-}
-catch (err)
-{
-
-}
+    document.getElementById("signinBtn").addEventListener('click', async (e)=>{
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const username2 = document.getElementById('password').value;
+      if (!username.length || !username2.length || username === username2)
+        return;
+      localPong(1, {game:"justTwo", vs1: username, vs2: username2})
+  })
 }
 
 
 export function localPong(isVsBot, objConf)
-{
-try
 {
   
   let app = document.getElementById("app");
@@ -375,9 +365,4 @@ try
       dataGlobal.idInterval = setInterval(gameLoop, 20)
     }, 2000)
 
-}
-catch (err)
-{
-
-}
 }

@@ -6,21 +6,14 @@ import { dataGlobal, logout } from "./globalData.js";
 
 export function searchView ()
 {
-    try
-    {
-        let app = document.getElementById("app");
-        app.innerHTML = searchHtml();
-    
-        let searchButton = document.getElementById("search-form");
-        let sear = document.getElementById("search-input");
-        
-        sear.addEventListener('input', searchElementsEvent);
-        searchButton.addEventListener('submit', searchElementsEvent);
-    }
-    catch (err)
-    {
+    let app = document.getElementById("app");
+    app.innerHTML = searchHtml();
 
-    }
+    let searchButton = document.getElementById("search-form");
+    let sear = document.getElementById("search-input");
+    
+    sear.addEventListener('input', searchElementsEvent);
+    searchButton.addEventListener('submit', searchElementsEvent);
 }
 
 function searchHtml()

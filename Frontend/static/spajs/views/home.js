@@ -1,30 +1,23 @@
 import {pushUrl} from './../utils/urlRoute.js';
-import { AJAX_ } from './checkAuth.js';
 import { dataGlobal } from './globalData.js';
 import { translations } from '../utils/localization.js';
 
 
 export function  homeView()
 {
-    try
+    let app = document.getElementById('app');
+    app.innerHTML = homeHtml();
+    const matches = document.querySelectorAll(".btn-sm");
+    if (matches)
     {
-        let app = document.getElementById('app');
-        app.innerHTML = homeHtml();
-        const matches = document.querySelectorAll(".btn-sm");
-        if (matches)
-        {
-            matches.forEach(match =>{
-                match.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    pushUrl(e.target.href);
-                })
-            })   
-        }
+        matches.forEach(match =>{
+            match.addEventListener("click", (e) => {
+                e.preventDefault();
+                pushUrl(e.target.href);
+            })
+        })   
     }
-    catch (err)
-    {
-        
-    }
+
 }
 
 

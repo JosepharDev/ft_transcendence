@@ -1,7 +1,5 @@
-import {dataGlobal, logout, url} from './views/globalData.js'
-
+import {dataGlobal, logout} from './views/globalData.js'
 import {urlLocationHandler} from './utils/locationHandles.js'
-
 import { pushUrl } from './utils/urlRoute.js'
 import { translations } from './utils/localization.js';
 
@@ -12,17 +10,6 @@ import { translations } from './utils/localization.js';
 
 async function ini()
 {
-    // try // {//s}
-    // {
-    //     if (!history.state) {
-    //         const initialHref = window.location.pathname;
-    //         history.replaceState({ href: initialHref }, '', initialHref);
-    //     }
-    // }
-    // catch (err)
-    // {
-    // }
-
     try
     {
 
@@ -132,7 +119,6 @@ async function ini()
     }
     catch (err)
     {
-
     }
 
 

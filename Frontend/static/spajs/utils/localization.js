@@ -1,5 +1,3 @@
-import { dataGlobal } from "../views/globalData.js";
-
 export const translations = {
     en: {
         tournament: "Tournament",
@@ -179,10 +177,3 @@ export const translations = {
 
     }
 };
-
-
-
-// Set default language to English
-// document.getElementById("language-selector").value = "en";
-// document.getElementById("language-selector").dispatchEvent(new Event("change"));
-// </div>

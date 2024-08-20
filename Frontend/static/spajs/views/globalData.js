@@ -1,7 +1,3 @@
-export let url = {
-    'signin' : 'runthis'
-};
-
 export let dataGlobal = {
     socketDisconnect : [],
     deleteEvent: [],

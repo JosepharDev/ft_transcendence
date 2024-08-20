@@ -4,8 +4,6 @@ import { pushUrl } from "../utils/urlRoute.js";
 
 export async function twofaView()
 {
-try
-{
     const nav = document.getElementById("navi")
     if (!nav.classList.contains('hideme'))
         nav.classList.add("hideme");
@@ -53,11 +51,6 @@ try
         {
         }
     });
-}
-catch(err)
-{
-
-}
 }
 
 
