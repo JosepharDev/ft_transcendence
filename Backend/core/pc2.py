@@ -1,45 +1,18 @@
 import json
 import random
-from channels.generic.websocket import AsyncWebsocketConsumer
-import asyncio
-from channels.db import database_sync_to_async
 import jwt
+import asyncio
+from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.db import database_sync_to_async
+from .pingPongUtils import vec2, generate_random_string, decode_jwt
 from .models import User, Match
-from django.conf import settings
-import string
-
 canvasWidth__ = 700
 canvasHeight__ = 350
 
-def vec2(x, y):
-    return {'x': x, 'y': y}
-
-def generate_random_string(length):
-    characters = string.ascii_letters + string.digits
-    random_string = ''.join(random.choices(characters, k=length))
-    return random_string
 
 queue = []
 rooms = {}
 curr_room = ""
-
-
-async def decode_jwt(token):
-    try:
-        token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        user_id = token['user_id']
-        if token['2fa'] == True:
-            if token['code'] == False:
-                return None
-        try:
-            user = await database_sync_to_async (User.objects.get)(pk=user_id)
-            return user
-        except User.DoesNotExist:
-            return None
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
 
 
 class PongConsumerTest(AsyncWebsocketConsumer):

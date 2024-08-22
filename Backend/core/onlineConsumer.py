@@ -5,23 +5,8 @@ import jwt
 import jwt
 from .models import User
 from django.conf import settings
+from .pingPongUtils import decode_jwt
 
-async def decode_jwt(token):
-    try:
-        token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        user_id = token['user_id']
-        if token['2fa'] == True:
-            if token['code'] == False:
-                return None
-        try:
-            user = await database_sync_to_async (User.objects.get)(pk=user_id)
-            return user
-        except User.DoesNotExist:
-            return None
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
 
 class OnlineConsumer(AsyncWebsocketConsumer):
 

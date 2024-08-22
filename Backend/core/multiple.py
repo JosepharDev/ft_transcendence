@@ -10,41 +10,15 @@ import jwt
 from .models import User
 from django.conf import settings
 import random
-import string
-
+from .pingPongUtils import vec2, generate_random_string, decode_jwt
 canvasWidth__ = 800
 canvasHeight__ = 450
 background_tasks = set()
 
-def vec2(x, y):
-    return {'x': x, 'y': y}
-
-def generate_random_string(length):
-    characters = string.ascii_letters + string.digits
-    random_string = ''.join(random.choices(characters, k=length))
-    return random_string
 
 queue = []
 rooms = {}
 curr_room = ""
-
-
-async def decode_jwt(token):
-    try:
-        token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        user_id = token['user_id']
-        if token['2fa'] == True:
-            if token['code'] == False:
-                return None
-        try:
-            user = await database_sync_to_async (User.objects.get)(pk=user_id)
-            return user
-        except User.DoesNotExist:
-            return None
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
 
 
 class multipleConsumeTest(AsyncWebsocketConsumer):
