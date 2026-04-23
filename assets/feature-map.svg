@@ -1,0 +1,34 @@
+<svg width="1400" height="420" viewBox="0 0 1400 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="feature map">
+  <rect width="1400" height="420" rx="20" fill="#0f172a"/>
+  <text x="40" y="52" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">Feature map</text>
+
+  <rect x="40" y="90" width="300" height="290" rx="14" fill="#1e3a8a"/>
+  <text x="62" y="132" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">Authentication</text>
+  <text x="62" y="164" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Email/password sign-in</text>
+  <text x="62" y="190" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• JWT session model</text>
+  <text x="62" y="216" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• 42 OAuth login</text>
+  <text x="62" y="242" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• 2FA (QR + TOTP)</text>
+
+  <rect x="370" y="90" width="300" height="290" rx="14" fill="#6d28d9"/>
+  <text x="392" y="132" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">Gameplay</text>
+  <text x="392" y="164" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Local game mode</text>
+  <text x="392" y="190" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Remote 1v1 mode</text>
+  <text x="392" y="216" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• 2v2 / four-player mode</text>
+  <text x="392" y="242" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Tournament mode</text>
+  <text x="392" y="268" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Real-time sync via WS</text>
+
+  <rect x="700" y="90" width="300" height="290" rx="14" fill="#0f766e"/>
+  <text x="722" y="132" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">Social/Profile</text>
+  <text x="722" y="164" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Profile management</text>
+  <text x="722" y="190" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Friend relations</text>
+  <text x="722" y="216" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• User search</text>
+  <text x="722" y="242" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Language settings</text>
+
+  <rect x="1030" y="90" width="330" height="290" rx="14" fill="#7c2d12"/>
+  <text x="1052" y="132" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="24" font-weight="700">DevOps / Infra</text>
+  <text x="1052" y="164" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Docker Compose orchestration</text>
+  <text x="1052" y="190" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• NGINX TLS reverse proxy</text>
+  <text x="1052" y="216" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Daphne ASGI backend</text>
+  <text x="1052" y="242" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• PostgreSQL persistence</text>
+  <text x="1052" y="268" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">• Shared media volume</text>
+</svg>
